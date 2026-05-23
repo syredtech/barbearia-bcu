@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+  --black: #1a1a1a;
+  --gold: #b8860b;
+  --muted: #717171;
+  --border: #ebebeb;
+  --card: #ffffff;
+  --radius: 16px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--bg);
+    color: var(--black);
+    line-height: 1.7;
+  }
+  ::selection {
+    background: var(--black);
+    color: #fff;
+  }
+}
+
+/* Hero responsive title */
+.hero-title {
+  font-size: clamp(48px, 7.5vw, 96px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+}
+
+/* Staggered fade-up animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@layer utilities {
+  .fade-up   { animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .fade-up-1 { opacity: 0; animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+  .fade-up-2 { opacity: 0; animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
+  .fade-up-3 { opacity: 0; animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both; }
+
+  /* Venue card shadow system */
+  .card-shadow       { box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+  .card-shadow-hover { box-shadow: 0 10px 40px rgba(0,0,0,0.13); }
+
+  /* Thin divider */
+  .divider { border-top: 1px solid var(--border); }
+}
