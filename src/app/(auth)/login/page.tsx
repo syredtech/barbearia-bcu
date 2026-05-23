@@ -63,7 +63,7 @@ function LoginContent() {
           {mode === "login" ? "Bem-vindo." : "Criar conta."}
         </h1>
         <p className="text-muted text-sm font-light mb-8">
-          {mode === "login" ? "Aceda à sua conta BCU" : "Registe-se gratuitamente"}
+          {mode === "login" ? "Aceda à sua conta Bela & Belo" : "Registe-se gratuitamente"}
         </p>
 
         {/* Google */}

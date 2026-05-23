@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "BCU — Barba, Cabelo e Unha · Cabo Verde",
+  title: "Bela & Belo — barba, cabelo e unha · Cabo Verde",
   description: "Agende o seu horário nas melhores barbearias e salões de Cabo Verde",
 };
 

@@ -24,11 +24,13 @@ export default function Navbar() {
     >
       <div className="max-w-content mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          href="/"
-          className="font-serif text-[22px] font-bold text-ink tracking-tight leading-none"
-        >
-          BCU
+        <Link href="/" className="flex flex-col leading-none">
+          <span className="font-serif text-[22px] font-bold text-ink tracking-tight">
+            Bela &amp; Belo
+          </span>
+          <span className="text-[10px] text-muted font-light tracking-widest uppercase mt-0.5">
+            barba, cabelo e unha
+          </span>
         </Link>
 
         {/* Links */}
