@@ -58,7 +58,8 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
   useEffect(() => {
     fetch("/api/venues")
       .then((r) => r.json())
-      .then((d) => { setVenues(d); setLoading(false); });
+      .then((d) => { setVenues(Array.isArray(d) ? d : []); setLoading(false); })
+      .catch(() => setLoading(false));
 
     if (typeof navigator !== "undefined" && "geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(

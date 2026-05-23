@@ -12,13 +12,14 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const searchParams = useSearchParams();
 
   const [venue, setVenue]     = useState<VenueData | null>(null);
-  const [step, setStep]       = useState<1 | 2 | 3>(1);
+  const [step, setStep]       = useState<1 | 2 | 3>(() => searchParams.get("servicoId") ? 2 : 1);
   const [servicoId, setServicoId] = useState(searchParams.get("servicoId") || "");
   const [date, setDate]       = useState("");
   const [horario, setHorario] = useState("");
   const [slots, setSlots]     = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [done, setDone]       = useState(false);
+  const [bookingError, setBookingError] = useState("");
   const [guestName, setGuestName]   = useState("");
   const [guestPhone, setGuestPhone] = useState("");
 
@@ -28,7 +29,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
 
   useEffect(() => {
     if (!servicoId || !date || !venue) return;
-    fetch(`/api/horarios-disponiveis?venueId=${venue.id}&date=${date}&servicoId=${servicoId}`)
+    fetch(`/api/horarios-disponiveis?venueId=${venue.id}&date=${date}`)
       .then((r) => r.json())
       .then((d) => setSlots(d.slots || []));
   }, [servicoId, date, venue]);
@@ -51,7 +52,12 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
       }),
     });
     setLoading(false);
-    if (res.ok) setDone(true);
+    if (res.ok) {
+      setDone(true);
+    } else {
+      const d = await res.json();
+      setBookingError(d.error || "Erro ao confirmar o agendamento.");
+    }
   }
 
   if (!venue) {
@@ -238,6 +244,10 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                            focus:outline-none focus:border-ink transition-colors duration-200"
               />
             </div>
+          )}
+
+          {bookingError && (
+            <p className="text-red-500 text-sm font-light mb-4">{bookingError}</p>
           )}
 
           <div className="flex gap-3">

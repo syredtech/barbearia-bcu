@@ -10,7 +10,7 @@ interface FormState {
 }
 
 export default function ParceirosPage() {
-  const { status } = useSession();
+  const { status, update } = useSession();
   const router = useRouter();
 
   const [form, setForm] = useState<FormState>({
@@ -47,6 +47,7 @@ export default function ParceirosPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (status === "loading") return;
     if (status === "unauthenticated") { router.push("/login?callbackUrl=/parceiros"); return; }
     setLoading(true);
     const res = await fetch("/api/owner/venue", {
@@ -55,7 +56,7 @@ export default function ParceirosPage() {
       body: JSON.stringify(form),
     });
     setLoading(false);
-    if (res.ok) router.push("/painel");
+    if (res.ok) { await update(); router.push("/painel"); }
     else { const d = await res.json(); setError(d.error || "Erro ao cadastrar."); }
   }
 

@@ -15,9 +15,9 @@ export default async function MinhaContaPage() {
     orderBy: [{ date: "desc" }, { horario: "desc" }],
   });
 
-  const hoje     = new Date().toISOString().split("T")[0];
-  const proximos = agendamentos.filter((a) => a.date >= hoje);
-  const anteriores = agendamentos.filter((a) => a.date < hoje);
+  const agora = new Date();
+  const proximos = agendamentos.filter((a) => new Date(`${a.date}T${a.horario}:00`) > agora);
+  const anteriores = agendamentos.filter((a) => new Date(`${a.date}T${a.horario}:00`) <= agora);
 
   function Card({ a }: { a: (typeof agendamentos)[0] }) {
     const statusLabel = a.status === "confirmed" ? "Confirmado" : a.status === "canceled" ? "Cancelado" : a.status;

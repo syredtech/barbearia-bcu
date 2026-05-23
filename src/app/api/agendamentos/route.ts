@@ -43,6 +43,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nome e telefone obrigatórios." }, { status: 400 });
   }
 
+  const servico = await prisma.servico.findUnique({ where: { id: servicoId } });
+  if (!servico || servico.venueId !== venueId) {
+    return NextResponse.json({ error: "Serviço inválido." }, { status: 400 });
+  }
+
   const conflict = await prisma.agendamento.findFirst({
     where: { venueId, date, horario, status: "confirmed" },
   });

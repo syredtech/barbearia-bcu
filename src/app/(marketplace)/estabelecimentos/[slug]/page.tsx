@@ -12,7 +12,12 @@ export default async function EstabelecimentoPage({
     include: { servicos: true },
   });
 
-  if (!venue || venue.status !== "approved") notFound();
+  const subscriptionOk =
+    venue?.subscriptionStatus === "active" &&
+    venue.subscriptionExpiresAt != null &&
+    new Date(venue.subscriptionExpiresAt) > new Date();
+
+  if (!venue || venue.status !== "approved" || !subscriptionOk) notFound();
 
   return (
     <main className="max-w-content mx-auto px-6 py-16">

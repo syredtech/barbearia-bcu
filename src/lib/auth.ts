@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger }) {
       if (user) {
         token.id = user.id;
         // Google sign-in: busca role do banco pois o objeto user não carrega role
@@ -70,6 +70,10 @@ export const authOptions: NextAuthOptions = {
         } else {
           token.role = user.role;
         }
+      }
+      if (trigger === "update") {
+        const dbUser = await prisma.user.findUnique({ where: { id: token.id } });
+        if (dbUser) token.role = dbUser.role;
       }
       return token;
     },

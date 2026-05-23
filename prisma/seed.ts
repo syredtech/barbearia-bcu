@@ -66,6 +66,8 @@ async function main() {
       phone: "+238 991 00 01",
       latitude: 14.9315,
       longitude: -23.5133,
+      subscriptionStatus: "active",
+      subscriptionExpiresAt: expiresAt,
     },
     create: {
       slug: "barbearia-do-joao-praia",
@@ -85,7 +87,7 @@ async function main() {
 
   // Mindelo (São Vicente): 16.8908° N, -24.9805° W
   const salao = await prisma.venue.upsert({
-    where: { slug: "salao-da-nhá-maria-mindelo" },
+    where: { slug: "salao-da-nha-maria-mindelo" },
     update: {
       name: "Salão da Nhá Maria",
       description: "Salão completo em Mindelo com atendimento especializado em cabelos, unhas e tratamentos estéticos.",
@@ -93,9 +95,11 @@ async function main() {
       phone: "+238 992 00 02",
       latitude: 16.8908,
       longitude: -24.9805,
+      subscriptionStatus: "active",
+      subscriptionExpiresAt: expiresAt,
     },
     create: {
-      slug: "salao-da-nhá-maria-mindelo",
+      slug: "salao-da-nha-maria-mindelo",
       name: "Salão da Nhá Maria",
       description: "Salão completo em Mindelo com atendimento especializado em cabelos, unhas e tratamentos estéticos.",
       category: "salao",
@@ -120,6 +124,8 @@ async function main() {
       phone: "+238 993 00 03",
       latitude: 14.8959,
       longitude: -24.4964,
+      subscriptionStatus: "active",
+      subscriptionExpiresAt: expiresAt,
     },
     create: {
       slug: "barbearia-do-pedro-sao-filipe",
@@ -147,6 +153,8 @@ async function main() {
       phone: "+238 994 00 04",
       latitude: 14.9149,
       longitude: -23.6068,
+      subscriptionStatus: "active",
+      subscriptionExpiresAt: expiresAt,
     },
     create: {
       slug: "spa-cidade-velha",

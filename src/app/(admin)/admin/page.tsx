@@ -170,7 +170,7 @@ export default function AdminPage() {
                 : "border-transparent text-muted hover:text-ink"}`}
           >
             {t.label}
-            {t.id === "venues" && stats?.venues.pending > 0 && (
+            {t.id === "venues" && (stats?.venues.pending ?? 0) > 0 && (
               <span className="ml-2 bg-ink text-white text-[10px] font-medium px-1.5 py-0.5 rounded-full">
                 {stats.venues.pending}
               </span>

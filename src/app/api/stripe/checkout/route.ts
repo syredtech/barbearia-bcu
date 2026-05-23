@@ -31,6 +31,7 @@ export async function POST() {
     success_url: `${process.env.NEXTAUTH_URL}/painel?assinatura=sucesso`,
     cancel_url: `${process.env.NEXTAUTH_URL}/painel`,
     metadata: { venueId: venue.id },
+    subscription_data: { metadata: { venueId: venue.id } },
   });
 
   return NextResponse.json({ url: checkoutSession.url });

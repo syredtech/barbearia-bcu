@@ -13,7 +13,9 @@ export default function ServicosPage() {
 
   async function load() {
     const res = await fetch("/api/owner/servicos");
-    setServicos(await res.json());
+    if (!res.ok) return;
+    const data = await res.json();
+    setServicos(Array.isArray(data) ? data : []);
   }
   useEffect(() => { load(); }, []);
 
