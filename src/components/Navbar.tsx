@@ -42,22 +42,23 @@ export default function Navbar() {
             Estabelecimentos
           </Link>
 
+          {(!session || session.user.role === "client") && (
+            <Link
+              href="/parceiros"
+              className="text-muted hover:text-ink transition-colors duration-200 font-light"
+            >
+              Registar o meu negócio
+            </Link>
+          )}
+
           {!session && (
-            <>
-              <Link
-                href="/parceiros"
-                className="text-muted hover:text-ink transition-colors duration-200 font-light"
-              >
-                Para proprietários
-              </Link>
-              <Link
-                href="/login"
-                className="border border-ink text-ink px-5 py-2 rounded-pill text-sm font-medium
-                           hover:bg-ink hover:text-white transition-all duration-200"
-              >
-                Entrar
-              </Link>
-            </>
+            <Link
+              href="/login"
+              className="border border-ink text-ink px-5 py-2 rounded-pill text-sm font-medium
+                         hover:bg-ink hover:text-white transition-all duration-200"
+            >
+              Entrar
+            </Link>
           )}
 
           {session?.user.role === "client" && (
