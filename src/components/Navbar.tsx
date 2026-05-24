@@ -35,13 +35,6 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="flex items-center gap-8 text-sm">
-          <Link
-            href="/estabelecimentos"
-            className="text-muted hover:text-ink transition-colors duration-200 font-light"
-          >
-            Estabelecimentos
-          </Link>
-
           {(!session || session.user.role === "client") && (
             <Link
               href="/parceiros"

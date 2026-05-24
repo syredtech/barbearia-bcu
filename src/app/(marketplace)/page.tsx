@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <main>
-      <section className="max-w-content mx-auto px-6 pt-24 pb-24">
+      <section className="max-w-content mx-auto px-6 pt-12 pb-24">
         <div className="max-w-[720px] mb-10">
           <h1 className="hero-title font-serif font-bold text-ink fade-up">
             Agende com<br />
