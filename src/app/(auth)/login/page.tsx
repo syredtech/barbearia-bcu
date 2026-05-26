@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -47,8 +47,15 @@ function LoginContent() {
     });
     setLoading(false);
 
-    if (result?.error) setError("E-mail ou senha incorretos.");
-    else { router.push(callbackUrl); router.refresh(); }
+    if (result?.error) {
+      setError("E-mail ou senha incorretos.");
+    } else {
+      const session = await getSession();
+      if (session?.user.role === "owner") router.push("/painel");
+      else if (session?.user.role === "admin") router.push("/admin");
+      else router.push(callbackUrl);
+      router.refresh();
+    }
   }
 
   return (
