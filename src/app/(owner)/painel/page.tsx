@@ -55,7 +55,10 @@ export default async function PainelPage() {
             {statusLabel}
           </span>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
+          <Link href="/painel/horario" className="border border-[#ebebeb] text-muted px-5 py-2.5 rounded-pill text-sm hover:border-ink hover:text-ink transition-all duration-200">
+            Horário
+          </Link>
           <Link href="/painel/servicos" className="border border-[#ebebeb] text-muted px-5 py-2.5 rounded-pill text-sm hover:border-ink hover:text-ink transition-all duration-200">
             Serviços
           </Link>
