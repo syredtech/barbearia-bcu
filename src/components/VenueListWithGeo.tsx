@@ -116,19 +116,19 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
     <div>
       {/* Category filter pills */}
       {showCategoryFilter && (
-        <div className="flex gap-16 border-b border-[#ebebeb] mb-8 overflow-x-auto pb-0">
+        <div className="flex gap-12 border-b border-[#ebebeb] mb-8 overflow-x-auto pb-0">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`flex flex-col items-center gap-3 pb-6 text-xl font-medium
+              className={`flex flex-col items-center gap-2 pb-[18px] text-[15px] font-medium
                 border-b-2 -mb-px whitespace-nowrap transition-all duration-200 ${
                   activeCategory === cat.id
                     ? "border-ink text-ink"
                     : "border-transparent text-muted hover:text-ink hover:border-[#bbb]"
                 }`}
             >
-              <span className="text-[44px] leading-none">{cat.symbol}</span>
+              <span className="text-[33px] leading-none">{cat.symbol}</span>
               {cat.label}
             </button>
           ))}
