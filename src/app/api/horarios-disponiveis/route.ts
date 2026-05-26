@@ -7,6 +7,8 @@ function generateSlots(
   duration: number,
   breakStart?: string | null,
   breakEnd?: string | null,
+  break2Start?: string | null,
+  break2End?: string | null,
 ): string[] {
   const toMin = (t: string) => {
     const [h, m] = t.split(":").map(Number);
@@ -19,15 +21,17 @@ function generateSlots(
   const endMin   = toMin(end);
   const bsMin    = breakStart ? toMin(breakStart) : null;
   const beMin    = breakEnd   ? toMin(breakEnd)   : null;
+  const bs2Min   = break2Start ? toMin(break2Start) : null;
+  const be2Min   = break2End   ? toMin(break2End)   : null;
 
   const slots: string[] = [];
   let cur = startMin;
 
   while (cur + duration <= endMin) {
-    if (bsMin !== null && beMin !== null && cur >= bsMin && cur < beMin) {
-      cur = beMin;
-      continue;
-    }
+    const inBreak1 = bsMin !== null && beMin !== null && cur >= bsMin && cur < beMin;
+    const inBreak2 = bs2Min !== null && be2Min !== null && cur >= bs2Min && cur < be2Min;
+    if (inBreak1) { cur = beMin!; continue; }
+    if (inBreak2) { cur = be2Min!; continue; }
     slots.push(toStr(cur));
     cur += duration;
   }
@@ -46,10 +50,27 @@ export async function GET(req: NextRequest) {
 
   const venue = await prisma.venue.findUnique({
     where: { id: venueId },
-    select: { scheduleStart: true, scheduleEnd: true, slotDuration: true, breakStart: true, breakEnd: true },
+    select: {
+      scheduleStart: true,
+      scheduleEnd: true,
+      slotDuration: true,
+      breakStart: true,
+      breakEnd: true,
+      break2Start: true,
+      break2End: true,
+      closedDays: true,
+    },
   });
 
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
+
+  // Check if the requested day is a closed day
+  const closedDays: number[] = JSON.parse(venue.closedDays || "[]");
+  const requestedDate = new Date(date + "T12:00:00");
+  const weekday = requestedDate.getDay(); // 0=Sunday, 1=Monday, ...
+  if (closedDays.includes(weekday)) {
+    return NextResponse.json({ slots: [] });
+  }
 
   const allSlots = generateSlots(
     venue.scheduleStart,
@@ -57,6 +78,8 @@ export async function GET(req: NextRequest) {
     venue.slotDuration,
     venue.breakStart,
     venue.breakEnd,
+    venue.break2Start,
+    venue.break2End,
   );
 
   const booked = await prisma.agendamento.findMany({

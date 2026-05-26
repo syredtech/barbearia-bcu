@@ -50,12 +50,15 @@ export default async function PainelPage() {
       <div className="flex items-start justify-between mb-12">
         <div>
           <p className="text-xs text-muted uppercase tracking-widest mb-2">Painel</p>
-          <h1 className="font-serif text-4xl font-bold text-ink">{venue.name}</h1>
+          <h1 className="font-serif text-2xl sm:text-4xl font-bold text-ink">{venue.name}</h1>
           <span className={`inline-block mt-2 text-xs px-3 py-1 rounded-pill font-medium ${statusColor}`}>
             {statusLabel}
           </span>
         </div>
         <div className="flex gap-3 flex-wrap">
+          <Link href="/painel/perfil" className="border border-[#ebebeb] text-muted px-5 py-2.5 rounded-pill text-sm hover:border-ink hover:text-ink transition-all duration-200">
+            Perfil
+          </Link>
           <Link href="/painel/horario" className="border border-[#ebebeb] text-muted px-5 py-2.5 rounded-pill text-sm hover:border-ink hover:text-ink transition-all duration-200">
             Horário
           </Link>
@@ -69,11 +72,11 @@ export default async function PainelPage() {
       </div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
         {[
-          { label: "Agendamentos hoje", value: agendamentosHoje.length },
-          { label: "Total de agendamentos", value: totalAgendamentos },
-          { label: "Serviços cadastrados", value: venue.servicos.length },
+          { label: "Hoje", value: agendamentosHoje.length },
+          { label: "Total", value: totalAgendamentos },
+          { label: "Serviços", value: venue.servicos.length },
         ].map((m) => (
           <div key={m.label} className="border border-[#ebebeb] rounded-card p-6">
             <p className="text-xs text-muted uppercase tracking-widest mb-3">{m.label}</p>

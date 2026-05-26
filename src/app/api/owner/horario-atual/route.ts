@@ -13,7 +13,7 @@ export async function GET() {
 
   const venue = await prisma.venue.findUnique({
     where: { ownerId: session.user.id },
-    select: { scheduleStart: true, scheduleEnd: true, slotDuration: true, breakStart: true, breakEnd: true },
+    select: { scheduleStart: true, scheduleEnd: true, slotDuration: true, breakStart: true, breakEnd: true, break2Start: true, break2End: true, closedDays: true },
   });
 
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });

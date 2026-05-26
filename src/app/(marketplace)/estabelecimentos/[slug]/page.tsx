@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ShareButton from "@/components/ShareButton";
 
 export default async function EstabelecimentoPage({
   params,
@@ -11,6 +12,13 @@ export default async function EstabelecimentoPage({
     where: { slug: params.slug },
     include: { servicos: true },
   });
+
+  const reviews = venue ? await prisma.review.findMany({
+    where: { venueId: venue.id },
+    include: { client: { select: { name: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+  }) : [];
 
   const subscriptionOk =
     venue?.subscriptionStatus === "active" &&
@@ -23,8 +31,8 @@ export default async function EstabelecimentoPage({
     <main className="max-w-content mx-auto px-6 py-16">
       {/* Breadcrumb */}
       <p className="text-xs text-muted mb-8">
-        <Link href="/estabelecimentos" className="hover:text-ink transition-colors">
-          Estabelecimentos
+        <Link href="/" className="hover:text-ink transition-colors">
+          Início
         </Link>
         {" / "}
         <span className="text-ink">{venue.name}</span>
@@ -47,6 +55,7 @@ export default async function EstabelecimentoPage({
           {venue.address && <span>{venue.address}</span>}
           {venue.phone   && <span>{venue.phone}</span>}
         </div>
+        <ShareButton name={venue.name} slug={venue.slug} />
       </div>
 
       {/* Divider */}
@@ -83,6 +92,34 @@ export default async function EstabelecimentoPage({
           </div>
         ))}
       </div>
+
+      {reviews.length > 0 && (
+        <>
+          <div className="divider my-12" />
+          <h2 className="font-serif text-2xl font-bold text-ink mb-6">
+            Avaliações
+            <span className="ml-2 text-base font-sans font-normal text-muted">
+              ({reviews.length})
+            </span>
+          </h2>
+          <div className="space-y-4">
+            {reviews.map((r) => (
+              <div key={r.id} className="border border-[#ebebeb] rounded-card p-5">
+                <div className="flex items-center gap-1 mb-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg key={i} width="12" height="12" viewBox="0 0 24 24"
+                      fill={i < r.rating ? "#141414" : "none"} stroke="#141414" strokeWidth="2">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  ))}
+                  <span className="text-xs text-muted ml-2">{r.client.name?.split(" ")[0]}</span>
+                </div>
+                {r.comment && <p className="text-sm text-muted font-light">{r.comment}</p>}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </main>
   );
 }

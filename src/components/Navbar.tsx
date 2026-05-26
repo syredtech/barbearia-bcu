@@ -77,9 +77,11 @@ export default function Navbar() {
           {session && (
             <div className="flex items-center gap-3">
               {session.user.role === "owner" && <NotificacaoBell />}
-              <span className="text-muted text-sm font-light">
-                {session.user.name?.split(" ")[0]}
-              </span>
+              {session.user.role !== "admin" && (
+                <span className="text-muted text-sm font-light">
+                  {session.user.name?.split(" ")[0]}
+                </span>
+              )}
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="border border-[#ebebeb] text-muted px-4 py-1.5 rounded-pill text-xs

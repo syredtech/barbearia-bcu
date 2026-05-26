@@ -197,7 +197,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
                 <p className="text-muted text-sm mt-0.5 leading-snug">
                   {venue.address ?? venue.category}
                 </p>
-                {venue.servicos.length > 0 && (
+                {venue.servicos.length > 0 && Math.min(...venue.servicos.map((s) => s.price)) > 0 && (
                   <p className="text-ink text-sm font-medium mt-1.5">
                     A partir de{" "}
                     {Math.min(...venue.servicos.map((s) => s.price)).toLocaleString("pt-CV")} ECV

@@ -9,11 +9,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  const { scheduleStart, scheduleEnd, slotDuration, breakStart, breakEnd, break2Start, break2End, closedDays } = await req.json();
-
-  if (!scheduleStart || !scheduleEnd || !slotDuration) {
-    return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
-  }
+  const { imageUrl, description, address, phone } = await req.json();
 
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
@@ -21,14 +17,10 @@ export async function PUT(req: NextRequest) {
   const updated = await prisma.venue.update({
     where: { id: venue.id },
     data: {
-      scheduleStart,
-      scheduleEnd,
-      slotDuration: Number(slotDuration),
-      breakStart: breakStart || null,
-      breakEnd: breakEnd || null,
-      break2Start: break2Start || null,
-      break2End: break2End || null,
-      closedDays: JSON.stringify(closedDays || []),
+      imageUrl: imageUrl || null,
+      description: description || null,
+      address: address || null,
+      phone: phone || null,
     },
   });
 
