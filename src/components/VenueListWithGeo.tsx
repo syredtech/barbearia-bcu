@@ -116,7 +116,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
     <div>
       {/* Category filter pills */}
       {showCategoryFilter && (
-        <div className="flex justify-between md:justify-start md:gap-12 border-b border-[#ebebeb] mb-8 md:overflow-x-auto pb-0">
+        <div className="flex justify-evenly md:justify-start md:gap-12 border-b border-[#ebebeb] mb-8 md:overflow-x-auto pb-0">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
