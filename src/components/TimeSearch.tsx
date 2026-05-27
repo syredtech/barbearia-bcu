@@ -67,7 +67,6 @@ function VenueCard({ v }: { v: VenueResult }) {
 }
 
 const CATEGORIES = [
-  { id: "",           label: "Todos",     symbol: "✦" },
   { id: "barbearia",  label: "Barbearia", symbol: "✂" },
   { id: "salao",      label: "Salão",     symbol: "✿" },
   { id: "spa",        label: "Spa",       symbol: "◈" },
