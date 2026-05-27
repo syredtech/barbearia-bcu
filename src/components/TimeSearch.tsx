@@ -192,7 +192,7 @@ export default function TimeSearch() {
             <>
               <p className="text-xs text-muted mb-5">
                 {results.length === total
-                  ? `${total} profissional${total !== 1 ? "is" : ""} disponíve${total !== 1 ? "is" : "l"}`
+                  ? `${total} profissiona${total !== 1 ? "is" : "l"} disponíve${total !== 1 ? "is" : "l"}`
                   : `${results.length} mais próximos de ${total} disponíveis`}
                 {" "}para as {time} de {dateLabel}
                 {userLoc ? " · ordenados por distância" : ""}
