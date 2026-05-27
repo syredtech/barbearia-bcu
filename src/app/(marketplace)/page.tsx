@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import VenueListWithGeo from "@/components/VenueListWithGeo";
+import TimeSearch from "@/components/TimeSearch";
 
 export default function Home() {
   const [draft, setDraft]   = useState("");
@@ -39,6 +40,8 @@ export default function Home() {
             Buscar
           </button>
         </form>
+
+        <TimeSearch />
 
         <VenueListWithGeo searchQuery={active} showCategoryFilter />
       </section>
