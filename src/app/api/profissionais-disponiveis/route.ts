@@ -43,8 +43,9 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
-  const date = searchParams.get("date");
-  const time = searchParams.get("time");
+  const date     = searchParams.get("date");
+  const time     = searchParams.get("time");
+  const category = searchParams.get("category") || null; // null or "" means all
   const lat  = searchParams.get("lat")  ? parseFloat(searchParams.get("lat")!)  : null;
   const lng  = searchParams.get("lng")  ? parseFloat(searchParams.get("lng")!)  : null;
 
@@ -59,6 +60,7 @@ export async function GET(req: NextRequest) {
       status: "approved",
       subscriptionStatus: "active",
       subscriptionExpiresAt: { gt: new Date() },
+      ...(category ? { category } : {}),
     },
     select: {
       id: true,

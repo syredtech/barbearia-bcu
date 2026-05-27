@@ -66,15 +66,23 @@ function VenueCard({ v }: { v: VenueResult }) {
   );
 }
 
+const CATEGORIES = [
+  { id: "",           label: "Todos",     symbol: "✦" },
+  { id: "barbearia",  label: "Barbearia", symbol: "✂" },
+  { id: "salao",      label: "Salão",     symbol: "✿" },
+  { id: "spa",        label: "Spa",       symbol: "◈" },
+];
+
 export default function TimeSearch() {
   const today = new Date().toISOString().split("T")[0];
-  const [date, setDate]       = useState(today);
-  const [time, setTime]       = useState("09:00");
+  const [date, setDate]         = useState(today);
+  const [time, setTime]         = useState("09:00");
+  const [category, setCategory] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
-  const [results, setResults] = useState<VenueResult[] | null>(null);
-  const [total, setTotal]     = useState(0);
-  const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null);
-  const [open, setOpen]       = useState(false);
+  const [results, setResults]   = useState<VenueResult[] | null>(null);
+  const [total, setTotal]       = useState(0);
+  const [userLoc, setUserLoc]   = useState<{ lat: number; lng: number } | null>(null);
+  const [open, setOpen]         = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,9 +96,11 @@ export default function TimeSearch() {
   }, []);
 
   async function search() {
+    if (category === null) return;
     setSearching(true);
     setResults(null);
     const params = new URLSearchParams({ date, time });
+    if (category) params.set("category", category);
     if (userLoc) { params.set("lat", String(userLoc.lat)); params.set("lng", String(userLoc.lng)); }
     const res  = await fetch(`/api/profissionais-disponiveis?${params}`);
     const data = await res.json();
@@ -100,8 +110,9 @@ export default function TimeSearch() {
     setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }
 
-  function reset() { setResults(null); setOpen(false); }
+  function reset() { setResults(null); setOpen(false); setCategory(null); }
 
+  const categoryLabel = CATEGORIES.find((c) => c.id === category)?.label ?? "";
   const dateLabel = new Date(date + "T12:00:00").toLocaleDateString("pt-CV", {
     weekday: "long", day: "numeric", month: "long",
   });
@@ -136,6 +147,34 @@ export default function TimeSearch() {
             </button>
           </div>
 
+          {/* Category filter — required */}
+          <div className="mb-4">
+            <label className="text-xs text-muted block mb-2">
+              Tipo de serviço
+              {category === null && (
+                <span className="ml-1.5 text-[#c0392b]">· obrigatório</span>
+              )}
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setCategory(cat.id)}
+                  className={`flex flex-col items-center gap-1 py-3 rounded-card border text-xs font-medium
+                    transition-all duration-200 ${
+                      category === cat.id
+                        ? "bg-ink text-white border-ink"
+                        : "border-[#ebebeb] text-muted hover:border-ink hover:text-ink"
+                    }`}
+                >
+                  <span className="text-[18px] leading-none">{cat.symbol}</span>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Date + time */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
               <label className="text-xs text-muted block mb-1">Data</label>
@@ -163,7 +202,7 @@ export default function TimeSearch() {
 
           <button
             onClick={search}
-            disabled={searching}
+            disabled={searching || category === null}
             className="w-full bg-ink text-white rounded-card py-3 text-sm font-medium
                        hover:bg-[#333] transition-all duration-200 disabled:opacity-40"
           >
@@ -179,7 +218,8 @@ export default function TimeSearch() {
             <div className="py-10 text-center border border-[#ebebeb] rounded-card">
               <p className="text-ink font-serif text-lg font-bold mb-1">Sem disponibilidade</p>
               <p className="text-muted text-sm font-light">
-                Nenhum profissional disponível a {time} de {dateLabel}.
+                Nenhum{categoryLabel ? ` ${categoryLabel.toLowerCase()}` : " profissional"} disponível
+                às {time} de {dateLabel}.
               </p>
               <button
                 onClick={() => setResults(null)}
@@ -194,8 +234,9 @@ export default function TimeSearch() {
                 {results.length === total
                   ? `${total} profissiona${total !== 1 ? "is" : "l"} disponíve${total !== 1 ? "is" : "l"}`
                   : `${results.length} mais próximos de ${total} disponíveis`}
-                {" "}para as {time} de {dateLabel}
-                {userLoc ? " · ordenados por distância" : ""}
+                {categoryLabel ? ` · ${categoryLabel}` : ""}
+                {" "}· {time} de {dateLabel}
+                {userLoc ? " · por distância" : ""}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                 {results.map((v) => <VenueCard key={v.id} v={v} />)}
