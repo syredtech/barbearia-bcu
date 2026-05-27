@@ -4,8 +4,9 @@ import VenueListWithGeo from "@/components/VenueListWithGeo";
 import TimeSearch from "@/components/TimeSearch";
 
 export default function Home() {
-  const [draft, setDraft]   = useState("");
-  const [active, setActive] = useState("");
+  const [draft, setDraft]         = useState("");
+  const [active, setActive]       = useState("");
+  const [timeSearchOn, setTimeSearchOn] = useState(false);
 
   return (
     <main>
@@ -41,9 +42,9 @@ export default function Home() {
           </button>
         </form>
 
-        <TimeSearch />
+        <TimeSearch onActiveChange={setTimeSearchOn} />
 
-        <VenueListWithGeo searchQuery={active} showCategoryFilter />
+        {!timeSearchOn && <VenueListWithGeo searchQuery={active} showCategoryFilter />}
       </section>
     </main>
   );

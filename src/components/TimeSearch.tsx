@@ -72,7 +72,7 @@ const CATEGORIES = [
   { id: "spa",        label: "Spa",       symbol: "◈" },
 ];
 
-export default function TimeSearch() {
+export default function TimeSearch({ onActiveChange }: { onActiveChange?: (active: boolean) => void }) {
   const today = new Date().toISOString().split("T")[0];
   const [date, setDate]         = useState(today);
   const [time, setTime]         = useState("09:00");
@@ -106,10 +106,11 @@ export default function TimeSearch() {
     setResults(data.results ?? []);
     setTotal(data.total ?? 0);
     setSearching(false);
+    onActiveChange?.(true);
     setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }
 
-  function reset() { setResults(null); setOpen(false); setCategory(null); }
+  function reset() { setResults(null); setOpen(false); setCategory(null); onActiveChange?.(false); }
 
   const categoryLabel = CATEGORIES.find((c) => c.id === category)?.label ?? "";
   const dateLabel = new Date(date + "T12:00:00").toLocaleDateString("pt-CV", {
