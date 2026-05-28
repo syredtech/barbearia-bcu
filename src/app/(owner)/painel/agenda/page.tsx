@@ -105,10 +105,16 @@ export default function AgendaPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  // Poll every 30 s for new bookings
+  // SSE — push imediato ao criar agendamento, sem polling
   useEffect(() => {
-    const id = setInterval(load, 30000);
-    return () => clearInterval(id);
+    let es: EventSource;
+    function connect() {
+      es = new EventSource("/api/owner/events");
+      es.onmessage = () => load();
+      es.onerror = () => { es.close(); setTimeout(connect, 1000); };
+    }
+    connect();
+    return () => es?.close();
   }, [load]);
 
   async function updateStatus(id: string, status: string) {
