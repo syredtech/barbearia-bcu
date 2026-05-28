@@ -3,6 +3,21 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "owner") {
+    return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+  const venue = await prisma.venue.findUnique({
+    where: { ownerId: session.user.id },
+    select: { slug: true, name: true, imageUrl: true, description: true, address: true, phone: true },
+  });
+  if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
+  return NextResponse.json(venue);
+}
+
 export async function PUT(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
