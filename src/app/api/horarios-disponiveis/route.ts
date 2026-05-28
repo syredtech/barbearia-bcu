@@ -59,18 +59,19 @@ export async function GET(req: NextRequest) {
       break2Start: true,
       break2End: true,
       closedDays: true,
+      _count: { select: { funcionarios: true } },
     },
   });
 
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
-  // Check if the requested day is a closed day
   const closedDays: number[] = JSON.parse(venue.closedDays || "[]");
-  const requestedDate = new Date(date + "T12:00:00");
-  const weekday = requestedDate.getDay(); // 0=Sunday, 1=Monday, ...
+  const weekday = new Date(date + "T12:00:00").getDay();
   if (closedDays.includes(weekday)) {
     return NextResponse.json({ slots: [] });
   }
+
+  const capacity = Math.max(1, venue._count.funcionarios);
 
   const allSlots = generateSlots(
     venue.scheduleStart,
@@ -87,8 +88,12 @@ export async function GET(req: NextRequest) {
     select: { horario: true },
   });
 
-  const bookedSet = new Set(booked.map((a) => a.horario));
-  const slots = allSlots.filter((s) => !bookedSet.has(s));
+  const countBySlot: Record<string, number> = {};
+  for (const a of booked) {
+    countBySlot[a.horario] = (countBySlot[a.horario] ?? 0) + 1;
+  }
+
+  const slots = allSlots.filter((s) => (countBySlot[s] ?? 0) < capacity);
 
   return NextResponse.json({ slots });
 }

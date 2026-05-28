@@ -85,6 +85,7 @@ export async function GET(req: NextRequest) {
         where: { date, horario: time, status: "confirmed" },
         select: { id: true },
       },
+      _count: { select: { funcionarios: true } },
     },
   });
 
@@ -100,8 +101,9 @@ export async function GET(req: NextRequest) {
     );
     if (!slots.includes(time)) return false;
 
-    // Check not already booked at this time
-    return v.agendamentos.length === 0;
+    // Check capacity: slot available if bookings < number of employees (min 1)
+    const capacity = Math.max(1, v._count.funcionarios);
+    return v.agendamentos.length < capacity;
   });
 
   // Sort by distance if user location provided

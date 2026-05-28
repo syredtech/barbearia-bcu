@@ -147,8 +147,11 @@ export default function AgendaPage() {
   }, {});
 
   const dayAgendamentos = agendamentos.filter((a) => a.date === selectedDate);
-  const bySlot: Record<string, Agendamento> = {};
-  dayAgendamentos.forEach((a) => { bySlot[a.horario] = a; });
+  const bySlot: Record<string, Agendamento[]> = {};
+  dayAgendamentos.forEach((a) => {
+    if (!bySlot[a.horario]) bySlot[a.horario] = [];
+    bySlot[a.horario].push(a);
+  });
 
   function prevWeek() {
     const d = new Date(weekBase); d.setDate(d.getDate() - 7); setWeekBase(d);
@@ -248,7 +251,7 @@ export default function AgendaPage() {
               ? "Dia de folga"
               : dayAgendamentos.length === 0
               ? "Nenhuma marcação"
-              : `${dayAgendamentos.length} marcação${dayAgendamentos.length !== 1 ? "ões" : ""} · ${allSlots.length - dayAgendamentos.length} horários livres`
+              : `${dayAgendamentos.length} marcaç${dayAgendamentos.length !== 1 ? "ões" : "ão"} em ${Object.keys(bySlot).length} horário${Object.keys(bySlot).length !== 1 ? "s" : ""}`
             }
           </p>
         </div>
@@ -271,7 +274,7 @@ export default function AgendaPage() {
       ) : (
         <div className="space-y-2">
           {allSlots.map((slot) => {
-            const a = bySlot[slot];
+            const slotBookings = bySlot[slot] ?? [];
             return (
               <div key={slot} className="flex items-stretch gap-4">
                 {/* Time label */}
@@ -279,61 +282,64 @@ export default function AgendaPage() {
                   {slot}
                 </span>
 
-                {a ? (
-                  /* Booked slot */
-                  <div className="flex-1 border border-[#ebebeb] rounded-card px-4 py-3.5 bg-white
-                                  hover:border-[#ccc] transition-colors duration-200">
-                    <div className="flex items-center gap-3">
-                      {/* Avatar */}
-                      <div className="w-8 h-8 rounded-full bg-ink flex items-center justify-center shrink-0">
-                        <span className="text-white text-[10px] font-serif font-bold leading-none">
-                          {initials(a.client?.name ?? a.guestName ?? "?")}
-                        </span>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-ink text-sm leading-tight truncate">
-                          {a.client?.name ?? a.guestName ?? "Convidado"}
-                        </p>
-                        <p className="text-xs text-muted font-light mt-0.5">
-                          {a.servico.name}
-                          <span className="mx-1.5 text-[#d0d0d0]">·</span>
-                          {a.servico.duration} min
-                          <span className="mx-1.5 text-[#d0d0d0]">·</span>
-                          {a.servico.price.toLocaleString("pt-CV")} ECV
-                        </p>
-                        {a.status === "confirmed" && (
-                          <div className="flex gap-2 mt-2">
-                            <button
-                              onClick={() => updateStatus(a.id, "completed")}
-                              disabled={updatingId === a.id}
-                              className="text-[10px] font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-pill hover:bg-green-100 transition-colors disabled:opacity-40"
-                            >
-                              Concluído
-                            </button>
-                            <button
-                              onClick={() => updateStatus(a.id, "cancelled")}
-                              disabled={updatingId === a.id}
-                              className="text-[10px] font-medium text-red-600 bg-red-50 px-2.5 py-0.5 rounded-pill hover:bg-red-100 transition-colors disabled:opacity-40"
-                            >
-                              Cancelar
-                            </button>
+                {slotBookings.length > 0 ? (
+                  /* Booked slot — one card per booking */
+                  <div className="flex-1 space-y-2">
+                    {slotBookings.map((a) => (
+                      <div key={a.id} className="border border-[#ebebeb] rounded-card px-4 py-3.5 bg-white
+                                      hover:border-[#ccc] transition-colors duration-200">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-ink flex items-center justify-center shrink-0">
+                            <span className="text-white text-[10px] font-serif font-bold leading-none">
+                              {initials(a.client?.name ?? a.guestName ?? "?")}
+                            </span>
                           </div>
-                        )}
-                        {a.status !== "confirmed" && (
-                          <span className={`inline-block mt-1 text-[10px] font-medium uppercase tracking-widest px-2.5 py-0.5 rounded-pill ${
-                            a.status === "completed" ? "text-blue-700 bg-blue-50" : "text-red-600 bg-red-50"
-                          }`}>
-                            {a.status === "completed" ? "Concluído" : "Cancelado"}
-                          </span>
-                        )}
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-ink text-sm leading-tight truncate">
+                              {a.client?.name ?? a.guestName ?? "Convidado"}
+                            </p>
+                            <p className="text-xs text-muted font-light mt-0.5">
+                              {a.servico.name}
+                              <span className="mx-1.5 text-[#d0d0d0]">·</span>
+                              {a.servico.duration} min
+                              <span className="mx-1.5 text-[#d0d0d0]">·</span>
+                              {a.servico.price.toLocaleString("pt-CV")} ECV
+                            </p>
+                            {a.status === "confirmed" && (
+                              <div className="flex gap-2 mt-2">
+                                <button
+                                  onClick={() => updateStatus(a.id, "completed")}
+                                  disabled={updatingId === a.id}
+                                  className="text-[10px] font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-pill hover:bg-green-100 transition-colors disabled:opacity-40"
+                                >
+                                  Concluído
+                                </button>
+                                <button
+                                  onClick={() => updateStatus(a.id, "cancelled")}
+                                  disabled={updatingId === a.id}
+                                  className="text-[10px] font-medium text-red-600 bg-red-50 px-2.5 py-0.5 rounded-pill hover:bg-red-100 transition-colors disabled:opacity-40"
+                                >
+                                  Cancelar
+                                </button>
+                              </div>
+                            )}
+                            {a.status !== "confirmed" && (
+                              <span className={`inline-block mt-1 text-[10px] font-medium uppercase tracking-widest px-2.5 py-0.5 rounded-pill ${
+                                a.status === "completed" ? "text-blue-700 bg-blue-50" : "text-red-600 bg-red-50"
+                              }`}>
+                                {a.status === "completed" ? "Concluído" : "Cancelado"}
+                              </span>
+                            )}
+                          </div>
+                          {a.status === "confirmed" && (
+                            <span className="shrink-0 text-[10px] font-medium uppercase tracking-widest
+                                             text-green-700 bg-green-50 px-2.5 py-0.5 rounded-pill">
+                              Confirmado
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      {a.status === "confirmed" && (
-                        <span className="shrink-0 text-[10px] font-medium uppercase tracking-widest
-                                         text-green-700 bg-green-50 px-2.5 py-0.5 rounded-pill">
-                          Confirmado
-                        </span>
-                      )}
-                    </div>
+                    ))}
                   </div>
                 ) : (
                   /* Free slot */

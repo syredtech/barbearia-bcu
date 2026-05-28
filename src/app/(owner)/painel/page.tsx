@@ -68,6 +68,9 @@ export default async function PainelPage() {
           <Link href="/painel/qrcode" className="border border-[#ebebeb] text-muted px-5 py-2.5 rounded-pill text-sm hover:border-ink hover:text-ink transition-all duration-200">
             QR Code
           </Link>
+          <Link href="/painel/funcionarios" className="border border-[#ebebeb] text-muted px-5 py-2.5 rounded-pill text-sm hover:border-ink hover:text-ink transition-all duration-200">
+            Funcionários
+          </Link>
           <Link href="/painel/agenda" className="bg-ink text-white px-5 py-2.5 rounded-pill text-sm font-medium hover:bg-[#333] transition-all duration-200">
             Agenda
           </Link>
