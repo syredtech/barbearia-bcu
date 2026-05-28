@@ -48,11 +48,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Serviço inválido." }, { status: 400 });
   }
 
-  const conflict = await prisma.agendamento.findFirst({
-    where: { venueId, date, horario, status: "confirmed" },
-  });
+  const [bookedCount, venue] = await Promise.all([
+    prisma.agendamento.count({ where: { venueId, date, horario, status: "confirmed" } }),
+    prisma.venue.findUnique({ where: { id: venueId }, select: { _count: { select: { funcionarios: true } } } }),
+  ]);
 
-  if (conflict) {
+  const capacity = Math.max(1, venue?._count.funcionarios ?? 0);
+  if (bookedCount >= capacity) {
     return NextResponse.json({ error: "Horário indisponível." }, { status: 409 });
   }
 
