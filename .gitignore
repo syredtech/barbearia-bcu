@@ -10,6 +10,7 @@ guest-*.png
 test-*.png
 *.png
 verify-*.mjs
+lh-*.json
 audit.mjs
 remove-*.mjs
 run-cleanup.mjs
