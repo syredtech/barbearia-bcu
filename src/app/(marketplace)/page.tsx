@@ -60,6 +60,7 @@ export default function Home() {
       {/* Listing */}
       {!timeSearchOn && (
         <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 pb-16 sm:pb-24">
+          <h2 className="sr-only">Estabelecimentos</h2>
           <VenueListWithGeo searchQuery={active} showCategoryFilter />
         </section>
       )}
