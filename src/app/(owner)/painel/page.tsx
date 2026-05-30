@@ -109,8 +109,8 @@ export default async function PainelPage() {
             <p className="text-muted text-sm font-light">Nenhum agendamento ainda.</p>
           </div>
         ) : (
-          <div className="border border-[#ebebeb] rounded-card overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-card border border-[#ebebeb]">
+            <table className="w-full min-w-[520px] text-sm">
               <thead className="border-b border-[#ebebeb]">
                 <tr>
                   {["Cliente", "Serviço", "Data", "Horário", "Estado"].map((h) => (
