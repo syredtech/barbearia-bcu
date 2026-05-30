@@ -348,10 +348,9 @@ export default function AgendaPage() {
                     ))}
                   </div>
                 ) : (
-                  /* Free slot */
-                  <div className="flex-1 border border-dashed border-[#e4e4e4] rounded-card px-4 py-3.5
-                                  flex items-center">
-                    <span className="text-xs text-muted/50 font-light">Disponível</span>
+                  /* Free slot — compact */
+                  <div className="flex-1 flex items-center h-9">
+                    <div className="flex-1 border-b border-[#f0f0f0]" />
                   </div>
                 )}
               </div>

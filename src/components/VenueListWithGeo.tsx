@@ -146,22 +146,28 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
       )}
 
       {/* Geo status */}
-      <div className="h-5 mb-4">
+      <div className="h-6 mb-4 flex items-center">
         {geoStatus === "pending" && (
-          <p className="text-xs text-muted flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping" />
             A obter localização…
-          </p>
+          </span>
         )}
         {geoStatus === "granted" && (
-          <p className="text-xs text-muted">
-            A mostrar os estabelecimentos mais próximos de si
-          </p>
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted border border-[#ebebeb] rounded-pill px-3 py-1">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            Ordenados por proximidade
+          </span>
         )}
         {geoStatus === "denied" && (
-          <p className="text-xs text-muted">
-            Active a geolocalização para ver as distâncias
-          </p>
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted/70">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            Ative a localização para ordenar por proximidade
+          </span>
         )}
       </div>
 

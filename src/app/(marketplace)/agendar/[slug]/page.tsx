@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface Servico { id: string; name: string; duration: number; price: number }
-interface VenueData { id: string; name: string; slug: string; servicos: Servico[] }
+interface VenueData { id: string; name: string; slug: string; category: string; address: string | null; servicos: Servico[] }
 
 export default function AgendarPage({ params }: { params: { slug: string } }) {
   const { data: session, status } = useSession();
@@ -94,180 +95,225 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
 
   const servico = venue.servicos.find((s) => s.id === servicoId);
   const today   = new Date().toISOString().split("T")[0];
+  const steps   = ["Serviço", "Data", "Horário"];
 
-  const steps = ["Serviço", "Data", "Horário"];
+  const dateLabel = date
+    ? new Date(date + "T12:00:00").toLocaleDateString("pt-CV", { weekday: "short", day: "numeric", month: "short" })
+    : null;
 
   return (
-    <main className="max-w-[540px] mx-auto px-6 py-16">
-      {/* Header */}
-      <p className="text-xs text-muted mb-2">{venue.name}</p>
-      <h1 className="font-serif text-3xl font-bold text-ink mb-8">Novo agendamento</h1>
+    <main className="max-w-content mx-auto px-6 py-16">
+      <div className="flex gap-16 items-start">
+        {/* Wizard */}
+        <div className="flex-1 max-w-[540px]">
+          <p className="text-xs text-muted mb-2">{venue.name}</p>
+          <h1 className="font-serif text-3xl font-bold text-ink mb-8">Novo agendamento</h1>
 
-      {/* Step indicator */}
-      <div className="flex items-center gap-2 mb-10">
-        {steps.map((label, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <div className={`flex items-center gap-1.5 ${step > i + 1 ? "text-ink" : step === i + 1 ? "text-ink" : "text-muted"}`}>
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium
-                ${step > i + 1 ? "bg-ink text-white" : step === i + 1 ? "border-2 border-ink text-ink" : "border border-[#ebebeb] text-muted"}`}>
-                {step > i + 1 ? "✓" : i + 1}
-              </div>
-              <span className="text-xs hidden sm:block">{label}</span>
-            </div>
-            {i < 2 && <div className={`flex-1 h-px w-8 ${step > i + 1 ? "bg-ink" : "bg-[#ebebeb]"}`} />}
-          </div>
-        ))}
-      </div>
-
-      {/* Step 1 — Serviço */}
-      {step === 1 && (
-        <div className="space-y-3">
-          {venue.servicos.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => { setServicoId(s.id); setStep(2); }}
-              className={`w-full text-left border rounded-card p-5 transition-all duration-200
-                ${servicoId === s.id ? "border-ink" : "border-[#ebebeb] hover:border-[#bbb]"}`}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="font-serif font-bold text-ink text-[15px]">{s.name}</p>
-                  <p className="text-muted text-xs mt-1">{s.duration} min</p>
+          {/* Step indicator */}
+          <div className="flex items-center gap-2 mb-10">
+            {steps.map((label, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <div className={`flex items-center gap-1.5 ${step > i + 1 ? "text-ink" : step === i + 1 ? "text-ink" : "text-muted"}`}>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium
+                    ${step > i + 1 ? "bg-ink text-white" : step === i + 1 ? "border-2 border-ink text-ink" : "border border-[#ebebeb] text-muted"}`}>
+                    {step > i + 1 ? "✓" : i + 1}
+                  </div>
+                  <span className="text-xs hidden sm:block">{label}</span>
                 </div>
-                <p className="text-ink font-medium text-sm">{s.price.toLocaleString("pt-CV")} ECV</p>
+                {i < 2 && <div className={`flex-1 h-px w-8 ${step > i + 1 ? "bg-ink" : "bg-[#ebebeb]"}`} />}
               </div>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Step 2 — Data */}
-      {step === 2 && (
-        <div>
-          <label className="block text-xs text-muted mb-3 uppercase tracking-widest">
-            Escolha a data
-          </label>
-          <input
-            type="date" min={today} value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
-                       focus:outline-none focus:border-ink transition-colors duration-200 mb-6"
-          />
-          <div className="flex gap-3">
-            <button
-              onClick={() => setStep(1)}
-              className="flex-1 border border-[#ebebeb] rounded-pill py-3 text-sm font-light hover:border-[#bbb] transition-all duration-200"
-            >
-              Voltar
-            </button>
-            <button
-              onClick={() => date && setStep(3)}
-              disabled={!date}
-              className="flex-1 bg-ink text-white rounded-pill py-3 text-sm font-medium
-                         hover:bg-[#333] transition-all duration-200 disabled:opacity-30"
-            >
-              Próximo
-            </button>
+            ))}
           </div>
-        </div>
-      )}
 
-      {/* Step 3 — Horário */}
-      {step === 3 && (
-        <div>
-          <label className="block text-xs text-muted mb-3 uppercase tracking-widest">
-            Escolha o horário
-          </label>
-          {slots.length === 0 ? (
-            <p className="text-muted text-sm font-light mb-6">
-              Nenhum horário disponível nesta data.
-            </p>
-          ) : (
-            <div className="grid grid-cols-4 gap-2 mb-6">
-              {slots.map((slot) => (
+          {/* Step 1 — Serviço */}
+          {step === 1 && (
+            <div className="space-y-3">
+              {venue.servicos.map((s) => (
                 <button
-                  key={slot}
-                  onClick={() => setHorario(slot)}
-                  className={`border rounded-card py-2.5 text-sm transition-all duration-200
-                    ${horario === slot
-                      ? "bg-ink text-white border-ink"
-                      : "border-[#ebebeb] text-ink hover:border-[#bbb]"}`}
+                  key={s.id}
+                  onClick={() => { setServicoId(s.id); setStep(2); }}
+                  className={`w-full text-left border rounded-card p-5 transition-all duration-200
+                    ${servicoId === s.id ? "border-ink" : "border-[#ebebeb] hover:border-[#bbb]"}`}
                 >
-                  {slot}
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-serif font-bold text-ink text-[15px]">{s.name}</p>
+                      <p className="text-muted text-xs mt-1">{s.duration} min</p>
+                    </div>
+                    <p className="text-ink font-medium text-sm">{s.price.toLocaleString("pt-CV")} ECV</p>
+                  </div>
                 </button>
               ))}
             </div>
           )}
 
-          {horario && servico && (
-            <div className="border border-[#ebebeb] rounded-card p-4 mb-6 space-y-1.5">
-              <p className="text-xs text-muted uppercase tracking-widest mb-2">Resumo</p>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted font-light">Serviço</span>
-                <span className="text-ink font-medium">{servico.name}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted font-light">Data</span>
-                <span className="text-ink font-medium">
-                  {new Date(date + "T12:00:00").toLocaleDateString("pt-CV", { weekday: "short", day: "numeric", month: "short" })}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted font-light">Horário</span>
-                <span className="text-ink font-medium">{horario}</span>
-              </div>
-              <div className="divider my-2" />
-              <div className="flex justify-between text-sm">
-                <span className="text-muted font-light">Total</span>
-                <span className="text-ink font-bold">{servico.price.toLocaleString("pt-CV")} ECV</span>
+          {/* Step 2 — Data */}
+          {step === 2 && (
+            <div>
+              <label className="block text-xs text-muted mb-3 uppercase tracking-widest">
+                Escolha a data
+              </label>
+              <input
+                type="date" min={today} value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
+                           focus:outline-none focus:border-ink transition-colors duration-200 mb-6"
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setStep(1)}
+                  className="flex-1 border border-[#ebebeb] rounded-pill py-3 text-sm font-light hover:border-[#bbb] transition-all duration-200"
+                >
+                  Voltar
+                </button>
+                <button
+                  onClick={() => date && setStep(3)}
+                  disabled={!date}
+                  className="flex-1 bg-ink text-white rounded-pill py-3 text-sm font-medium
+                             hover:bg-[#333] transition-all duration-200 disabled:opacity-30"
+                >
+                  Próximo
+                </button>
               </div>
             </div>
           )}
 
-          {isGuest && horario && (
-            <div className="space-y-3 mb-6">
-              <p className="text-xs text-muted uppercase tracking-widest">Os seus dados</p>
-              <input
-                type="text"
-                placeholder="Nome completo"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
-                           focus:outline-none focus:border-ink transition-colors duration-200"
-              />
-              <input
-                type="tel"
-                placeholder="Número de telefone"
-                value={guestPhone}
-                onChange={(e) => setGuestPhone(e.target.value)}
-                className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
-                           focus:outline-none focus:border-ink transition-colors duration-200"
-              />
+          {/* Step 3 — Horário */}
+          {step === 3 && (
+            <div>
+              <label className="block text-xs text-muted mb-3 uppercase tracking-widest">
+                Escolha o horário
+              </label>
+              {slots.length === 0 ? (
+                <p className="text-muted text-sm font-light mb-6">
+                  Nenhum horário disponível nesta data.
+                </p>
+              ) : (
+                <div className="grid grid-cols-4 gap-2 mb-6">
+                  {slots.map((slot) => (
+                    <button
+                      key={slot}
+                      onClick={() => setHorario(slot)}
+                      className={`border rounded-card py-2.5 text-sm transition-all duration-200
+                        ${horario === slot
+                          ? "bg-ink text-white border-ink"
+                          : "border-[#ebebeb] text-ink hover:border-[#bbb]"}`}
+                    >
+                      {slot}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {horario && servico && (
+                <div className="border border-[#ebebeb] rounded-card p-4 mb-6 space-y-1.5">
+                  <p className="text-xs text-muted uppercase tracking-widest mb-2">Resumo</p>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted font-light">Serviço</span>
+                    <span className="text-ink font-medium">{servico.name}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted font-light">Data</span>
+                    <span className="text-ink font-medium">{dateLabel}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted font-light">Horário</span>
+                    <span className="text-ink font-medium">{horario}</span>
+                  </div>
+                  <div className="divider my-2" />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted font-light">Total</span>
+                    <span className="text-ink font-bold">{servico.price.toLocaleString("pt-CV")} ECV</span>
+                  </div>
+                </div>
+              )}
+
+              {isGuest && horario && (
+                <div className="space-y-3 mb-6">
+                  <p className="text-xs text-muted uppercase tracking-widest">Os seus dados</p>
+                  <input
+                    type="text" placeholder="Nome completo" value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
+                               focus:outline-none focus:border-ink transition-colors duration-200"
+                  />
+                  <input
+                    type="tel" placeholder="Número de telefone" value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
+                               focus:outline-none focus:border-ink transition-colors duration-200"
+                  />
+                </div>
+              )}
+
+              {bookingError && (
+                <p className="text-red-500 text-sm font-light mb-4">{bookingError}</p>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setStep(2)}
+                  className="flex-1 border border-[#ebebeb] rounded-pill py-3 text-sm font-light hover:border-[#bbb] transition-all duration-200"
+                >
+                  Voltar
+                </button>
+                <button
+                  onClick={confirmar}
+                  disabled={!horario || loading || !guestReady}
+                  className="flex-1 bg-ink text-white rounded-pill py-3 text-sm font-medium
+                             hover:bg-[#333] transition-all duration-200 disabled:opacity-30"
+                >
+                  {loading ? "A confirmar…" : isGuest ? "Finalizar agendamento" : "Confirmar agendamento"}
+                </button>
+              </div>
             </div>
           )}
+        </div>
 
-          {bookingError && (
-            <p className="text-red-500 text-sm font-light mb-4">{bookingError}</p>
-          )}
+        {/* Sidebar — desktop only */}
+        <div className="hidden lg:block w-[260px] shrink-0">
+          <div className="sticky top-8 space-y-4">
+            {/* Venue card */}
+            <div className="border border-[#ebebeb] rounded-card p-6">
+              <p className="text-[10px] text-muted uppercase tracking-widest mb-2">
+                {venue.category}
+              </p>
+              <p className="font-serif font-bold text-ink text-lg leading-snug">{venue.name}</p>
+              {venue.address && (
+                <p className="text-xs text-muted font-light mt-2 leading-relaxed">{venue.address}</p>
+              )}
+              <Link
+                href={`/estabelecimentos/${venue.slug}`}
+                className="inline-block mt-4 text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors"
+              >
+                Ver perfil
+              </Link>
+            </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={() => setStep(2)}
-              className="flex-1 border border-[#ebebeb] rounded-pill py-3 text-sm font-light hover:border-[#bbb] transition-all duration-200"
-            >
-              Voltar
-            </button>
-            <button
-              onClick={confirmar}
-              disabled={!horario || loading || !guestReady}
-              className="flex-1 bg-ink text-white rounded-pill py-3 text-sm font-medium
-                         hover:bg-[#333] transition-all duration-200 disabled:opacity-30"
-            >
-              {loading ? "A confirmar…" : isGuest ? "Finalizar agendamento" : "Confirmar agendamento"}
-            </button>
+            {/* Selected service */}
+            {servico && (
+              <div className="border border-[#ebebeb] rounded-card p-6">
+                <p className="text-[10px] text-muted uppercase tracking-widest mb-3">Serviço</p>
+                <p className="font-serif font-bold text-ink">{servico.name}</p>
+                <p className="text-sm text-muted font-light mt-1">
+                  {servico.duration} min · {servico.price.toLocaleString("pt-CV")} ECV
+                </p>
+              </div>
+            )}
+
+            {/* Selected date + time */}
+            {date && (
+              <div className="border border-[#ebebeb] rounded-card p-6">
+                <p className="text-[10px] text-muted uppercase tracking-widest mb-3">Data e horário</p>
+                <p className="text-ink font-medium text-sm">{dateLabel}</p>
+                {horario && (
+                  <p className="text-muted text-sm font-light mt-1">às {horario}</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </main>
   );
 }

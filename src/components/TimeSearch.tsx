@@ -29,7 +29,12 @@ function VenueCard({ v }: { v: VenueResult }) {
     : 0;
 
   const initials = v.name.split(" ").slice(0, 2).map((w) => w[0] ?? "").join("").toUpperCase();
-  const bg = v.category === "barbearia" ? "#141414" : v.category === "spa" ? "#0f1818" : "#180f0f";
+  const placeholderCfg: Record<string, { bg: string; accent: string }> = {
+    barbearia: { bg: "linear-gradient(160deg, #1c1814 0%, #382d22 100%)", accent: "#b8860b" },
+    salao:     { bg: "linear-gradient(160deg, #1c1622 0%, #362840 100%)", accent: "#c8a0b8" },
+    spa:       { bg: "linear-gradient(160deg, #121e1c 0%, #1e3830 100%)", accent: "#6aaa96" },
+  };
+  const { bg, accent } = placeholderCfg[v.category] ?? { bg: "linear-gradient(160deg, #1a1a1a 0%, #303030 100%)", accent: "#888" };
 
   return (
     <Link href={`/estabelecimentos/${v.slug}`} className="group block cursor-pointer">
@@ -40,11 +45,13 @@ function VenueCard({ v }: { v: VenueResult }) {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-[1.04]"
+          <div className="w-full h-full flex flex-col items-center justify-center gap-3 transition-transform duration-500 group-hover:scale-[1.04]"
             style={{ background: bg }}>
-            <span className="font-serif text-[52px] font-bold text-white opacity-[0.12] select-none tracking-widest">
+            <span className="font-serif font-bold select-none tracking-widest text-white/60 leading-none"
+              style={{ fontSize: "clamp(44px, 5vw, 68px)" }}>
               {initials}
             </span>
+            <div className="h-px w-8 rounded-full" style={{ background: accent, opacity: 0.8 }} />
           </div>
         )}
       </div>
@@ -123,8 +130,8 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
       {!open && results === null && (
         <button
           onClick={() => setOpen(true)}
-          className="w-full border border-dashed border-[#d0d0d0] rounded-card px-5 py-4 text-left
-                     text-sm text-muted hover:border-ink hover:text-ink transition-all duration-200 group"
+          className="w-full border border-[#ebebeb] bg-[#fafafa] rounded-card px-5 py-4 text-left
+                     text-sm text-muted hover:border-ink hover:text-ink hover:bg-white transition-all duration-200 group"
         >
           <span className="flex items-center gap-3">
             <svg className="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
