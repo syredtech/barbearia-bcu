@@ -57,7 +57,7 @@ export default async function EstabelecimentoPage({
         )}
       </div>
 
-      <main className="max-w-content mx-auto px-6 py-12">
+      <main className="max-w-content mx-auto px-6 py-8">
         {/* Breadcrumb */}
         <p className="text-xs text-muted mb-8">
           <Link href="/" className="hover:text-ink transition-colors">Início</Link>
@@ -66,7 +66,7 @@ export default async function EstabelecimentoPage({
         </p>
 
         {/* Header */}
-        <div className="max-w-[640px] mb-14">
+        <div className="max-w-[640px] mb-8">
           <span className="text-xs font-medium uppercase tracking-widest text-muted">
             {venue.category}
           </span>
@@ -101,7 +101,7 @@ export default async function EstabelecimentoPage({
         </div>
 
         {/* Divider */}
-        <div className="divider mb-12" />
+        <div className="divider mb-8" />
 
         {/* Services */}
         <h2 className="font-serif text-2xl font-bold text-ink mb-6">Serviços</h2>
@@ -137,7 +137,7 @@ export default async function EstabelecimentoPage({
 
         {reviews.length > 0 && (
           <>
-            <div className="divider my-12" />
+            <div className="divider my-8" />
             <h2 className="font-serif text-2xl font-bold text-ink mb-6">
               Avaliações
               <span className="ml-2 text-base font-sans font-normal text-muted">
