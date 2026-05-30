@@ -18,6 +18,12 @@ export default function Footer() {
           <a href="mailto:suporte@bcu.cv" className="hover:text-ink transition-colors duration-200">
             Suporte
           </a>
+          <Link href="/privacidade" className="hover:text-ink transition-colors duration-200">
+            Privacidade
+          </Link>
+          <Link href="/termos" className="hover:text-ink transition-colors duration-200">
+            Termos
+          </Link>
         </nav>
         <p className="text-xs text-muted">© {new Date().getFullYear()} Bela &amp; Belo</p>
       </div>
