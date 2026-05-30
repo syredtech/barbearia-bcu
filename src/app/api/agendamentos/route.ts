@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
+import { enviarWhatsAppConfirmacao } from "@/lib/whatsapp";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -99,6 +100,17 @@ export async function POST(req: NextRequest) {
       client: { select: { name: true } },
     },
   });
+
+  // WhatsApp confirmation — fire-and-forget, only for guest bookings (have phone)
+  if (agendamento.guestPhone) {
+    enviarWhatsAppConfirmacao({
+      phone: agendamento.guestPhone,
+      venueName: agendamento.venue.name,
+      date: agendamento.date,
+      horario: agendamento.horario,
+      servicoName: agendamento.servico.name,
+    }).catch(() => {});
+  }
 
   const clientLabel = agendamento.client?.name ?? agendamento.guestName ?? "Cliente";
   const [day, month, year] = [
