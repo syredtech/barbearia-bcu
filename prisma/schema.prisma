@@ -153,3 +153,8 @@ model Review {
   client        User        @relation(fields: [clientId], references: [id])
   createdAt     DateTime    @default(now())
 }
+
+model WebhookEvent {
+  id          String   @id
+  processedAt DateTime @default(now())
+}

@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
 
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
-  const closedDays: number[] = JSON.parse(venue.closedDays || "[]");
+  const closedDays: number[] = (() => { try { return JSON.parse(venue.closedDays || "[]"); } catch { return []; } })();
   const weekday = new Date(date + "T12:00:00").getDay();
   if (closedDays.includes(weekday)) {
     return NextResponse.json({ slots: [] });

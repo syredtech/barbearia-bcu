@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
 
   const available = venues.filter((v) => {
     // Check closed days
-    const closed: number[] = JSON.parse(v.closedDays || "[]");
+    const closed: number[] = (() => { try { return JSON.parse(v.closedDays || "[]"); } catch { return []; } })();
     if (closed.includes(weekday)) return false;
 
     // Check if requested time is a valid slot

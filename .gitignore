@@ -8,3 +8,10 @@ tsconfig.tsbuildinfo
 ss-*.png
 guest-*.png
 test-*.png
+*.png
+verify-*.mjs
+audit.mjs
+remove-*.mjs
+run-cleanup.mjs
+cap*.png
+sse-*.png

@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
   }
 
+  if (agendamento.status !== "completed") {
+    return NextResponse.json({ error: "Só é possível avaliar serviços concluídos." }, { status: 400 });
+  }
+
   const review = await prisma.review.create({
     data: {
       agendamentoId,

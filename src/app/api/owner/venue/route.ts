@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
+  if (session.user.role === "owner") {
+    return NextResponse.json({ error: "Já é owner." }, { status: 400 });
+  }
+
   const body = await req.json();
   const { name, slug, category, description, address, phone, latitude, longitude } = body;
 
@@ -28,7 +32,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nome e URL são obrigatórios." }, { status: 400 });
   }
 
-  const existing = await prisma.venue.findUnique({ where: { slug } });
+  const safeSlug = slug?.toLowerCase().replace(/[^a-z0-9-]/g, "").substring(0, 100);
+  if (!safeSlug || safeSlug.length < 3) {
+    return NextResponse.json({ error: "Slug inválido." }, { status: 400 });
+  }
+
+  const existing = await prisma.venue.findUnique({ where: { slug: safeSlug } });
   if (existing) {
     return NextResponse.json({ error: "Esta URL já está em uso." }, { status: 409 });
   }
@@ -47,7 +56,7 @@ export async function POST(req: NextRequest) {
 
   const venue = await prisma.venue.create({
     data: {
-      name, slug, category, description, address, phone,
+      name, slug: safeSlug, category, description, address, phone,
       latitude: latitude != null ? Number(latitude) : null,
       longitude: longitude != null ? Number(longitude) : null,
       ownerId: session.user.id,

@@ -26,6 +26,10 @@ export async function PUT(req: NextRequest) {
 
   const { imageUrl, description, address, phone } = await req.json();
 
+  if (imageUrl && !imageUrl.startsWith("https://")) {
+    return NextResponse.json({ error: "imageUrl deve começar com https://." }, { status: 400 });
+  }
+
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 

@@ -15,6 +15,24 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
   }
 
+  const timeRegex = /^\d{2}:\d{2}$/;
+  if (!timeRegex.test(scheduleStart)) {
+    return NextResponse.json({ error: "scheduleStart inválido. Use o formato HH:MM." }, { status: 400 });
+  }
+  if (!timeRegex.test(scheduleEnd)) {
+    return NextResponse.json({ error: "scheduleEnd inválido. Use o formato HH:MM." }, { status: 400 });
+  }
+  const slotNum = Number(slotDuration);
+  if (isNaN(slotNum) || slotNum < 15 || slotNum > 480) {
+    return NextResponse.json({ error: "slotDuration deve ser um número entre 15 e 480." }, { status: 400 });
+  }
+  if (breakStart && !timeRegex.test(breakStart)) {
+    return NextResponse.json({ error: "breakStart inválido. Use o formato HH:MM." }, { status: 400 });
+  }
+  if (breakEnd && !timeRegex.test(breakEnd)) {
+    return NextResponse.json({ error: "breakEnd inválido. Use o formato HH:MM." }, { status: 400 });
+  }
+
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 

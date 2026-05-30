@@ -7,7 +7,19 @@ export async function GET(
 ) {
   const venue = await prisma.venue.findUnique({
     where: { slug: params.slug },
-    include: { servicos: true },
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      description: true,
+      category: true,
+      address: true,
+      phone: true,
+      imageUrl: true,
+      latitude: true,
+      longitude: true,
+      servicos: { select: { id: true, name: true, duration: true, price: true } },
+    },
   });
 
   if (!venue) {

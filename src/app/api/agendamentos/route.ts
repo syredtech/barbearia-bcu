@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -30,17 +31,40 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!rateLimit(`agendamentos:${ip}`, 10, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
+  }
+
   const session = await getServerSession(authOptions);
 
   const { venueId, servicoId, date, horario, guestName, guestPhone } = await req.json();
 
-  if (!venueId || !servicoId || !date || !horario) {
+  if (!venueId || typeof venueId !== "string" || !venueId.trim()) {
+    return NextResponse.json({ error: "venueId inválido." }, { status: 400 });
+  }
+  if (!servicoId || typeof servicoId !== "string" || !servicoId.trim()) {
+    return NextResponse.json({ error: "servicoId inválido." }, { status: 400 });
+  }
+  if (!date || !horario) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return NextResponse.json({ error: "Formato de data inválido." }, { status: 400 });
+  }
+  if (!/^\d{2}:\d{2}$/.test(horario)) {
+    return NextResponse.json({ error: "Formato de horário inválido." }, { status: 400 });
+  }
+  if (new Date(date + "T00:00:00") < new Date(new Date().toISOString().split("T")[0] + "T00:00:00")) {
+    return NextResponse.json({ error: "A data deve ser hoje ou futura." }, { status: 400 });
   }
 
   // Guest booking requires name and phone
   if (!session && (!guestName?.trim() || !guestPhone?.trim())) {
     return NextResponse.json({ error: "Nome e telefone obrigatórios." }, { status: 400 });
+  }
+  if (!session && guestPhone && !/^[0-9+\s]{7,15}$/.test(guestPhone.trim())) {
+    return NextResponse.json({ error: "Formato de telefone inválido." }, { status: 400 });
   }
 
   const servico = await prisma.servico.findUnique({ where: { id: servicoId } });

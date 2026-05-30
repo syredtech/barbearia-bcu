@@ -9,15 +9,23 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
   const [comment, setComment] = useState("");
   const [hover, setHover]     = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState("");
 
   async function submit() {
     if (rating === 0) return;
     setLoading(true);
-    await fetch("/api/reviews", {
+    setError("");
+    const res = await fetch("/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ agendamentoId, venueId, rating, comment }),
     });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || "Erro ao enviar avaliação.");
+      setLoading(false);
+      return;
+    }
     router.refresh();
   }
 
@@ -57,6 +65,7 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
         className="w-full border border-[#ebebeb] rounded-card px-3 py-2 text-sm font-light
                    focus:outline-none focus:border-ink transition-colors resize-none"
       />
+      {error && <p className="text-xs text-red-500">{error}</p>}
       <div className="flex gap-2">
         <button
           onClick={submit}

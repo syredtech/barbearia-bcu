@@ -12,7 +12,13 @@ export async function GET(req: NextRequest) {
 
   const users = await prisma.user.findMany({
     where: role ? { role } : { role: { not: "admin" } },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
       venue: { select: { name: true, status: true, subscriptionStatus: true } },
       _count: { select: { agendamentos: true } },
     },

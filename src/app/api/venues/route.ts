@@ -10,7 +10,19 @@ export async function GET() {
       subscriptionStatus: "active",
       subscriptionExpiresAt: { gt: new Date() },
     },
-    include: { servicos: { select: { id: true, price: true } } },
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      description: true,
+      category: true,
+      address: true,
+      phone: true,
+      imageUrl: true,
+      latitude: true,
+      longitude: true,
+      servicos: { select: { id: true, price: true } },
+    },
     orderBy: { name: "asc" },
   });
   return NextResponse.json(venues);

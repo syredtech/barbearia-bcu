@@ -54,7 +54,10 @@ function LoginContent() {
       if (session?.user.role === "owner") router.push("/painel");
       else if (session?.user.role === "admin") router.push("/admin");
       else if (session?.user.role === "client") router.push("/minha-conta");
-      else router.push(callbackUrl);
+      else {
+        const safeUrl = callbackUrl?.startsWith("/") ? callbackUrl : "/";
+        router.push(safeUrl);
+      }
       router.refresh();
     }
   }

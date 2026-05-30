@@ -18,6 +18,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Webhook inválido." }, { status: 400 });
   }
 
+  // Idempotency check
+  const existing = await prisma.webhookEvent.findUnique({ where: { id: event.id } });
+  if (existing) return NextResponse.json({ received: true });
+  await prisma.webhookEvent.create({ data: { id: event.id } });
+
   const getVenueId = (obj: Stripe.Subscription | Stripe.Invoice) =>
     (obj.metadata as Record<string, string>)?.venueId ||
     (obj as any).customer_metadata?.venueId;
