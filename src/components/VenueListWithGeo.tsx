@@ -34,16 +34,26 @@ const CATEGORIES = [
   { id: "spa",        label: "Spa",       symbol: "◈" },
 ];
 
+const PLACEHOLDER_CONFIG: Record<string, { bg: string; accent: string }> = {
+  barbearia: { bg: "linear-gradient(160deg, #1c1814 0%, #382d22 100%)", accent: "#b8860b" },
+  salao:     { bg: "linear-gradient(160deg, #1c1622 0%, #362840 100%)", accent: "#c8a0b8" },
+  spa:       { bg: "linear-gradient(160deg, #121e1c 0%, #1e3830 100%)", accent: "#6aaa96" },
+};
+
 function VenueImagePlaceholder({ venue }: { venue: Venue }) {
   const initials = venue.name
     .split(" ").slice(0, 2)
     .map((w) => w[0] ?? "").join("").toUpperCase();
-  const bg = venue.category === "barbearia" ? "#141414" : venue.category === "spa" ? "#0f1818" : "#180f0f";
+  const { bg, accent } = PLACEHOLDER_CONFIG[venue.category] ?? { bg: "linear-gradient(160deg, #1a1a1a 0%, #303030 100%)", accent: "#888" };
   return (
-    <div className="w-full h-full flex items-center justify-center" style={{ background: bg }}>
-      <span className="font-serif text-[52px] font-bold text-white opacity-[0.12] select-none tracking-widest">
+    <div className="w-full h-full flex flex-col items-center justify-center gap-3" style={{ background: bg }}>
+      <span
+        className="font-serif font-bold select-none tracking-widest text-white/60"
+        style={{ fontSize: "clamp(44px, 5vw, 68px)", lineHeight: 1 }}
+      >
         {initials}
       </span>
+      <div className="h-px w-8 rounded-full" style={{ background: accent, opacity: 0.8 }} />
     </div>
   );
 }
