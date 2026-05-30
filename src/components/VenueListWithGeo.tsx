@@ -126,7 +126,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
     <div>
       {/* Category filter pills */}
       {showCategoryFilter && (
-        <div className="flex justify-evenly md:justify-start md:gap-12 border-b border-[#ebebeb] mb-8 md:overflow-x-auto pb-0">
+        <div className="flex justify-evenly md:justify-start md:gap-12 border-b border-[#ebebeb] mb-6 md:overflow-x-auto pb-0">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
@@ -146,7 +146,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
       )}
 
       {/* Geo status */}
-      <div className="h-6 mb-4 flex items-center">
+      <div className="h-6 mb-3 flex items-center">
         {geoStatus === "pending" && (
           <span className="inline-flex items-center gap-1.5 text-xs text-muted">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping" />
@@ -176,7 +176,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
           <p className="text-muted text-sm">Nenhum estabelecimento encontrado.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
           {processed.map((venue) => (
             <Link
               key={venue.id}

@@ -12,7 +12,7 @@ export default function Home() {
     <main>
       {/* Hero — warm background */}
       <div className="bg-[#f7f4f0]">
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-10 sm:pb-14 relative overflow-hidden">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8 sm:pb-10 relative overflow-hidden">
           {/* decorative watermark */}
           <span
             className="pointer-events-none select-none absolute right-0 top-[-1rem] font-serif font-bold leading-none hidden lg:block"
@@ -22,12 +22,12 @@ export default function Home() {
             &amp;
           </span>
 
-          <div className="max-w-[720px] mb-7 sm:mb-10 relative">
+          <div className="max-w-[720px] mb-5 sm:mb-7 relative">
             <h1 className="hero-title font-serif font-bold text-ink fade-up">
               Agende com<br />
               simplicidade.
             </h1>
-            <p className="mt-7 text-muted text-lg font-light max-w-[440px] fade-up-1">
+            <p className="mt-4 text-muted text-lg font-light max-w-[440px] fade-up-1">
               Os melhores profissionais de Cabo Verde, ao alcance de um toque.
             </p>
           </div>
@@ -59,7 +59,7 @@ export default function Home() {
 
       {/* Listing */}
       {!timeSearchOn && (
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 pb-16 sm:pb-24">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-6 pb-12 sm:pb-16">
           <h2 className="sr-only">Estabelecimentos</h2>
           <VenueListWithGeo searchQuery={active} showCategoryFilter />
         </section>
