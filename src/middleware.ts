@@ -39,7 +39,7 @@ export default withAuth(
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
         if (pathname.startsWith("/api/owner/") || pathname.startsWith("/api/admin/")) {
-          return !!token;
+          return true; // let middleware function return 401 instead of redirecting to login
         }
         return !!token;
       },
