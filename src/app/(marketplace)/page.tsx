@@ -12,7 +12,7 @@ export default function Home() {
     <main>
       {/* Hero — warm background */}
       <div className="bg-[#f7f4f0]">
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8 sm:pb-10 relative overflow-hidden">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative overflow-hidden">
           {/* decorative watermark */}
           <span
             className="pointer-events-none select-none absolute right-0 top-[-1rem] font-serif font-bold leading-none hidden lg:block"
@@ -59,7 +59,7 @@ export default function Home() {
 
       {/* Listing */}
       {!timeSearchOn && (
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-6 pb-12 sm:pb-16">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-4 pb-12 sm:pb-16">
           <h2 className="sr-only">Estabelecimentos</h2>
           <VenueListWithGeo searchQuery={active} showCategoryFilter />
         </section>

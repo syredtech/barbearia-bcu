@@ -125,7 +125,7 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
   });
 
   return (
-    <div className="mb-8">
+    <div className="mb-3">
       {/* Toggle button */}
       {!open && results === null && (
         <button
