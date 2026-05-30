@@ -45,9 +45,9 @@ export default async function PainelPage() {
   const statusLabel = venue.status === "approved" ? "Aprovado" : venue.status === "pending" ? "Aguardando aprovação" : "Rejeitado";
 
   return (
-    <main className="max-w-content mx-auto px-6 py-16">
+    <main className="max-w-content mx-auto px-6 py-10 sm:py-16">
       {/* Header */}
-      <div className="flex items-start justify-between mb-12">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-8 sm:mb-12">
         <div>
           <p className="text-xs text-muted uppercase tracking-widest mb-2">Painel</p>
           <h1 className="font-serif text-2xl sm:text-4xl font-bold text-ink">{venue.name}</h1>
@@ -55,7 +55,7 @@ export default async function PainelPage() {
             {statusLabel}
           </span>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap mt-5 sm:mt-0">
           {[
             { href: "/painel/perfil",       label: "Perfil",       icon: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 8a8 8 0 1 1 16 0" },
             { href: "/painel/horario",      label: "Horário",      icon: "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 5v5l3 2" },
