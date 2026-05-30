@@ -55,24 +55,24 @@ export default function ServicosPage() {
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs text-muted uppercase tracking-widest mb-2">Nome</label>
-              <input type="text" placeholder="Ex: Corte Masculino" value={form.name}
+              <label htmlFor="servico-nome" className="block text-xs text-muted uppercase tracking-widest mb-2">Nome</label>
+              <input id="servico-nome" type="text" placeholder="Ex: Corte Masculino" value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required className={inputClass} />
             </div>
             <div>
-              <label className="block text-xs text-muted uppercase tracking-widest mb-2">Descrição</label>
-              <input type="text" placeholder="Opcional" value={form.description}
+              <label htmlFor="servico-desc" className="block text-xs text-muted uppercase tracking-widest mb-2">Descrição</label>
+              <input id="servico-desc" type="text" placeholder="Opcional" value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className={inputClass} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-muted uppercase tracking-widest mb-2">Duração (min)</label>
-                <input type="number" min={15} step={15} value={form.duration}
+                <label htmlFor="servico-duracao" className="block text-xs text-muted uppercase tracking-widest mb-2">Duração (min)</label>
+                <input id="servico-duracao" type="number" min={15} step={15} value={form.duration}
                   onChange={(e) => setForm((f) => ({ ...f, duration: Number(e.target.value) }))} required className={inputClass} />
               </div>
               <div>
-                <label className="block text-xs text-muted uppercase tracking-widest mb-2">Preço (ECV)</label>
-                <input type="number" min={0} step={50} value={form.price}
+                <label htmlFor="servico-preco" className="block text-xs text-muted uppercase tracking-widest mb-2">Preço (ECV)</label>
+                <input id="servico-preco" type="number" min={0} step={50} value={form.price}
                   onChange={(e) => setForm((f) => ({ ...f, price: Number(e.target.value) }))} required className={inputClass} />
               </div>
             </div>

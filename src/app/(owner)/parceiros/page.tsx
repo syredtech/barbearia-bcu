@@ -76,17 +76,18 @@ export default function ParceirosPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className={labelClass}>Nome do estabelecimento</label>
-          <input type="text" value={form.name} onChange={(e) => handleNameChange(e.target.value)} required className={inputClass} />
+          <label htmlFor="parc-nome" className={labelClass}>Nome do estabelecimento</label>
+          <input id="parc-nome" type="text" value={form.name} onChange={(e) => handleNameChange(e.target.value)} required className={inputClass} />
         </div>
 
         <div>
-          <label className={labelClass}>URL personalizada</label>
+          <label htmlFor="parc-slug" className={labelClass}>URL personalizada</label>
           <div className="flex items-stretch border border-[#ebebeb] rounded-card overflow-hidden focus-within:border-ink transition-colors duration-200">
             <span className="bg-[#fafafa] px-4 flex items-center text-muted text-sm border-r border-[#ebebeb] shrink-0">
               bcu.cv/
             </span>
             <input
+              id="parc-slug"
               type="text" value={form.slug}
               onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
               required
@@ -112,22 +113,22 @@ export default function ParceirosPage() {
         </div>
 
         <div>
-          <label className={labelClass}>Descrição</label>
-          <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+          <label htmlFor="parc-desc" className={labelClass}>Descrição</label>
+          <textarea id="parc-desc" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             rows={3} className={inputClass + " resize-none"} />
         </div>
 
         <div>
-          <label className={labelClass}>Endereço</label>
-          <input type="text" value={form.address}
+          <label htmlFor="parc-address" className={labelClass}>Endereço</label>
+          <input id="parc-address" type="text" value={form.address}
             onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
             placeholder="Ex: Rua de Lisboa, 12 — Plateau, Praia"
             className={inputClass} />
         </div>
 
         <div>
-          <label className={labelClass}>Telefone / WhatsApp</label>
-          <input type="tel" value={form.phone}
+          <label htmlFor="parc-phone" className={labelClass}>Telefone / WhatsApp</label>
+          <input id="parc-phone" type="tel" value={form.phone}
             onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
             placeholder="+238 9XX XX XX" className={inputClass} />
         </div>

@@ -150,10 +150,11 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
           {/* Step 2 — Data */}
           {step === 2 && (
             <div>
-              <label className="block text-xs text-muted mb-3 uppercase tracking-widest">
+              <label htmlFor="agendar-date" className="block text-xs text-muted mb-3 uppercase tracking-widest">
                 Escolha a data
               </label>
               <input
+                id="agendar-date"
                 type="date" min={today} value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
@@ -232,13 +233,17 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                 <div className="space-y-3 mb-6">
                   <p className="text-xs text-muted uppercase tracking-widest">Os seus dados</p>
                   <input
-                    type="text" placeholder="Nome completo" value={guestName}
+                    type="text" placeholder="Nome completo"
+                    aria-label="Nome completo"
+                    value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
                     className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
                                focus:outline-none focus:border-ink transition-colors duration-200"
                   />
                   <input
-                    type="tel" placeholder="Número de telefone" value={guestPhone}
+                    type="tel" placeholder="Número de telefone"
+                    aria-label="Número de telefone"
+                    value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
                     className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
                                focus:outline-none focus:border-ink transition-colors duration-200"

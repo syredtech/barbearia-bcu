@@ -131,6 +131,7 @@ function LoginContent() {
             {mode === "register" && (
               <input
                 type="text" placeholder="Nome completo"
+                aria-label="Nome completo"
                 value={form.name} onChange={(e) => update("name", e.target.value)}
                 required
                 className="border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
@@ -139,6 +140,7 @@ function LoginContent() {
             )}
             <input
               type="email" placeholder="E-mail"
+              aria-label="E-mail"
               value={form.email} onChange={(e) => update("email", e.target.value)}
               required
               className="border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
@@ -146,6 +148,7 @@ function LoginContent() {
             />
             <input
               type="password" placeholder="Senha"
+              aria-label="Senha"
               value={form.password} onChange={(e) => update("password", e.target.value)}
               required
               className="border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light

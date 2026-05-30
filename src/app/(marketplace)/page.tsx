@@ -38,6 +38,7 @@ export default function Home() {
             className="flex gap-3 mb-6 fade-up-2"
           >
             <input
+              aria-label="Pesquisar estabelecimentos"
               value={draft}
               onChange={(e) => { setDraft(e.target.value); if (!e.target.value) setActive(""); }}
               placeholder="Buscar por nome, endereço, ilha…"

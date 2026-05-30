@@ -72,6 +72,7 @@ export default function FuncionariosPage() {
           </p>
           <div className="flex gap-3">
             <input
+              aria-label="Nome do funcionário"
               value={draft}
               onChange={(e) => { setDraft(e.target.value); setError(""); }}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add(); } }}

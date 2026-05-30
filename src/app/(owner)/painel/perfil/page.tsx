@@ -73,8 +73,9 @@ export default function PerfilPage() {
           <div className="border border-[#ebebeb] rounded-card p-6">
             <p className="text-xs font-medium uppercase tracking-widest text-muted mb-4">Imagem</p>
             <div>
-              <label className="text-xs text-muted block mb-1.5">URL da foto de capa</label>
+              <label htmlFor="perfil-imageUrl" className="text-xs text-muted block mb-1.5">URL da foto de capa</label>
               <input
+                id="perfil-imageUrl"
                 type="url"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
@@ -94,8 +95,9 @@ export default function PerfilPage() {
             <p className="text-xs font-medium uppercase tracking-widest text-muted mb-4">Informações</p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs text-muted block mb-1.5">Descrição</label>
+                <label htmlFor="perfil-description" className="text-xs text-muted block mb-1.5">Descrição</label>
                 <textarea
+                  id="perfil-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Descreva o seu estabelecimento…"
@@ -105,8 +107,9 @@ export default function PerfilPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-muted block mb-1.5">Morada</label>
+                <label htmlFor="perfil-address" className="text-xs text-muted block mb-1.5">Morada</label>
                 <input
+                  id="perfil-address"
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -116,8 +119,9 @@ export default function PerfilPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-muted block mb-1.5">Telefone</label>
+                <label htmlFor="perfil-phone" className="text-xs text-muted block mb-1.5">Telefone</label>
                 <input
+                  id="perfil-phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
