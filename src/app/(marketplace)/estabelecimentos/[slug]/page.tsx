@@ -2,6 +2,41 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ShareButton from "@/components/ShareButton";
+import type { Metadata } from "next";
+
+const SITE_URL = "https://barbearia-bcu.vercel.app";
+const CATEGORY_LABEL: Record<string, string> = {
+  barbearia: "Barbearia",
+  salao: "Salão de Beleza",
+  spa: "Spa",
+};
+
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
+  const venue = await prisma.venue.findUnique({
+    where: { slug: params.slug },
+    select: { name: true, description: true, category: true, address: true, imageUrl: true, slug: true },
+  });
+  if (!venue) return {};
+
+  const cat   = CATEGORY_LABEL[venue.category] ?? venue.category;
+  const title = `${venue.name} — ${cat}`;
+  const desc  = venue.description
+    ?? `${venue.name} em ${venue.address ?? "Cabo Verde"}. Agende o seu horário online.`;
+  const url   = `${SITE_URL}/estabelecimentos/${venue.slug}`;
+  const images = venue.imageUrl
+    ? [{ url: venue.imageUrl, width: 1200, height: 630, alt: venue.name }]
+    : undefined;
+
+  return {
+    title,
+    description: desc,
+    alternates: { canonical: url },
+    openGraph: { title, description: desc, url, images, type: "website" },
+    twitter: { card: "summary_large_image", title, description: desc },
+  };
+}
 
 const COVER_CONFIG: Record<string, { bg: string; accent: string }> = {
   barbearia: { bg: "linear-gradient(160deg, #1c1814 0%, #382d22 100%)", accent: "#b8860b" },
@@ -40,8 +75,42 @@ export default async function EstabelecimentoPage({
     ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
     : null;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: venue.name,
+    description: venue.description ?? undefined,
+    url: `${SITE_URL}/estabelecimentos/${venue.slug}`,
+    image: venue.imageUrl ?? undefined,
+    address: venue.address
+      ? { "@type": "PostalAddress", streetAddress: venue.address, addressCountry: "CV" }
+      : undefined,
+    telephone: venue.phone ?? undefined,
+    ...(avgRating !== null && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: avgRating.toFixed(1),
+        reviewCount: reviews.length,
+      },
+    }),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Serviços",
+      itemListElement: venue.servicos.map((s) => ({
+        "@type": "Offer",
+        name: s.name,
+        price: s.price,
+        priceCurrency: "CVE",
+      })),
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Cover hero */}
       <div className="w-full h-[220px] sm:h-[300px] overflow-hidden" style={{ background: venue.imageUrl ? undefined : bg }}>
         {venue.imageUrl ? (

@@ -7,6 +7,7 @@ import CancelButton from "@/components/CancelButton";
 import AvaliarButton from "@/components/AvaliarButton";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
 
 export default async function MinhaContaPage() {
   const session = await getServerSession(authOptions);

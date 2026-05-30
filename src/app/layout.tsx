@@ -19,9 +19,33 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+const SITE_URL = "https://barbearia-bcu.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Bela & Belo — barba, cabelo e unha · Cabo Verde",
-  description: "Agende o seu horário nas melhores barbearias e salões de Cabo Verde",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Bela & Belo — Barba, Cabelo e Unha · Cabo Verde",
+    template: "%s · Bela & Belo",
+  },
+  description:
+    "Agende o seu horário nas melhores barbearias, salões de beleza e spas de Cabo Verde. Simples, rápido e sem complicações.",
+  keywords: ["barbearia", "salão de beleza", "spa", "agendamento", "Cabo Verde", "barba", "cabelo", "unha"],
+  openGraph: {
+    type: "website",
+    locale: "pt_CV",
+    url: SITE_URL,
+    siteName: "Bela & Belo",
+    title: "Bela & Belo — Barba, Cabelo e Unha · Cabo Verde",
+    description:
+      "Agende o seu horário nas melhores barbearias, salões e spas de Cabo Verde.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bela & Belo — Barba, Cabelo e Unha · Cabo Verde",
+    description: "Agende o seu horário nas melhores barbearias, salões e spas de Cabo Verde.",
+  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: SITE_URL },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
