@@ -154,17 +154,17 @@ export default function AdminPage() {
 
   // ── Render ──────────────────────────────────────────────────
   return (
-    <main className="max-w-content mx-auto px-6 py-16">
+    <main className="max-w-content mx-auto px-6 py-10 sm:py-16">
       {/* Header */}
       <p className="text-xs text-muted uppercase tracking-widest mb-2">Admin</p>
-      <h1 className="font-serif text-4xl font-bold text-ink mb-10">Dashboard</h1>
+      <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink mb-8 sm:mb-10">Dashboard</h1>
 
       {/* Top tabs */}
-      <div className="flex gap-1 border-b border-[#ebebeb] mb-10">
+      <div className="flex gap-1 border-b border-[#ebebeb] mb-8 sm:mb-10 overflow-x-auto">
         {TOP_TABS.map((t) => (
           <button
             key={t.id} onClick={() => setTab(t.id)}
-            className={`px-5 py-3 text-sm transition-all duration-200 border-b-2 -mb-px
+            className={`shrink-0 px-5 py-3 text-sm transition-all duration-200 border-b-2 -mb-px
               ${tab === t.id
                 ? "border-ink text-ink font-medium"
                 : "border-transparent text-muted hover:text-ink"}`}
@@ -245,8 +245,8 @@ export default function AdminPage() {
           {venues.length === 0 ? (
             <EmptyState msg="Nenhum estabelecimento nesta categoria." />
           ) : (
-            <div className="border border-[#ebebeb] rounded-card overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-card border border-[#ebebeb]">
+              <table className="w-full min-w-[680px] text-sm">
                 <thead className="border-b border-[#ebebeb]">
                   <tr>
                     {["Estabelecimento", "Proprietário", "Categoria", "Assinatura", "Data", ""].map(h => (
@@ -319,8 +319,8 @@ export default function AdminPage() {
           {users.length === 0 ? (
             <EmptyState msg="Nenhum utilizador encontrado." />
           ) : (
-            <div className="border border-[#ebebeb] rounded-card overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-card border border-[#ebebeb]">
+              <table className="w-full min-w-[580px] text-sm">
                 <thead className="border-b border-[#ebebeb]">
                   <tr>
                     {userRole === "owner"
@@ -373,8 +373,8 @@ export default function AdminPage() {
           {agendamentos.length === 0 ? (
             <EmptyState msg="Nenhum agendamento encontrado." />
           ) : (
-            <div className="border border-[#ebebeb] rounded-card overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-card border border-[#ebebeb]">
+              <table className="w-full min-w-[740px] text-sm">
                 <thead className="border-b border-[#ebebeb]">
                   <tr>
                     {["Cliente", "Estabelecimento", "Serviço", "Valor", "Data", "Horário", "Estado"].map(h => (
