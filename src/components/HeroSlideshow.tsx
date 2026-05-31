@@ -1,15 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-// ─── SLIDES ────────────────────────────────────────────────────────────────
-// Placeholder: gradients escuros enquanto não há fotografias reais.
-//
-// Para substituir por fotografia real, trocar o objecto:
-//   DE:   { gradient: "..." }
-//   PARA: { src: "/hero/hero-1.jpg", alt: "Descrição da imagem" }
-//
-// Colocar os ficheiros em /public/hero/ (formato WebP, 1920×900 px)
-// ──────────────────────────────────────────────────────────────────────────
 type Slide =
   | { gradient: string; src?: undefined }
   | { src: string; alt: string; gradient?: undefined };
@@ -34,15 +25,9 @@ export default function HeroSlideshow() {
 
   return (
     <div
-      className="absolute inset-y-0 right-0 w-[46%] hidden lg:block pointer-events-none"
+      className="absolute inset-0 hidden lg:block pointer-events-none"
       aria-hidden="true"
     >
-      {/* Fade esquerdo — funde com bg-[#f7f4f0] do hero */}
-      <div
-        className="absolute inset-y-0 left-0 w-40 z-10"
-        style={{ background: "linear-gradient(to right, #f7f4f0, transparent)" }}
-      />
-
       {SLIDES.map((slide, i) => (
         <div
           key={i}
@@ -57,8 +42,17 @@ export default function HeroSlideshow() {
         />
       ))}
 
+      {/* Gradiente — funde com bg-[#f7f4f0] para legibilidade do texto */}
+      <div
+        className="absolute inset-0 z-10"
+        style={{
+          background:
+            "linear-gradient(to right, #f7f4f0 0%, #f7f4f0 25%, rgba(247,244,240,0.85) 38%, rgba(247,244,240,0.4) 54%, rgba(247,244,240,0.05) 68%, transparent 80%)",
+        }}
+      />
+
       {/* Indicadores */}
-      <div className="absolute bottom-4 right-5 flex gap-1.5 z-10">
+      <div className="absolute bottom-4 right-5 flex gap-1.5 z-20">
         {SLIDES.map((_, i) => (
           <div
             key={i}
