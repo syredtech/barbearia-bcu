@@ -15,11 +15,12 @@ type Slide =
   | { src: string; alt: string; gradient?: undefined };
 
 const SLIDES: Slide[] = [
-  { gradient: "linear-gradient(160deg, #2c1f14 0%, #5a3820 50%, #8b5e3c 100%)" },
-  { gradient: "linear-gradient(160deg, #1c1a28 0%, #2d2845 50%, #4a3e6b 100%)" },
-  { gradient: "linear-gradient(160deg, #121e1c 0%, #1e3428 50%, #2d5c40 100%)" },
-  { gradient: "linear-gradient(160deg, #1e1a14 0%, #3d3020 50%, #6b5238 100%)" },
-  { gradient: "linear-gradient(160deg, #1a1c1e 0%, #2a3038 50%, #3c4a58 100%)" },
+  { src: "/hero/hero-1.webp", alt: "Barbearia" },
+  { src: "/hero/hero-2.jpg",  alt: "Barbearia" },
+  { src: "/hero/hero-3.avif", alt: "Barbearia" },
+  { src: "/hero/hero-4.webp", alt: "Barbearia" },
+  { src: "/hero/hero-5.jpg",  alt: "Barbearia" },
+  { src: "/hero/hero-6.jpg",  alt: "Barbearia" },
 ];
 
 export default function HeroSlideshow() {
