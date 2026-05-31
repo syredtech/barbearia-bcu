@@ -2,6 +2,7 @@
 import { useState } from "react";
 import VenueListWithGeo from "@/components/VenueListWithGeo";
 import TimeSearch from "@/components/TimeSearch";
+import HeroSlideshow from "@/components/HeroSlideshow";
 
 export default function Home() {
   const [draft, setDraft]         = useState("");
@@ -11,16 +12,9 @@ export default function Home() {
   return (
     <main>
       {/* Hero — warm background */}
-      <div className="bg-[#f7f4f0]">
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative overflow-hidden">
-          {/* decorative watermark */}
-          <span
-            className="pointer-events-none select-none absolute right-0 top-[-1rem] font-serif font-bold leading-none hidden lg:block"
-            style={{ fontSize: "260px", color: "rgba(26,26,26,0.04)" }}
-            aria-hidden="true"
-          >
-            &amp;
-          </span>
+      <div className="bg-[#f7f4f0] relative overflow-hidden">
+        <HeroSlideshow />
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative">
 
           <div className="max-w-[720px] mb-5 sm:mb-7 relative">
             <h1 className="hero-title font-serif font-bold text-ink fade-up">
