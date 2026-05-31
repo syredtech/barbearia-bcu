@@ -17,7 +17,6 @@ type Slide =
 const SLIDES: Slide[] = [
   { src: "/hero/hero-1.webp", alt: "Barbearia" },
   { src: "/hero/hero-2.jpg",  alt: "Barbearia" },
-  { src: "/hero/hero-3.avif", alt: "Barbearia" },
   { src: "/hero/hero-4.webp", alt: "Barbearia" },
   { src: "/hero/hero-5.jpg",  alt: "Barbearia" },
   { src: "/hero/hero-6.jpg",  alt: "Barbearia" },
