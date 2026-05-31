@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
-import { enviarWhatsAppConfirmacao } from "@/lib/whatsapp";
+import { enviarConfirmacao } from "@/lib/mensagem";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
 
   // WhatsApp confirmation — fire-and-forget, only for guest bookings (have phone)
   if (agendamento.guestPhone) {
-    enviarWhatsAppConfirmacao({
+    enviarConfirmacao({
       phone: agendamento.guestPhone,
       venueName: agendamento.venue.name,
       date: agendamento.date,
