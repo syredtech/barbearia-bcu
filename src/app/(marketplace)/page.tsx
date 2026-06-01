@@ -17,7 +17,7 @@ export default function Home() {
         <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative z-20">
 
           <div className="max-w-[720px] mb-5 sm:mb-7 relative">
-            <h1 className="hero-title font-serif font-bold text-ink fade-up">
+            <h1 className="hero-title font-serif font-bold text-black fade-up">
               Agende com<br />
               simplicidade.
             </h1>
@@ -29,7 +29,7 @@ export default function Home() {
           {/* Search */}
           <form
             onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-            className="flex gap-3 mb-6 fade-up-2 rounded-pill backdrop-blur-sm lg:backdrop-blur-none bg-white/10 lg:bg-transparent"
+            className="flex gap-3 mb-6 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
           >
             <input
               aria-label="Pesquisar estabelecimentos"
