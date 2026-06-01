@@ -6,10 +6,10 @@ type Slide =
   | { src: string; alt: string; gradient?: undefined };
 
 const SLIDES: Slide[] = [
-  { src: "/hero/hero-1.png", alt: "Barbearia" },
-  { src: "/hero/hero-2.png", alt: "Barbearia" },
-  { src: "/hero/hero-3.png", alt: "Barbearia" },
-  { src: "/hero/hero-4.png", alt: "Barbearia" },
+  { src: "/hero/hero-1.webp", alt: "Barbearia" },
+  { src: "/hero/hero-2.webp", alt: "Barbearia" },
+  { src: "/hero/hero-3.webp", alt: "Barbearia" },
+  { src: "/hero/hero-4.webp", alt: "Barbearia" },
 ];
 
 export default function HeroSlideshow() {

@@ -51,6 +51,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt" className={`${dmSans.variable} ${playfair.variable}`}>
+      <head>
+        <link rel="preload" as="image" href="/hero/hero-1.webp" />
+      </head>
       <body className="font-sans bg-white text-ink antialiased">
         <Providers>
           <Navbar />

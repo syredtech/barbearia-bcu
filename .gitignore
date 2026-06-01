@@ -9,7 +9,6 @@ ss-*.png
 guest-*.png
 test-*.png
 *.png
-!public/hero/*.png
 verify-*.mjs
 lh-*.json
 audit.mjs
