@@ -40,27 +40,16 @@
   font-size: clamp(48px, 7.5vw, 96px);
   line-height: 1.0;
   letter-spacing: -0.03em;
-  /* mobile: elevação subtil */
   text-shadow:
-    0 -1px 0   rgba(255,255,255,0.18),
-    0  2px 4px  rgba(0,0,0,0.14),
-    0  6px 16px rgba(0,0,0,0.10),
-    0 16px 40px rgba(0,0,0,0.07);
-}
-@media (min-width: 1024px) {
-  .hero-title {
-    /* desktop: extrusão 3D — luz do canto superior esquerdo */
-    text-shadow:
-      -0.5px -0.5px 0 rgba(255,255,255,0.22),
-       1px  1px 0 rgba(0,0,0,0.22),
-       2px  2px 0 rgba(0,0,0,0.19),
-       3px  3px 0 rgba(0,0,0,0.16),
-       4px  4px 0 rgba(0,0,0,0.12),
-       5px  5px 0 rgba(0,0,0,0.09),
-       6px  6px 0 rgba(0,0,0,0.06),
-       7px  7px 0 rgba(0,0,0,0.04),
-       8px  8px 0 rgba(0,0,0,0.02);
-  }
+    -0.5px -0.5px 0 rgba(255,255,255,0.22),
+     1px  1px 0 rgba(0,0,0,0.22),
+     2px  2px 0 rgba(0,0,0,0.19),
+     3px  3px 0 rgba(0,0,0,0.16),
+     4px  4px 0 rgba(0,0,0,0.12),
+     5px  5px 0 rgba(0,0,0,0.09),
+     6px  6px 0 rgba(0,0,0,0.06),
+     7px  7px 0 rgba(0,0,0,0.04),
+     8px  8px 0 rgba(0,0,0,0.02);
 }
 
 .hero-sub {
