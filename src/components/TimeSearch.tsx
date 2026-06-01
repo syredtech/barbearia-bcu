@@ -38,7 +38,7 @@ function VenueCard({ v }: { v: VenueResult }) {
 
   return (
     <Link href={`/estabelecimentos/${v.slug}`} className="group block cursor-pointer">
-      <div className="w-full aspect-[4/3] rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
+      <div className="w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
         {v.imageUrl ? (
           <img
             src={v.imageUrl} alt={v.name}
@@ -130,8 +130,8 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
       {!open && results === null && (
         <button
           onClick={() => setOpen(true)}
-          className="w-full border border-[#ebebeb] bg-[#fafafa] rounded-card px-5 py-4 text-left
-                     text-sm text-muted hover:border-ink hover:text-ink hover:bg-white transition-all duration-200 group"
+          className="w-full border border-[#e0dbd4] bg-white/60 backdrop-blur-sm rounded-card px-5 py-4 text-left
+                     text-sm text-muted hover:border-ink hover:text-ink hover:bg-white/80 transition-all duration-200 group"
         >
           <span className="flex items-center gap-3">
             <svg className="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">

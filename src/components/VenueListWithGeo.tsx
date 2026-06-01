@@ -65,6 +65,15 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
   const [loading, setLoading]         = useState(true);
   const [activeCategory, setActiveCategory] = useState("");
 
+  function requestGeo() {
+    setGeoStatus("pending");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setGeoStatus("granted"); },
+      () => setGeoStatus("denied"),
+      { timeout: 10000 }
+    );
+  }
+
   useEffect(() => {
     fetch("/api/venues")
       .then((r) => r.json())
@@ -113,7 +122,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
           <div key={i} className="animate-pulse">
-            <div className="w-full aspect-[4/3] rounded-[12px] bg-[#f0f0f0] mb-3" />
+            <div className="w-full aspect-video rounded-[12px] bg-[#f0f0f0] mb-3" />
             <div className="h-4 bg-[#f0f0f0] rounded w-3/4 mb-2" />
             <div className="h-3 bg-[#f0f0f0] rounded w-1/2" />
           </div>
@@ -126,19 +135,18 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
     <div>
       {/* Category filter pills */}
       {showCategoryFilter && (
-        <div className="flex justify-evenly md:justify-start md:gap-12 border-b border-[#ebebeb] mb-6 md:overflow-x-auto pb-0">
+        <div className="flex gap-2 overflow-x-auto mb-6 pb-1 scrollbar-none">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`flex flex-col items-center gap-2 pb-[18px] text-[15px] font-medium
-                border-b-2 -mb-px whitespace-nowrap transition-all duration-200 ${
-                  activeCategory === cat.id
-                    ? "border-ink text-ink"
-                    : "border-transparent text-muted hover:text-ink hover:border-[#bbb]"
-                }`}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-pill text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                activeCategory === cat.id
+                  ? "bg-ink text-white"
+                  : "border border-[#e0dbd4] text-muted hover:border-ink hover:text-ink"
+              }`}
             >
-              <span className="text-[33px] leading-none">{cat.symbol}</span>
+              <span className="text-[15px] leading-none">{cat.symbol}</span>
               {cat.label}
             </button>
           ))}
@@ -162,12 +170,15 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
           </span>
         )}
         {geoStatus === "denied" && (
-          <span className="inline-flex items-center gap-1.5 text-xs text-muted/70">
+          <button
+            onClick={requestGeo}
+            className="inline-flex items-center gap-1.5 text-xs text-muted border border-[#e0dbd4] rounded-pill px-3 py-1 hover:border-ink hover:text-ink transition-all duration-200"
+          >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
             </svg>
-            Ative a localização para ordenar por proximidade
-          </span>
+            Ativar localização
+          </button>
         )}
       </div>
 
@@ -184,7 +195,7 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
               className="group block cursor-pointer"
             >
               {/* Image */}
-              <div className="w-full aspect-[4/3] rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
+              <div className="w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
                 {venue.imageUrl ? (
                   <img
                     src={venue.imageUrl}
