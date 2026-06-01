@@ -40,11 +40,8 @@ export default function HeroSlideshow() {
         />
       ))}
 
-      {/* Tint uniforme — imagem visível na totalidade, texto legível */}
-      <div
-        className="absolute inset-0 z-10"
-        style={{ background: "rgba(247, 244, 240, 0.52)" }}
-      />
+      {/* Overlay: gradiente top→bottom (mobile) / tint uniforme (desktop) */}
+      <div className="absolute inset-0 z-10 hero-tint" />
 
       {/* Indicadores */}
       <div className="absolute bottom-4 right-5 flex gap-1.5 z-20">
