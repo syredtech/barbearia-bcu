@@ -40,6 +40,11 @@
   font-size: clamp(48px, 7.5vw, 96px);
   line-height: 1.0;
   letter-spacing: -0.03em;
+  text-shadow: 0 0 28px rgba(247,244,240,1), 0 0 12px rgba(247,244,240,0.9);
+}
+
+.hero-sub {
+  text-shadow: 0 0 20px rgba(247,244,240,1), 0 0 8px rgba(247,244,240,0.8);
 }
 
 /* Staggered fade-up animations */
