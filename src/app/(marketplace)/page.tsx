@@ -14,7 +14,7 @@ export default function Home() {
       {/* Hero — warm background */}
       <div className="bg-[#f7f4f0] relative overflow-hidden">
         <HeroSlideshow />
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative z-20">
 
           <div className="max-w-[720px] mb-5 sm:mb-7 relative">
             <h1 className="hero-title font-serif font-bold text-ink fade-up">
