@@ -220,7 +220,7 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
 
       {/* Results */}
       {results !== null && (
-        <div ref={resultsRef} className="mt-6">
+        <div ref={resultsRef} className="mt-5 -mx-4 sm:-mx-6 bg-white border-t border-[#ebebeb] px-4 sm:px-6 pt-7 pb-10">
           {results.length === 0 ? (
             <div className="py-10 text-center border border-[#ebebeb] rounded-card">
               <p className="text-ink font-serif text-lg font-bold mb-1">Sem disponibilidade</p>
@@ -237,15 +237,35 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
             </div>
           ) : (
             <>
-              <p className="text-xs text-muted mb-5">
-                {results.length === total
-                  ? `${total} profissiona${total !== 1 ? "is" : "l"} disponíve${total !== 1 ? "is" : "l"}`
-                  : `${results.length} mais próximos de ${total} disponíveis`}
-                {categoryLabel ? ` · ${categoryLabel}` : ""}
-                {" "}· {time} de {dateLabel}
-                {userLoc ? " · por distância" : ""}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 h-px bg-[#ebebeb]" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-muted whitespace-nowrap">
+                  {results.length === total
+                    ? `${total} disponíve${total !== 1 ? "is" : "l"}`
+                    : `${results.length} de ${total} disponíveis`}
+                </span>
+                <div className="flex-1 h-px bg-[#ebebeb]" />
+              </div>
+
+              {/* Filter chips */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {categoryLabel && (
+                  <span className="text-xs border border-[#e0dbd4] rounded-pill px-3 py-1 text-muted">
+                    {categoryLabel}
+                  </span>
+                )}
+                <span className="text-xs border border-[#e0dbd4] rounded-pill px-3 py-1 text-muted">{time}</span>
+                <span className="text-xs border border-[#e0dbd4] rounded-pill px-3 py-1 text-muted capitalize">{dateLabel}</span>
+                {userLoc && (
+                  <span className="text-xs border border-[#e0dbd4] rounded-pill px-3 py-1 text-muted">
+                    por proximidade
+                  </span>
+                )}
+              </div>
+
+              {/* Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
                 {results.map((v) => <VenueCard key={v.id} v={v} />)}
               </div>
             </>
