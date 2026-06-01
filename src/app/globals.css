@@ -67,6 +67,14 @@
   }
 }
 
+@keyframes kenburns {
+  from { transform: scale(1.07); }
+  to   { transform: scale(1.0); }
+}
+.hero-slide-active {
+  animation: kenburns 5.5s ease-out forwards;
+}
+
 /* Overlay do hero: gradiente top→bottom em mobile, tint uniforme em desktop */
 .hero-tint {
   background: linear-gradient(

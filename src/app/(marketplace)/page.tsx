@@ -29,7 +29,7 @@ export default function Home() {
           {/* Search */}
           <form
             onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-            className="flex gap-3 mb-6 fade-up-2"
+            className="flex gap-3 mb-6 fade-up-2 rounded-pill backdrop-blur-sm lg:backdrop-blur-none bg-white/10 lg:bg-transparent"
           >
             <input
               aria-label="Pesquisar estabelecimentos"

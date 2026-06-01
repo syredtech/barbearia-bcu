@@ -30,7 +30,7 @@ export default function HeroSlideshow() {
       {SLIDES.map((slide, i) => (
         <div
           key={i}
-          className="absolute inset-0 hero-slide-bg"
+          className={`absolute inset-0 hero-slide-bg${i === current ? " hero-slide-active" : ""}`}
           style={{
             backgroundImage: slide.src ? `url(${slide.src})` : undefined,
             background: slide.src ? undefined : slide.gradient,
@@ -44,14 +44,14 @@ export default function HeroSlideshow() {
       <div className="absolute inset-0 z-10 hero-tint" />
 
       {/* Indicadores */}
-      <div className="absolute bottom-4 right-5 flex gap-1.5 z-20">
+      <div className="absolute bottom-4 right-5 flex gap-2 z-20">
         {SLIDES.map((_, i) => (
           <div
             key={i}
-            className="w-1.5 h-1.5 rounded-full transition-all duration-500"
+            className="w-2.5 h-2.5 rounded-full transition-all duration-500"
             style={{
-              background: i === current ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
-              transform: i === current ? "scale(1.3)" : "scale(1)",
+              background: i === current ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.35)",
+              transform: i === current ? "scale(1.25)" : "scale(1)",
             }}
           />
         ))}
