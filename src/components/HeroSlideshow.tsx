@@ -47,7 +47,7 @@ export default function HeroSlideshow() {
         className="absolute inset-0 z-10"
         style={{
           background:
-            "linear-gradient(to right, #f7f4f0 0%, #f7f4f0 25%, rgba(247,244,240,0.85) 38%, rgba(247,244,240,0.4) 54%, rgba(247,244,240,0.05) 68%, transparent 80%)",
+            "linear-gradient(to right, #f7f4f0 0%, #f7f4f0 42%, rgba(247,244,240,0.9) 54%, rgba(247,244,240,0.5) 64%, rgba(247,244,240,0.1) 76%, transparent 88%)",
         }}
       />
 
