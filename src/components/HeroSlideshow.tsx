@@ -42,13 +42,10 @@ export default function HeroSlideshow() {
         />
       ))}
 
-      {/* Gradiente — funde com bg-[#f7f4f0] para legibilidade do texto */}
+      {/* Tint uniforme — imagem visível na totalidade, texto legível */}
       <div
         className="absolute inset-0 z-10"
-        style={{
-          background:
-            "linear-gradient(to right, #f7f4f0 0%, #f7f4f0 42%, rgba(247,244,240,0.9) 54%, rgba(247,244,240,0.5) 64%, rgba(247,244,240,0.1) 76%, transparent 88%)",
-        }}
+        style={{ background: "rgba(247, 244, 240, 0.52)" }}
       />
 
       {/* Indicadores */}
