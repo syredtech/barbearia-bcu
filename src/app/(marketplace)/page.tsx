@@ -21,7 +21,7 @@ export default function Home() {
               Agende com<br />
               simplicidade.
             </h1>
-            <p className="mt-4 text-muted text-lg font-light max-w-[440px] fade-up-1 hero-sub">
+            <p className="mt-4 text-muted text-lg font-light max-w-[440px] fade-up-1 hero-sub hidden lg:block">
               Os melhores profissionais de Cabo Verde, ao alcance de um toque.
             </p>
           </div>
