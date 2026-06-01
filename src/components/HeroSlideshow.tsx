@@ -30,11 +30,10 @@ export default function HeroSlideshow() {
       {SLIDES.map((slide, i) => (
         <div
           key={i}
-          className="absolute inset-0"
+          className="absolute inset-0 hero-slide-bg"
           style={{
-            background: slide.src
-              ? `url(${slide.src}) center/cover no-repeat`
-              : slide.gradient,
+            backgroundImage: slide.src ? `url(${slide.src})` : undefined,
+            background: slide.src ? undefined : slide.gradient,
             opacity: i === current ? 1 : 0,
             transition: "opacity 1s ease-in-out",
           }}

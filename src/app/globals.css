@@ -47,6 +47,17 @@
   text-shadow: 0 0 20px rgba(247,244,240,1), 0 0 8px rgba(247,244,240,0.8);
 }
 
+.hero-slide-bg {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+@media (min-width: 1024px) {
+  .hero-slide-bg {
+    background-position: center center;
+  }
+}
+
 /* Staggered fade-up animations */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
