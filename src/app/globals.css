@@ -68,9 +68,9 @@
   background: linear-gradient(
     to bottom,
     #f7f4f0 0%,
-    rgba(247,244,240,0.75) 20%,
-    rgba(247,244,240,0.3) 38%,
-    transparent 52%
+    rgba(247,244,240,0.6) 10%,
+    rgba(247,244,240,0.15) 18%,
+    transparent 24%
   );
 }
 @media (min-width: 1024px) {
