@@ -24,7 +24,7 @@ export default function HeroSlideshow() {
 
   return (
     <div
-      className="absolute inset-0 hidden lg:block pointer-events-none"
+      className="absolute inset-0 pointer-events-none"
       aria-hidden="true"
     >
       {SLIDES.map((slide, i) => (
