@@ -44,7 +44,11 @@
 }
 
 .hero-sub {
-  -webkit-text-stroke: 0.5px rgba(247,244,240,0.85);
+  text-shadow:
+    -0.4px -0.4px 0 rgba(247,244,240,0.85),
+     0.4px -0.4px 0 rgba(247,244,240,0.85),
+    -0.4px  0.4px 0 rgba(247,244,240,0.85),
+     0.4px  0.4px 0 rgba(247,244,240,0.85);
 }
 
 .hero-slide-bg {
