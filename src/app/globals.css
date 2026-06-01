@@ -44,7 +44,7 @@
 }
 
 .hero-sub {
-  text-shadow: 0 0 20px rgba(247,244,240,1), 0 0 8px rgba(247,244,240,0.8);
+  -webkit-text-stroke: 0.5px rgba(247,244,240,0.85);
 }
 
 .hero-slide-bg {
