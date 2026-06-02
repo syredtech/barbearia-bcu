@@ -20,13 +20,13 @@ export default function Home() {
   return (
     <main>
       {/* Hero — full viewport height on mobile */}
-      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[540px] flex flex-col lg:block">
+      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[540px] flex flex-col">
         <HeroSlideshow />
 
-        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-24 pb-5 lg:pb-10 relative z-20 flex flex-col lg:block">
+        <section className="flex-1 w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:py-14 pb-5 relative z-20 flex flex-col lg:justify-center">
 
           {/* Title — vertically centered in available height on mobile */}
-          <div className="flex-1 lg:flex-none flex items-center lg:block mb-4 lg:mb-9">
+          <div className="flex-1 lg:flex-none flex items-center mb-4 lg:mb-9">
             <div className="max-w-[720px] w-full relative">
               <h1 className="hero-title font-serif font-bold text-black fade-up">
                 Agende com<br />
