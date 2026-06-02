@@ -58,7 +58,7 @@ export default function Home() {
           <div className="pb-3">
             <form
               onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-              className="flex gap-3 mb-3 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
+              className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
             >
               <input
                 aria-label="Pesquisar estabelecimentos"
@@ -79,7 +79,7 @@ export default function Home() {
 
             {/* Category pills — mobile only, between search and TimeSearch */}
             {!timeSearchOn && (
-              <div className="grid grid-cols-4 gap-2 mb-3 lg:hidden">
+              <div className="grid grid-cols-4 gap-2 mb-6 lg:hidden">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat.id}
@@ -103,7 +103,7 @@ export default function Home() {
 
           {/* Scroll hint — mobile only */}
           {!timeSearchOn && (
-            <div className="flex justify-center pb-4 pt-2 lg:hidden pointer-events-none">
+            <div className="flex justify-center pb-4 pt-6 lg:hidden pointer-events-none">
               <svg
                 className="w-7 h-7 animate-bounce"
                 fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" viewBox="0 0 24 24"
