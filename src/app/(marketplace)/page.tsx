@@ -40,7 +40,7 @@ export default function Home() {
               <p className="mt-4 text-muted text-xl font-light max-w-[320px] fade-up-1 hero-sub lg:hidden">
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
                 Escolha a hora e reserve já.{" "}
-                <span className="font-medium">Rápido e gratuito!</span>
+                <span className="font-medium whitespace-nowrap">Rápido e gratuito!</span>
               </p>
             </div>
           </div>
