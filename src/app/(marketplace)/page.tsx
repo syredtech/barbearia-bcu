@@ -33,10 +33,14 @@ export default function Home() {
                 simplicidade.
               </h1>
               {/* Subtítulo desktop */}
-              <p className="mt-4 text-muted text-xl font-light max-w-[440px] fade-up-1 hero-sub hidden lg:block">
+              <p className="mt-4 text-xl font-light max-w-[440px] fade-up-1 hidden lg:block"
+                style={{
+                  color: "rgba(247,244,240,0.92)",
+                  textShadow: "-0.4px -0.4px 0 rgba(0,0,0,0.65), 0.4px -0.4px 0 rgba(0,0,0,0.65), -0.4px 0.4px 0 rgba(0,0,0,0.65), 0.4px 0.4px 0 rgba(0,0,0,0.65)",
+                }}>
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
                 Escolha a hora e reserve já.{" "}
-                <span className="font-semibold whitespace-nowrap">Rápido e gratuito!</span>
+                <span className="font-semibold whitespace-nowrap" style={{ color: "rgba(255,255,255,1)" }}>Rápido e gratuito!</span>
               </p>
               {/* Subtítulo mobile */}
               <p className="mt-4 text-xl font-light max-w-[320px] fade-up-1 lg:hidden"
