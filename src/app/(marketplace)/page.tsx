@@ -33,7 +33,7 @@ export default function Home() {
                 simplicidade.
               </h1>
               {/* Subtítulo desktop */}
-              <p className="mt-4 text-xl font-serif font-bold max-w-[440px] fade-up-1 hidden lg:block"
+              <p className="mt-4 text-xl font-serif font-semibold max-w-[440px] fade-up-1 hidden lg:block"
                 style={{
                   color: "rgba(255,255,255,1)",
                   textShadow: "-0.7px -0.7px 0 rgba(0,0,0,0.9), 0.7px -0.7px 0 rgba(0,0,0,0.9), -0.7px 0.7px 0 rgba(0,0,0,0.9), 0.7px 0.7px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.45), 0 2px 18px rgba(0,0,0,0.3)",
