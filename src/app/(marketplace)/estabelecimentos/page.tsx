@@ -33,7 +33,7 @@ export default function EstabelecimentosPage() {
         </button>
       </form>
 
-      <VenueListWithGeo searchQuery={active} showCategoryFilter />
+      <VenueListWithGeo searchQuery={active} />
     </main>
   );
 }

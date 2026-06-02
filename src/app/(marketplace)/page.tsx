@@ -38,11 +38,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Search + TimeSearch */}
+          {/* Search + category pills (mobile) + TimeSearch */}
           <div className="pb-3">
             <form
               onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-              className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
+              className="flex gap-3 mb-3 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
             >
               <input
                 aria-label="Pesquisar estabelecimentos"
@@ -61,29 +61,29 @@ export default function Home() {
               </button>
             </form>
 
+            {/* Category pills — mobile only, between search and TimeSearch */}
+            {!timeSearchOn && (
+              <div className="grid grid-cols-4 gap-2 mb-3 lg:hidden">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`flex items-center justify-center gap-1 px-1 py-2 rounded-pill text-xs font-medium
+                      backdrop-blur-sm transition-all duration-200 ${
+                        activeCategory === cat.id
+                          ? "bg-ink text-white border border-ink"
+                          : "bg-white/20 border border-white/40 text-white hover:bg-white/35"
+                      }`}
+                  >
+                    <span className="text-[13px] leading-none">{cat.symbol}</span>
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <TimeSearch onActiveChange={setTimeSearchOn} />
           </div>
-
-          {/* Category pills — mobile only, over the hero image */}
-          {!timeSearchOn && (
-            <div className="grid grid-cols-4 gap-2 pb-3 lg:hidden">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`flex items-center justify-center gap-1 px-1 py-2 rounded-pill text-xs font-medium
-                    backdrop-blur-sm transition-all duration-200 ${
-                      activeCategory === cat.id
-                        ? "bg-ink text-white border border-ink"
-                        : "bg-white/20 border border-white/40 text-white hover:bg-white/35"
-                    }`}
-                >
-                  <span className="text-[13px] leading-none">{cat.symbol}</span>
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-          )}
 
           {/* Scroll hint — mobile only */}
           {!timeSearchOn && (
