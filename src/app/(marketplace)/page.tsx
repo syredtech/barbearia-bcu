@@ -34,7 +34,9 @@ export default function Home() {
               </h1>
               {/* Subtítulo desktop */}
               <p className="mt-4 text-muted text-xl font-light max-w-[440px] fade-up-1 hero-sub hidden lg:block">
-                Os melhores profissionais de Cabo Verde, ao alcance de um toque.
+                A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
+                Escolha a hora e reserve já.{" "}
+                <span className="font-semibold whitespace-nowrap">Rápido e gratuito!</span>
               </p>
               {/* Subtítulo mobile */}
               <p className="mt-4 text-xl font-light max-w-[320px] fade-up-1 lg:hidden"
