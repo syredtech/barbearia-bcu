@@ -37,7 +37,7 @@
 
 /* Hero responsive title */
 .hero-title {
-  font-size: clamp(48px, 7.5vw, 96px);
+  font-size: clamp(56px, 7.5vw, 100px);
   line-height: 1.0;
   letter-spacing: -0.03em;
   /* mobile: outline fino warm + extrusão 3D */
