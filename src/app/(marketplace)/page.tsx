@@ -26,7 +26,7 @@ export default function Home() {
         <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-24 pb-10 lg:pb-10 relative z-20 flex flex-col lg:block">
 
           {/* Title — vertically centered in available height on mobile */}
-          <div className="flex-1 lg:flex-none flex items-center lg:block lg:mb-9">
+          <div className="flex-1 lg:flex-none flex items-center lg:block mb-5 lg:mb-9">
             <div className="max-w-[720px] w-full relative">
               <h1 className="hero-title font-serif font-bold text-black fade-up">
                 Agende com<br />
@@ -42,7 +42,7 @@ export default function Home() {
                 Escolha a hora e reserve já. <span className="whitespace-nowrap">Rápido e gratuito!</span>
               </p>
               {/* Subtítulo mobile */}
-              <p className="mt-4 text-xl font-light max-w-[320px] fade-up-1 lg:hidden"
+              <p className="mt-7 text-xl font-light max-w-[320px] fade-up-1 lg:hidden"
                 style={{
                   color: "rgba(247,244,240,0.95)",
                   textShadow: "-0.7px -0.7px 0 rgba(0,0,0,0.9), 0.7px -0.7px 0 rgba(0,0,0,0.9), -0.7px 0.7px 0 rgba(0,0,0,0.9), 0.7px 0.7px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.4), 0 2px 16px rgba(0,0,0,0.25)",
@@ -58,7 +58,7 @@ export default function Home() {
           <div className="pb-3">
             <form
               onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-              className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
+              className="flex gap-3 mb-3 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
             >
               <input
                 aria-label="Pesquisar estabelecimentos"
@@ -79,7 +79,7 @@ export default function Home() {
 
             {/* Category pills — mobile only, between search and TimeSearch */}
             {!timeSearchOn && (
-              <div className="grid grid-cols-4 gap-2 mb-6 lg:hidden">
+              <div className="grid grid-cols-4 gap-2 mb-3 lg:hidden">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat.id}
@@ -103,7 +103,7 @@ export default function Home() {
 
           {/* Scroll hint — mobile only */}
           {!timeSearchOn && (
-            <div className="flex justify-center pb-4 pt-6 lg:hidden pointer-events-none">
+            <div className="flex justify-center pb-4 pt-2 lg:hidden pointer-events-none">
               <svg
                 className="w-7 h-7 animate-bounce"
                 fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" viewBox="0 0 24 24"
