@@ -26,7 +26,7 @@ export default function Home() {
         <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-24 pb-5 lg:pb-10 relative z-20 flex flex-col lg:block">
 
           {/* Title — vertically centered in available height on mobile */}
-          <div className="flex-1 lg:flex-none flex items-center lg:block mb-7 lg:mb-9">
+          <div className="flex-1 lg:flex-none flex items-center lg:block mb-4 lg:mb-9">
             <div className="max-w-[720px] w-full relative">
               <h1 className="hero-title font-serif font-bold text-black fade-up">
                 Agende com<br />
