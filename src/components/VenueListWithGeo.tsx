@@ -24,15 +24,8 @@ type GeoStatus = "pending" | "granted" | "denied";
 interface Props {
   limit?: number;
   searchQuery?: string;
-  showCategoryFilter?: boolean;
+  activeCategory?: string;
 }
-
-const CATEGORIES = [
-  { id: "",           label: "Todos",     symbol: "✦" },
-  { id: "barbearia",  label: "Barbearia", symbol: "✂" },
-  { id: "salao",      label: "Salão",     symbol: "✿" },
-  { id: "spa",        label: "Spa",       symbol: "◈" },
-];
 
 const PLACEHOLDER_CONFIG: Record<string, { bg: string; accent: string }> = {
   barbearia: { bg: "linear-gradient(160deg, #1c1814 0%, #382d22 100%)", accent: "#b8860b" },
@@ -58,12 +51,11 @@ function VenueImagePlaceholder({ venue }: { venue: Venue }) {
   );
 }
 
-export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilter }: Props) {
-  const [venues, setVenues]           = useState<Venue[]>([]);
+export default function VenueListWithGeo({ limit, searchQuery, activeCategory = "" }: Props) {
+  const [venues, setVenues]             = useState<Venue[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [geoStatus, setGeoStatus]     = useState<GeoStatus>("pending");
-  const [loading, setLoading]         = useState(true);
-  const [activeCategory, setActiveCategory] = useState("");
+  const [geoStatus, setGeoStatus]       = useState<GeoStatus>("pending");
+  const [loading, setLoading]           = useState(true);
 
   function requestGeo() {
     setGeoStatus("pending");
@@ -133,26 +125,6 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
 
   return (
     <div>
-      {/* Category filter pills */}
-      {showCategoryFilter && (
-        <div className="grid grid-cols-4 gap-2 mb-6">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`flex items-center justify-center gap-1 px-1 py-2 rounded-pill text-xs font-medium transition-all duration-200 ${
-                activeCategory === cat.id
-                  ? "bg-ink text-white"
-                  : "border border-[#e0dbd4] text-muted hover:border-ink hover:text-ink"
-              }`}
-            >
-              <span className="text-[13px] leading-none">{cat.symbol}</span>
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Geo status */}
       <div className="h-6 mb-3 flex items-center">
         {geoStatus === "pending" && (
@@ -194,7 +166,6 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
               href={`/estabelecimentos/${venue.slug}`}
               className="group block cursor-pointer"
             >
-              {/* Image */}
               <div className="w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
                 {venue.imageUrl ? (
                   <img
@@ -209,7 +180,6 @@ export default function VenueListWithGeo({ limit, searchQuery, showCategoryFilte
                 )}
               </div>
 
-              {/* Info */}
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-serif font-bold text-ink text-[15px] leading-snug">
