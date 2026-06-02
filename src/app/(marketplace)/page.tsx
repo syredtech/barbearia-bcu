@@ -43,8 +43,8 @@ export default function Home() {
                   textShadow: "-0.4px -0.4px 0 rgba(0,0,0,0.65), 0.4px -0.4px 0 rgba(0,0,0,0.65), -0.4px 0.4px 0 rgba(0,0,0,0.65), 0.4px 0.4px 0 rgba(0,0,0,0.65)",
                 }}>
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
-                Escolha a hora e reserve já.{" "}
-                <span className="font-medium whitespace-nowrap">Rápido e gratuito!</span>
+                Escolha a hora e reserve já.<br />
+                <span className="font-semibold whitespace-nowrap" style={{ color: "rgba(255,255,255,1)" }}>Rápido e gratuito!</span>
               </p>
             </div>
           </div>
@@ -98,10 +98,10 @@ export default function Home() {
 
           {/* Scroll hint — mobile only */}
           {!timeSearchOn && (
-            <div className="flex justify-center pb-5 pt-1 lg:hidden pointer-events-none">
+            <div className="flex justify-center pb-4 pt-2 lg:hidden pointer-events-none">
               <svg
-                className="w-5 h-5 animate-bounce"
-                fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" viewBox="0 0 24 24"
+                className="w-7 h-7 animate-bounce"
+                fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
