@@ -20,10 +20,10 @@ export default function Home() {
   return (
     <main>
       {/* Hero — full viewport height on mobile */}
-      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-0 flex flex-col lg:block">
+      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[540px] flex flex-col lg:block">
         <HeroSlideshow />
 
-        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10 lg:pb-0 relative z-20 flex flex-col lg:block">
+        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-24 pb-10 lg:pb-10 relative z-20 flex flex-col lg:block">
 
           {/* Title — vertically centered in available height on mobile */}
           <div className="flex-1 lg:flex-none flex items-center lg:block lg:mb-9">
@@ -36,7 +36,7 @@ export default function Home() {
               <p className="mt-4 text-xl font-semibold max-w-[440px] fade-up-1 hidden lg:block"
                 style={{
                   color: "rgba(255,255,255,1)",
-                  textShadow: "-0.4px -0.4px 0 rgba(0,0,0,0.65), 0.4px -0.4px 0 rgba(0,0,0,0.65), -0.4px 0.4px 0 rgba(0,0,0,0.65), 0.4px 0.4px 0 rgba(0,0,0,0.65)",
+                  textShadow: "-0.7px -0.7px 0 rgba(0,0,0,0.9), 0.7px -0.7px 0 rgba(0,0,0,0.9), -0.7px 0.7px 0 rgba(0,0,0,0.9), 0.7px 0.7px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.45), 0 2px 18px rgba(0,0,0,0.3)",
                 }}>
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.<br />
                 Escolha a hora e reserve já. <span className="whitespace-nowrap">Rápido e gratuito!</span>
@@ -44,8 +44,8 @@ export default function Home() {
               {/* Subtítulo mobile */}
               <p className="mt-4 text-xl font-light max-w-[320px] fade-up-1 lg:hidden"
                 style={{
-                  color: "rgba(247,244,240,0.92)",
-                  textShadow: "-0.4px -0.4px 0 rgba(0,0,0,0.65), 0.4px -0.4px 0 rgba(0,0,0,0.65), -0.4px 0.4px 0 rgba(0,0,0,0.65), 0.4px 0.4px 0 rgba(0,0,0,0.65)",
+                  color: "rgba(247,244,240,0.95)",
+                  textShadow: "-0.7px -0.7px 0 rgba(0,0,0,0.9), 0.7px -0.7px 0 rgba(0,0,0,0.9), -0.7px 0.7px 0 rgba(0,0,0,0.9), 0.7px 0.7px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.4), 0 2px 16px rgba(0,0,0,0.25)",
                 }}>
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
                 Escolha a hora e reserve já.<br />
