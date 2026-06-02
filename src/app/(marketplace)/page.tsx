@@ -23,7 +23,7 @@ export default function Home() {
       <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[540px] flex flex-col lg:block">
         <HeroSlideshow />
 
-        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-24 pb-2 lg:pb-10 relative z-20 flex flex-col lg:block">
+        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-24 pb-8 lg:pb-10 relative z-20 flex flex-col lg:block">
 
           {/* Title — vertically centered in available height on mobile */}
           <div className="flex-1 lg:flex-none flex items-center lg:block mb-8 lg:mb-9">
@@ -101,19 +101,19 @@ export default function Home() {
             <TimeSearch onActiveChange={setTimeSearchOn} />
           </div>
 
-          {/* Scroll hint — mobile only */}
-          {!timeSearchOn && (
-            <div className="flex justify-center pb-2 pt-3 lg:hidden pointer-events-none">
-              <svg
-                className="w-7 h-7 animate-bounce"
-                fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          )}
-
         </section>
+
+        {/* Scroll hint — mobile only, absolutely positioned so it's always visible */}
+        {!timeSearchOn && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 lg:hidden pointer-events-none">
+            <svg
+              className="w-7 h-7 animate-bounce"
+              fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {/* Gradient transition warm → white */}
