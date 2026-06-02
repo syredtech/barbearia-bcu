@@ -14,9 +14,9 @@ export default function Home() {
       {/* Hero — warm background */}
       <div className="bg-[#f7f4f0] relative overflow-hidden">
         <HeroSlideshow />
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-7 relative z-20">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-8 sm:pb-10 relative z-20">
 
-          <div className="max-w-[720px] mb-5 sm:mb-7 relative">
+          <div className="max-w-[720px] mb-7 sm:mb-9 relative">
             <h1 className="hero-title font-serif font-bold text-black fade-up">
               Agende com<br />
               simplicidade.
@@ -52,9 +52,12 @@ export default function Home() {
         </section>
       </div>
 
+      {/* Gradient transition warm → white */}
+      {!timeSearchOn && <div className="h-8 bg-gradient-to-b from-[#f7f4f0] to-white" />}
+
       {/* Listing */}
       {!timeSearchOn && (
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-4 pb-12 sm:pb-16">
+        <section className="max-w-content mx-auto px-4 sm:px-6 pt-2 pb-12 sm:pb-16">
           <h2 className="sr-only">Estabelecimentos</h2>
           <VenueListWithGeo searchQuery={active} showCategoryFilter />
         </section>

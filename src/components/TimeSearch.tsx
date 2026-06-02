@@ -130,14 +130,17 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
       {!open && results === null && (
         <button
           onClick={() => setOpen(true)}
-          className="w-full border border-[#e0dbd4] bg-white/60 backdrop-blur-sm rounded-card px-5 py-4 text-left
-                     text-sm text-muted hover:border-ink hover:text-ink hover:bg-white/80 transition-all duration-200 group"
+          className="w-full bg-[#1a1a1a]/80 backdrop-blur-sm text-white rounded-card px-5 py-3.5
+                     text-sm font-light border border-white/10 hover:bg-[#1a1a1a]/95
+                     transition-all duration-200 group"
         >
           <span className="flex items-center gap-3">
-            <svg className="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg className="w-4 h-4 shrink-0 opacity-60 group-hover:opacity-90 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
-            <span>Diga o seu horário — encontramos o profissional disponível</span>
+            <span className="text-white/80 group-hover:text-white transition-colors">
+              Diga o seu horário — encontramos o profissional disponível
+            </span>
           </span>
         </button>
       )}
