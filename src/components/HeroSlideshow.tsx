@@ -44,7 +44,7 @@ export default function HeroSlideshow() {
       <div className="absolute inset-0 z-10 hero-tint" />
 
       {/* Indicadores */}
-      <div className="absolute bottom-[230px] lg:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
         {SLIDES.map((_, i) => (
           <div
             key={i}

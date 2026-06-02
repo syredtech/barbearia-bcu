@@ -23,7 +23,7 @@ export default function Home() {
       <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-0 flex flex-col lg:block">
         <HeroSlideshow />
 
-        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 relative z-20 flex flex-col lg:block">
+        <section className="flex-1 lg:flex-none w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10 lg:pb-0 relative z-20 flex flex-col lg:block">
 
           {/* Title — vertically centered in available height on mobile */}
           <div className="flex-1 lg:flex-none flex items-center lg:block lg:mb-9">
