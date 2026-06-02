@@ -37,10 +37,10 @@ export default function Home() {
                 Os melhores profissionais de Cabo Verde, ao alcance de um toque.
               </p>
               {/* Subtítulo mobile */}
-              <p className="mt-3 text-[15px] font-serif font-normal leading-snug max-w-[320px] fade-up-1 lg:hidden hero-sub">
+              <p className="mt-4 text-muted text-lg font-light max-w-[320px] fade-up-1 hero-sub lg:hidden">
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
                 Escolha a hora e reserve já.{" "}
-                <span className="font-semibold">Rápido e gratuito!</span>
+                <span className="font-medium">Rápido e gratuito!</span>
               </p>
             </div>
           </div>
