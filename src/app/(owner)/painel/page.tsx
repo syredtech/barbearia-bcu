@@ -16,7 +16,7 @@ export default async function PainelPage() {
     include: {
       servicos: true,
       agendamentos: {
-        include: { client: true, servico: true },
+        include: { client: { select: { name: true } }, servico: true },
         orderBy: [{ date: "desc" }, { horario: "asc" }],
         take: 10,
       },

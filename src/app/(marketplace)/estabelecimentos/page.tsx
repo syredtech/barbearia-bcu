@@ -2,9 +2,20 @@
 import { useState } from "react";
 import VenueListWithGeo from "@/components/VenueListWithGeo";
 
+const CATEGORIES = [
+  { id: "barbearia", label: "Barbearia",                  symbol: "✂" },
+  { id: "salao",     label: "Cabeleireiro & Penteados",   symbol: "✿" },
+  { id: "spa",       label: "Unhas & Maquilhagem",        symbol: "◈" },
+];
+
 export default function EstabelecimentosPage() {
-  const [draft, setDraft]   = useState("");
-  const [active, setActive] = useState("");
+  const [draft, setDraft]           = useState("");
+  const [active, setActive]         = useState("");
+  const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
+
+  function toggleCategory(id: string) {
+    setActiveCategory((prev) => (prev === id ? undefined : id));
+  }
 
   return (
     <main className="max-w-content mx-auto px-6 py-16">
@@ -15,7 +26,7 @@ export default function EstabelecimentosPage() {
       {/* Search bar */}
       <form
         onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-        className="flex gap-3 mb-10"
+        className="flex gap-3 mb-6"
       >
         <input
           value={draft}
@@ -33,7 +44,25 @@ export default function EstabelecimentosPage() {
         </button>
       </form>
 
-      <VenueListWithGeo searchQuery={active} />
+      {/* Category pills */}
+      <div className="flex flex-wrap gap-2 mb-10">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => toggleCategory(cat.id)}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-pill text-sm font-medium border transition-all duration-200 ${
+              activeCategory === cat.id
+                ? "bg-ink text-white border-ink"
+                : "border-[#ebebeb] text-muted hover:border-ink hover:text-ink"
+            }`}
+          >
+            <span>{cat.symbol}</span>
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      <VenueListWithGeo searchQuery={active} activeCategory={activeCategory} />
     </main>
   );
 }

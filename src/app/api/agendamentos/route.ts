@@ -59,6 +59,9 @@ export async function POST(req: NextRequest) {
   if (new Date(date + "T00:00:00") < new Date(new Date().toISOString().split("T")[0] + "T00:00:00")) {
     return NextResponse.json({ error: "A data deve ser hoje ou futura." }, { status: 400 });
   }
+  if (new Date(`${date}T${horario}:00`) <= new Date()) {
+    return NextResponse.json({ error: "Este horário já passou." }, { status: 400 });
+  }
 
   // Guest booking requires name and phone
   if (!session && (!guestName?.trim() || !guestPhone?.trim())) {

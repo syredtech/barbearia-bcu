@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { formatDistance } from "@/lib/geo";
 
 const HALF_HOURS = Array.from({ length: 48 }, (_, i) => {
@@ -38,11 +39,12 @@ function VenueCard({ v }: { v: VenueResult }) {
 
   return (
     <Link href={`/estabelecimentos/${v.slug}`} className="group block cursor-pointer">
-      <div className="w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
+      <div className="relative w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
         {v.imageUrl ? (
-          <img
-            src={v.imageUrl} alt={v.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          <Image
+            src={v.imageUrl} alt={v.name} fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-3 transition-transform duration-500 group-hover:scale-[1.04]"
@@ -165,7 +167,7 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
                 <span className="ml-1.5 text-[#ff7070]">· obrigatório</span>
               )}
             </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
