@@ -17,7 +17,7 @@ export async function GET() {
 
     const agendamentos = await prisma.agendamento.findMany({
       where: { venueId: venue.id },
-      include: { client: true, servico: true },
+      include: { client: { select: { name: true, email: true } }, servico: true },
       orderBy: [{ date: "desc" }, { horario: "asc" }],
     });
     return NextResponse.json(agendamentos);

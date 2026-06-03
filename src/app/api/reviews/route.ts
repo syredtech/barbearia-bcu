@@ -33,8 +33,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
   }
 
-  if (agendamento.status !== "completed") {
-    return NextResponse.json({ error: "Só é possível avaliar serviços concluídos." }, { status: 400 });
+  if (agendamento.status === "cancelled") {
+    return NextResponse.json({ error: "Não é possível avaliar um agendamento cancelado." }, { status: 400 });
+  }
+
+  const apptTime = new Date(`${agendamento.date}T${agendamento.horario}:00`);
+  if (apptTime > new Date()) {
+    return NextResponse.json({ error: "Só é possível avaliar após a data do serviço." }, { status: 400 });
+  }
+
+  const existingReview = await prisma.review.findUnique({ where: { agendamentoId } });
+  if (existingReview) {
+    return NextResponse.json({ error: "Já avaliou este serviço." }, { status: 409 });
   }
 
   const review = await prisma.review.create({

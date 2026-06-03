@@ -37,9 +37,23 @@ export async function POST(req: NextRequest) {
   if (!name || !duration || price === undefined) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
   }
+  if (typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
+    return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
+  }
+  if (description && description.length > 300) {
+    return NextResponse.json({ error: "Descrição inválida (máx. 300 caracteres)." }, { status: 400 });
+  }
+  const durNum = Number(duration);
+  const priceNum = Number(price);
+  if (isNaN(durNum) || durNum < 5 || durNum > 480) {
+    return NextResponse.json({ error: "Duração inválida (5–480 min)." }, { status: 400 });
+  }
+  if (isNaN(priceNum) || priceNum < 0 || priceNum > 1000000) {
+    return NextResponse.json({ error: "Preço inválido." }, { status: 400 });
+  }
 
   const servico = await prisma.servico.create({
-    data: { name, description, duration: Number(duration), price: Number(price), venueId: venue.id },
+    data: { name: name.trim(), description: description?.trim() || null, duration: durNum, price: priceNum, venueId: venue.id },
   });
 
   return NextResponse.json(servico, { status: 201 });

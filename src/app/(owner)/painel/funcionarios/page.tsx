@@ -62,7 +62,7 @@ export default function FuncionariosPage() {
         </h1>
         <p className="text-muted text-sm font-light mb-8">
           Cada funcionário permite um agendamento simultâneo adicional.
-          {" "}Capacidade actual: <strong className="text-ink">{capacity}</strong> cliente{capacity !== 1 ? "s" : ""} em simultâneo.
+          {" "}Capacidade atual: <strong className="text-ink">{capacity}</strong> cliente{capacity !== 1 ? "s" : ""} em simultâneo.
         </p>
 
         {/* Add form */}

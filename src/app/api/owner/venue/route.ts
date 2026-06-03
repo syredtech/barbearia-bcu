@@ -32,6 +32,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nome e URL são obrigatórios." }, { status: 400 });
   }
 
+  if (typeof name !== "string" || name.trim().length > 100) {
+    return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
+  }
+  if (description && (typeof description !== "string" || description.length > 500)) {
+    return NextResponse.json({ error: "Descrição inválida (máx. 500 caracteres)." }, { status: 400 });
+  }
+  if (address && (typeof address !== "string" || address.length > 200)) {
+    return NextResponse.json({ error: "Endereço inválido (máx. 200 caracteres)." }, { status: 400 });
+  }
+  if (phone && (typeof phone !== "string" || phone.length > 30)) {
+    return NextResponse.json({ error: "Telefone inválido (máx. 30 caracteres)." }, { status: 400 });
+  }
+
   const safeSlug = slug?.toLowerCase().replace(/[^a-z0-9-]/g, "").substring(0, 100);
   if (!safeSlug || safeSlug.length < 3) {
     return NextResponse.json({ error: "Slug inválido." }, { status: 400 });
@@ -57,8 +70,8 @@ export async function POST(req: NextRequest) {
   const venue = await prisma.venue.create({
     data: {
       name, slug: safeSlug, category, description, address, phone,
-      latitude: latitude != null ? Number(latitude) : null,
-      longitude: longitude != null ? Number(longitude) : null,
+      latitude: latitude != null && !isNaN(Number(latitude)) ? Number(latitude) : null,
+      longitude: longitude != null && !isNaN(Number(longitude)) ? Number(longitude) : null,
       ownerId: session.user.id,
     },
   });

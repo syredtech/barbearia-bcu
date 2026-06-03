@@ -29,6 +29,18 @@ export async function PUT(req: NextRequest) {
   if (imageUrl && !imageUrl.startsWith("https://")) {
     return NextResponse.json({ error: "imageUrl deve começar com https://." }, { status: 400 });
   }
+  if (imageUrl && imageUrl.length > 500) {
+    return NextResponse.json({ error: "URL de imagem inválida (máx. 500 caracteres)." }, { status: 400 });
+  }
+  if (description && description.length > 500) {
+    return NextResponse.json({ error: "Descrição inválida (máx. 500 caracteres)." }, { status: 400 });
+  }
+  if (address && address.length > 200) {
+    return NextResponse.json({ error: "Endereço inválido (máx. 200 caracteres)." }, { status: 400 });
+  }
+  if (phone && phone.length > 30) {
+    return NextResponse.json({ error: "Telefone inválido (máx. 30 caracteres)." }, { status: 400 });
+  }
 
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });

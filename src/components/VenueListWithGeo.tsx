@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { haversine, formatDistance } from "@/lib/geo";
 
 interface Servico { id: string; price: number }
@@ -166,12 +167,14 @@ export default function VenueListWithGeo({ limit, searchQuery, activeCategory = 
               href={`/estabelecimentos/${venue.slug}`}
               className="group block cursor-pointer"
             >
-              <div className="w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
+              <div className="relative w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
                 {venue.imageUrl ? (
-                  <img
+                  <Image
                     src={venue.imageUrl}
                     alt={venue.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                 ) : (
                   <div className="w-full h-full transition-transform duration-500 group-hover:scale-[1.04]">

@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import ShareButton from "@/components/ShareButton";
 import type { Metadata } from "next";
 
-const SITE_URL = "https://barbearia-bcu.vercel.app";
+const SITE_URL = (process.env.NEXTAUTH_URL ?? "https://barbearia-bcu.vercel.app").replace(/\/$/, "");
 const CATEGORY_LABEL: Record<string, string> = {
   barbearia: "Barbearia",
   salao: "Cabeleireiro & Penteados",
@@ -112,9 +113,9 @@ export default async function EstabelecimentoPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Cover hero */}
-      <div className="w-full h-[220px] sm:h-[300px] overflow-hidden" style={{ background: venue.imageUrl ? undefined : bg }}>
+      <div className="relative w-full h-[220px] sm:h-[300px] overflow-hidden" style={{ background: venue.imageUrl ? undefined : bg }}>
         {venue.imageUrl ? (
-          <img src={venue.imageUrl} alt={venue.name} className="w-full h-full object-cover" />
+          <Image src={venue.imageUrl} alt={venue.name} fill className="object-cover" sizes="100vw" />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-3">
             <span className="font-serif font-bold select-none tracking-widest text-white/60 leading-none"

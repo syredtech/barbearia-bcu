@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function PerfilPage() {
   const router = useRouter();
@@ -84,8 +85,8 @@ export default function PerfilPage() {
                            focus:outline-none focus:border-ink transition-colors"
               />
               {imageUrl && (
-                <div className="mt-3 w-full aspect-[4/3] rounded-[8px] overflow-hidden bg-[#f5f5f5]">
-                  <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <div className="mt-3 relative w-full aspect-[4/3] rounded-[8px] overflow-hidden bg-[#f5f5f5]">
+                  <Image src={imageUrl} alt="Preview" fill className="object-cover" sizes="560px" />
                 </div>
               )}
             </div>

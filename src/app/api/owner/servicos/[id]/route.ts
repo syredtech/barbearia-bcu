@@ -25,9 +25,25 @@ export async function PUT(
   if (!servico) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
   const { name, description, duration, price } = await req.json();
+
+  if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
+    return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
+  }
+  if (description && description.length > 300) {
+    return NextResponse.json({ error: "Descrição inválida (máx. 300 caracteres)." }, { status: 400 });
+  }
+  const durNum = Number(duration);
+  const priceNum = Number(price);
+  if (isNaN(durNum) || durNum < 5 || durNum > 480) {
+    return NextResponse.json({ error: "Duração inválida (5–480 min)." }, { status: 400 });
+  }
+  if (isNaN(priceNum) || priceNum < 0 || priceNum > 1000000) {
+    return NextResponse.json({ error: "Preço inválido." }, { status: 400 });
+  }
+
   const updated = await prisma.servico.update({
     where: { id: params.id },
-    data: { name, description, duration: Number(duration), price: Number(price) },
+    data: { name: name.trim(), description: description?.trim() || null, duration: durNum, price: priceNum },
   });
 
   return NextResponse.json(updated);
