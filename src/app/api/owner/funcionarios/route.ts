@@ -27,6 +27,12 @@ export async function POST(req: NextRequest) {
   }
   const { name } = await req.json();
   if (!name?.trim()) return NextResponse.json({ error: "Nome obrigatório." }, { status: 400 });
+  if (typeof name !== "string" || name.trim().length > 100) {
+    return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
+  }
+  if (/[<>]/.test(name)) {
+    return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
+  }
 
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });

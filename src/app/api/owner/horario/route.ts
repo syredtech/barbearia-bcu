@@ -84,6 +84,11 @@ export async function PUT(req: NextRequest) {
       break2End: break2End || null,
       closedDays: JSON.stringify(closedDays || []),
     },
+    select: {
+      scheduleStart: true, scheduleEnd: true, slotDuration: true,
+      breakStart: true, breakEnd: true, break2Start: true, break2End: true,
+      closedDays: true,
+    },
   });
 
   return NextResponse.json({ ok: true, venue: updated });

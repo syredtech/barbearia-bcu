@@ -44,14 +44,26 @@ export async function POST(req: NextRequest) {
   if (typeof name !== "string" || name.trim().length > 100) {
     return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
   }
+  if (/[<>]/.test(name)) {
+    return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
+  }
   if (description && (typeof description !== "string" || description.length > 500)) {
     return NextResponse.json({ error: "Descrição inválida (máx. 500 caracteres)." }, { status: 400 });
+  }
+  if (description && /[<>]/.test(description)) {
+    return NextResponse.json({ error: "Descrição contém caracteres inválidos." }, { status: 400 });
   }
   if (address && (typeof address !== "string" || address.length > 200)) {
     return NextResponse.json({ error: "Endereço inválido (máx. 200 caracteres)." }, { status: 400 });
   }
+  if (address && /[<>]/.test(address)) {
+    return NextResponse.json({ error: "Endereço contém caracteres inválidos." }, { status: 400 });
+  }
   if (phone && (typeof phone !== "string" || phone.length > 30)) {
     return NextResponse.json({ error: "Telefone inválido (máx. 30 caracteres)." }, { status: 400 });
+  }
+  if (phone && /[<>]/.test(phone)) {
+    return NextResponse.json({ error: "Telefone contém caracteres inválidos." }, { status: 400 });
   }
 
   const safeSlug = slug?.toLowerCase().replace(/[^a-z0-9-]/g, "").substring(0, 100);
@@ -82,6 +94,11 @@ export async function POST(req: NextRequest) {
       latitude: latitude != null && !isNaN(Number(latitude)) ? Number(latitude) : null,
       longitude: longitude != null && !isNaN(Number(longitude)) ? Number(longitude) : null,
       ownerId: session.user.id,
+    },
+    select: {
+      id: true, slug: true, name: true, description: true,
+      category: true, address: true, phone: true, imageUrl: true,
+      latitude: true, longitude: true, status: true, createdAt: true,
     },
   });
 

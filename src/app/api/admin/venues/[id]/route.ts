@@ -21,6 +21,7 @@ export async function PATCH(
     const venue = await prisma.venue.update({
       where: { id: params.id },
       data: { status },
+      select: { id: true, name: true, status: true, updatedAt: true },
     });
     return NextResponse.json(venue);
   } catch {

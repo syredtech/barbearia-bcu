@@ -32,6 +32,12 @@ export async function POST(req: NextRequest) {
   if (!agendamentoId || !venueId || !rating || rating < 1 || rating > 5) {
     return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
   }
+  if (comment && (typeof comment !== "string" || comment.length > 500)) {
+    return NextResponse.json({ error: "Comentário inválido (máx. 500 caracteres)." }, { status: 400 });
+  }
+  if (comment && /[<>]/.test(comment)) {
+    return NextResponse.json({ error: "Comentário contém caracteres inválidos." }, { status: 400 });
+  }
 
   // Verify the appointment belongs to this client
   const agendamento = await prisma.agendamento.findUnique({ where: { id: agendamentoId } });

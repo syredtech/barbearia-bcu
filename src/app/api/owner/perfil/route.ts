@@ -41,6 +41,15 @@ export async function PUT(req: NextRequest) {
   if (phone && phone.length > 30) {
     return NextResponse.json({ error: "Telefone inválido (máx. 30 caracteres)." }, { status: 400 });
   }
+  if (description && /[<>]/.test(description)) {
+    return NextResponse.json({ error: "Descrição contém caracteres inválidos." }, { status: 400 });
+  }
+  if (address && /[<>]/.test(address)) {
+    return NextResponse.json({ error: "Endereço contém caracteres inválidos." }, { status: 400 });
+  }
+  if (phone && /[<>]/.test(phone)) {
+    return NextResponse.json({ error: "Telefone contém caracteres inválidos." }, { status: 400 });
+  }
 
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
@@ -53,6 +62,7 @@ export async function PUT(req: NextRequest) {
       address: address || null,
       phone: phone || null,
     },
+    select: { slug: true, name: true, imageUrl: true, description: true, address: true, phone: true },
   });
 
   return NextResponse.json({ ok: true, venue: updated });
