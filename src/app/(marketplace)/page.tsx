@@ -7,7 +7,7 @@ import HeroSlideshow from "@/components/HeroSlideshow";
 const CATEGORIES = [
   { id: "",           label: "Todos",     symbol: "✦" },
   { id: "barbearia",  label: "Barbearia", symbol: "✂" },
-  { id: "salao",      label: "Cabeleireiro & Penteados", symbol: "✿" },
+  { id: "salao",      label: "Cabeleireiro & Penteados", mobileLabel: "Cabelo", symbol: "✿" },
   { id: "spa",        label: "Unhas & Maquilhagem",    symbol: "◈" },
 ];
 
@@ -91,7 +91,7 @@ export default function Home() {
                       }`}
                   >
                     <span className="text-[13px] leading-none">{cat.symbol}</span>
-                    {cat.label}
+                    {"mobileLabel" in cat ? cat.mobileLabel : cat.label}
                   </button>
                 ))}
               </div>
