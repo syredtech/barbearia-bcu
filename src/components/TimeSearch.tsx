@@ -147,22 +147,22 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
 
       {/* Expanded form */}
       {(open || results !== null) && (
-        <div className="border border-[#ebebeb] rounded-card p-5">
+        <div className="bg-[#111]/80 backdrop-blur-md border border-white/10 rounded-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-medium uppercase tracking-widest text-muted">
+            <p className="text-xs font-medium uppercase tracking-widest text-white/50">
               Buscar por disponibilidade
             </p>
-            <button onClick={reset} className="text-xs text-muted hover:text-ink transition-colors">
+            <button onClick={reset} className="text-xs text-white/40 hover:text-white transition-colors">
               ✕ Fechar
             </button>
           </div>
 
           {/* Category filter — required */}
           <div className="mb-4">
-            <label className="text-xs text-muted block mb-2">
+            <label className="text-xs text-white/60 block mb-2">
               Tipo de serviço
               {category === null && (
-                <span className="ml-1.5 text-[#c0392b]">· obrigatório</span>
+                <span className="ml-1.5 text-[#ff7070]">· obrigatório</span>
               )}
             </label>
             <div className="grid grid-cols-4 gap-2">
@@ -173,8 +173,8 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
                   className={`flex flex-col items-center gap-1 py-3 rounded-card border text-xs font-medium
                     transition-all duration-200 ${
                       category === cat.id
-                        ? "bg-ink text-white border-ink"
-                        : "border-[#ebebeb] text-muted hover:border-ink hover:text-ink"
+                        ? "bg-white text-ink border-white"
+                        : "border-white/20 text-white/60 hover:border-white/50 hover:text-white"
                     }`}
                 >
                   <span className="text-[18px] leading-none">{cat.symbol}</span>
@@ -187,21 +187,23 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
           {/* Date + time */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs text-muted block mb-1">Data</label>
+              <label className="text-xs text-white/60 block mb-1">Data</label>
               <input
                 type="date" min={today} value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full border border-[#ebebeb] rounded-card px-3 py-2.5 text-sm font-light
-                           focus:outline-none focus:border-ink transition-colors"
+                style={{ colorScheme: "dark" }}
+                className="w-full border border-white/20 bg-white/8 rounded-card px-3 py-2.5 text-sm font-light text-white
+                           focus:outline-none focus:border-white/50 transition-colors"
               />
             </div>
             <div>
-              <label className="text-xs text-muted block mb-1">Horário</label>
+              <label className="text-xs text-white/60 block mb-1">Horário</label>
               <select
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full border border-[#ebebeb] rounded-card px-3 py-2.5 text-sm font-light
-                           focus:outline-none focus:border-ink transition-colors"
+                style={{ colorScheme: "dark" }}
+                className="w-full border border-white/20 bg-[#1a1a1a] rounded-card px-3 py-2.5 text-sm font-light text-white
+                           focus:outline-none focus:border-white/50 transition-colors"
               >
                 {HALF_HOURS.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -213,8 +215,8 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
           <button
             onClick={search}
             disabled={searching || category === null}
-            className="w-full bg-ink text-white rounded-card py-3 text-sm font-medium
-                       hover:bg-[#333] transition-all duration-200 disabled:opacity-40"
+            className="w-full bg-white text-ink rounded-card py-3 text-sm font-medium
+                       hover:bg-white/90 transition-all duration-200 disabled:opacity-40"
           >
             {searching ? "A procurar…" : "Encontrar profissional disponível"}
           </button>
