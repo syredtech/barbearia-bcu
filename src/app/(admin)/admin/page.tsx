@@ -30,6 +30,12 @@ interface Agendamento {
 }
 
 // ── Constants ──────────────────────────────────────────────────
+const CATEGORY_LABEL: Record<string, string> = {
+  barbearia: "Barbearia",
+  salao: "Cabeleireiro & Penteados",
+  spa: "Unhas & Maquilhagem",
+};
+
 type TopTab = "overview" | "venues" | "users" | "agendamentos";
 type VenueFilter = "pending" | "approved" | "rejected";
 
@@ -260,13 +266,13 @@ export default function AdminPage() {
                       className={`${i < venues.length - 1 ? "border-b border-[#ebebeb]" : ""} hover:bg-[#fafafa] transition-colors`}>
                       <TD>
                         <p className="font-serif font-bold text-ink">{v.name}</p>
-                        <p className="text-xs text-muted font-light capitalize mt-0.5">{v.category}</p>
+                        <p className="text-xs text-muted font-light mt-0.5">{CATEGORY_LABEL[v.category] ?? v.category}</p>
                       </TD>
                       <TD>
                         <p className="text-ink font-light">{v.owner.name}</p>
                         <p className="text-xs text-muted font-light">{v.owner.email}</p>
                       </TD>
-                      <TD className="text-muted font-light capitalize">{v.category}</TD>
+                      <TD className="text-muted font-light">{CATEGORY_LABEL[v.category] ?? v.category}</TD>
                       <TD>
                         {v.subscriptionStatus
                           ? <StatusPill status={v.subscriptionStatus} />
@@ -392,7 +398,7 @@ export default function AdminPage() {
                       </TD>
                       <TD>
                         <p className="text-ink font-light">{a.venue.name}</p>
-                        <p className="text-xs text-muted capitalize">{a.venue.category}</p>
+                        <p className="text-xs text-muted">{CATEGORY_LABEL[a.venue.category] ?? a.venue.category}</p>
                       </TD>
                       <TD className="text-muted font-light">{a.servico.name}</TD>
                       <TD className="text-ink font-medium">

@@ -82,7 +82,7 @@ export default function Home() {
                 {CATEGORIES.filter((cat) => cat.id !== "").map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
+                    onClick={() => setActiveCategory(activeCategory === cat.id ? "" : cat.id)}
                     className={`flex items-center justify-center gap-1 px-1 py-2 rounded-pill text-xs font-medium
                       backdrop-blur-sm transition-all duration-200 ${
                         activeCategory === cat.id
