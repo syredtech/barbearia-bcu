@@ -7,7 +7,7 @@ import HeroSlideshow from "@/components/HeroSlideshow";
 const CATEGORIES = [
   { id: "",           label: "Todos",     symbol: "✦" },
   { id: "barbearia",  label: "Barbearia", symbol: "✂" },
-  { id: "salao",      label: "Cabeleireiro & Penteados", mobileLabel: "Cabelo", symbol: "✿" },
+  { id: "salao",      label: "Cabeleireiro & Penteados", mobileLabel: "Penteado", symbol: "✿" },
   { id: "spa",        label: "Unhas & Maquilhagem",    symbol: "◈" },
 ];
 
