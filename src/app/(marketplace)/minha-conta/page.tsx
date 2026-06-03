@@ -47,7 +47,11 @@ export default async function MinhaContaPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {proximos.map((a) => (
+            {proximos.map((a) => {
+              const apptTime = new Date(`${a.date}T${a.horario}:00`);
+              const hoursUntil = (apptTime.getTime() - agora.getTime()) / (1000 * 60 * 60);
+              const cancelBlocked = hoursUntil < 24 ? "Cancelamento bloqueado (menos de 24h de antecedência)" : undefined;
+              return (
               <div key={a.id} className="border border-[#ebebeb] rounded-card p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -55,7 +59,7 @@ export default async function MinhaContaPage() {
                     <p className="text-muted text-sm font-light mt-0.5">{a.servico.name}</p>
                     <p className="text-muted text-xs mt-2 font-light">
                       {new Date(a.date + "T12:00:00").toLocaleDateString("pt-CV", {
-                        weekday: "long", day: "numeric", month: "long",
+                        weekday: "long", day: "numeric", month: "long", year: "numeric",
                       })} · {a.horario}
                     </p>
                   </div>
@@ -69,10 +73,11 @@ export default async function MinhaContaPage() {
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t border-[#f5f5f5]">
-                  <CancelButton agendamentoId={a.id} />
+                  <CancelButton agendamentoId={a.id} blockedMessage={cancelBlocked} />
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
@@ -94,7 +99,7 @@ export default async function MinhaContaPage() {
                       <p className="text-muted text-sm font-light mt-0.5">{a.servico.name}</p>
                       <p className="text-muted text-xs mt-2 font-light">
                         {new Date(a.date + "T12:00:00").toLocaleDateString("pt-CV", {
-                          weekday: "long", day: "numeric", month: "long",
+                          weekday: "long", day: "numeric", month: "long", year: "numeric",
                         })} · {a.horario}
                       </p>
                     </div>

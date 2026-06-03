@@ -114,7 +114,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
           <h1 className="font-serif text-3xl font-bold text-ink mb-8">Novo agendamento</h1>
 
           {/* Step indicator */}
-          <div className="flex items-center gap-2 mb-10">
+          <div className="flex items-center gap-2 mb-6">
             {steps.map((label, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className={`flex items-center gap-1.5 ${step > i + 1 ? "text-ink" : step === i + 1 ? "text-ink" : "text-muted"}`}>
@@ -128,6 +128,10 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
               </div>
             ))}
           </div>
+          {/* Active step label — mobile only */}
+          <p className="text-xs text-muted uppercase tracking-widest mb-6 sm:hidden">
+            Passo {step}: {steps[step - 1]}
+          </p>
 
           {/* Step 1 — Serviço */}
           {step === 1 && (

@@ -110,7 +110,7 @@ export default async function EstabelecimentoPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/<\//g, "<\\/") }}
       />
       {/* Cover hero */}
       <div className="relative w-full h-[220px] sm:h-[300px] overflow-hidden" style={{ background: venue.imageUrl ? undefined : bg }}>

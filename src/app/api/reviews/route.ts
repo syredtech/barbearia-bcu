@@ -11,7 +11,13 @@ export async function GET(req: NextRequest) {
 
   const reviews = await prisma.review.findMany({
     where: { venueId },
-    include: { client: { select: { name: true } } },
+    select: {
+      id: true,
+      rating: true,
+      comment: true,
+      createdAt: true,
+      client: { select: { name: true } },
+    },
     orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(reviews);

@@ -11,7 +11,16 @@ export async function GET() {
 
   const venue = await prisma.venue.findUnique({
     where: { ownerId: session.user.id },
-    include: { servicos: true },
+    select: {
+      id: true, slug: true, name: true, description: true,
+      category: true, address: true, phone: true, imageUrl: true,
+      latitude: true, longitude: true, status: true,
+      subscriptionStatus: true, subscriptionExpiresAt: true,
+      scheduleStart: true, scheduleEnd: true, slotDuration: true,
+      breakStart: true, breakEnd: true, break2Start: true, break2End: true,
+      closedDays: true, createdAt: true, updatedAt: true,
+      servicos: true,
+    },
   });
 
   return NextResponse.json(venue);

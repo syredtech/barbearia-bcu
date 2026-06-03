@@ -29,6 +29,9 @@ export async function PUT(
   if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
     return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
   }
+  if (/[<>]/.test(name)) {
+    return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
+  }
   if (description && description.length > 300) {
     return NextResponse.json({ error: "Descrição inválida (máx. 300 caracteres)." }, { status: 400 });
   }
@@ -37,8 +40,8 @@ export async function PUT(
   if (isNaN(durNum) || durNum < 5 || durNum > 480) {
     return NextResponse.json({ error: "Duração inválida (5–480 min)." }, { status: 400 });
   }
-  if (isNaN(priceNum) || priceNum < 0 || priceNum > 1000000) {
-    return NextResponse.json({ error: "Preço inválido." }, { status: 400 });
+  if (isNaN(priceNum) || priceNum < 1 || priceNum > 1000000) {
+    return NextResponse.json({ error: "Preço inválido (mínimo 1 ECV)." }, { status: 400 });
   }
 
   const updated = await prisma.servico.update({

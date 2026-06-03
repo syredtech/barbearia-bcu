@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CancelButton({ agendamentoId }: { agendamentoId: string }) {
+export default function CancelButton({ agendamentoId, blockedMessage }: { agendamentoId: string; blockedMessage?: string }) {
   const router = useRouter();
   const [loading, setLoading]     = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -32,6 +32,10 @@ export default function CancelButton({ agendamentoId }: { agendamentoId: string 
       return;
     }
     router.refresh();
+  }
+
+  if (blockedMessage) {
+    return <p className="text-xs text-muted font-light opacity-60">{blockedMessage}</p>;
   }
 
   return (

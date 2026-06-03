@@ -126,7 +126,7 @@ export default async function PainelPage() {
                     <td className="px-5 py-4 font-medium text-ink">{a.client?.name ?? a.guestName ?? "Convidado"}</td>
                     <td className="px-5 py-4 text-ink font-light">{a.servico.name}</td>
                     <td className="px-5 py-4 text-muted font-light">
-                      {new Date(a.date + "T12:00:00").toLocaleDateString("pt-CV", { day: "numeric", month: "short" })}
+                      {new Date(a.date + "T12:00:00").toLocaleDateString("pt-CV", { day: "numeric", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-5 py-4 text-muted font-light">{a.horario}</td>
                     <td className="px-5 py-4">

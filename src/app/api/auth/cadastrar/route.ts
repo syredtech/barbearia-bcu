@@ -9,11 +9,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { name, email: rawEmail, password } = await req.json();
+  const { name: rawName, email: rawEmail, password } = await req.json();
   const email = rawEmail?.toLowerCase().trim();
+  const name  = typeof rawName === "string" ? rawName.trim() : "";
 
   if (!name || !email || !password) {
     return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });
+  }
+
+  if (name.length > 100) {
+    return NextResponse.json({ error: "Nome demasiado longo (máx. 100 caracteres)." }, { status: 400 });
+  }
+
+  if (/[<>]/.test(name)) {
+    return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
+  }
+
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "E-mail inválido." }, { status: 400 });
   }
 
   if (!password || password.length < 8) {

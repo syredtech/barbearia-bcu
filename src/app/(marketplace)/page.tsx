@@ -19,6 +19,8 @@ export default function Home() {
 
   return (
     <main>
+      {/* Preload hero image only on homepage */}
+      <link rel="preload" as="image" href="/hero/hero-1.webp" />
       {/* Hero — full viewport height on mobile */}
       <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[88svh] lg:min-h-[580px] flex flex-col">
         <HeroSlideshow />
@@ -59,7 +61,9 @@ export default function Home() {
               onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
               className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10 lg:max-w-[560px]"
             >
+              <label htmlFor="hero-search" className="sr-only">Pesquisar estabelecimentos</label>
               <input
+                id="hero-search"
                 aria-label="Pesquisar estabelecimentos"
                 value={draft}
                 onChange={(e) => { setDraft(e.target.value); if (!e.target.value) setActive(""); }}

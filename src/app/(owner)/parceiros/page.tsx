@@ -77,7 +77,7 @@ export default function ParceirosPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="parc-nome" className={labelClass}>Nome do estabelecimento</label>
-          <input id="parc-nome" type="text" value={form.name} onChange={(e) => handleNameChange(e.target.value)} required className={inputClass} />
+          <input id="parc-nome" type="text" value={form.name} onChange={(e) => handleNameChange(e.target.value)} required maxLength={100} className={inputClass} />
         </div>
 
         <div>
@@ -119,7 +119,7 @@ export default function ParceirosPage() {
         <div>
           <label htmlFor="parc-desc" className={labelClass}>Descrição</label>
           <textarea id="parc-desc" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-            rows={3} className={inputClass + " resize-none"} />
+            rows={3} maxLength={500} className={inputClass + " resize-none"} />
         </div>
 
         <div>
@@ -127,14 +127,14 @@ export default function ParceirosPage() {
           <input id="parc-address" type="text" value={form.address}
             onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
             placeholder="Ex: Rua de Lisboa, 12 — Plateau, Praia"
-            className={inputClass} />
+            maxLength={200} className={inputClass} />
         </div>
 
         <div>
           <label htmlFor="parc-phone" className={labelClass}>Telefone / WhatsApp</label>
           <input id="parc-phone" type="tel" value={form.phone}
             onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-            placeholder="+238 9XX XX XX" className={inputClass} />
+            placeholder="+238 9XX XX XX" maxLength={30} className={inputClass} />
         </div>
 
         {/* Geolocalização */}
