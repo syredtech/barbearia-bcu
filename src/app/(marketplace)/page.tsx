@@ -78,8 +78,8 @@ export default function Home() {
 
             {/* Category pills — mobile only, between search and TimeSearch */}
             {!timeSearchOn && (
-              <div className="grid grid-cols-4 gap-2 mb-4 lg:hidden">
-                {CATEGORIES.map((cat) => (
+              <div className="grid grid-cols-3 gap-2 mb-4 lg:hidden">
+                {CATEGORIES.filter((cat) => cat.id !== "").map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
