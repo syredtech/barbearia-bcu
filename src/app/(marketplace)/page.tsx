@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <main>
       {/* Hero — full viewport height on mobile */}
-      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[540px] flex flex-col">
+      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[580px] flex flex-col">
         <HeroSlideshow />
 
         <section className="flex-1 w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:py-14 pb-5 relative z-20 flex flex-col lg:justify-center">
@@ -35,8 +35,7 @@ export default function Home() {
               {/* Subtítulo desktop */}
               <p className="mt-4 text-2xl font-serif font-semibold max-w-[480px] fade-up-1 hidden lg:block"
                 style={{
-                  color: "rgba(255,255,255,1)",
-                  textShadow: "-0.7px -0.7px 0 rgba(0,0,0,0.9), 0.7px -0.7px 0 rgba(0,0,0,0.9), -0.7px 0.7px 0 rgba(0,0,0,0.9), 0.7px 0.7px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.45), 0 2px 18px rgba(0,0,0,0.3)",
+                  color: "rgba(20,20,20,0.82)",
                 }}>
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.<br />
                 Escolha a hora e reserve já. <span className="whitespace-nowrap">Rápido e gratuito!</span>
@@ -58,7 +57,7 @@ export default function Home() {
           <div className="pb-4">
             <form
               onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
-              className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10"
+              className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10 lg:max-w-[560px]"
             >
               <input
                 aria-label="Pesquisar estabelecimentos"
@@ -107,8 +106,8 @@ export default function Home() {
         {!timeSearchOn && (
           <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-30 lg:hidden pointer-events-none">
             <svg
-              className="w-7 h-7 animate-bounce"
-              fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" viewBox="0 0 24 24"
+              className="w-9 h-9 animate-bounce"
+              fill="none" stroke="rgba(255,255,255,0.82)" strokeWidth="2" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
@@ -143,7 +142,17 @@ export default function Home() {
             ))}
           </div>
 
-          <VenueListWithGeo searchQuery={active} activeCategory={activeCategory} />
+          <VenueListWithGeo searchQuery={active} activeCategory={activeCategory} limit={3} />
+
+          <div className="mt-8 text-center">
+            <a
+              href="/estabelecimentos"
+              className="inline-flex items-center gap-2 text-sm text-muted border border-[#e0dbd4] rounded-pill px-6 py-2.5
+                         hover:border-ink hover:text-ink transition-all duration-200"
+            >
+              Ver todos os estabelecimentos
+            </a>
+          </div>
         </section>
       )}
     </main>
