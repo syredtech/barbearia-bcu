@@ -7,8 +7,8 @@ import type { Metadata } from "next";
 const SITE_URL = "https://barbearia-bcu.vercel.app";
 const CATEGORY_LABEL: Record<string, string> = {
   barbearia: "Barbearia",
-  salao: "Salão de Beleza",
-  spa: "Spa",
+  salao: "Cabeleireiro & Penteados",
+  spa: "Unhas & Maquilhagem",
 };
 
 export async function generateMetadata(

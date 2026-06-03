@@ -99,14 +99,18 @@ export default function ParceirosPage() {
         <div>
           <label className={labelClass}>Categoria</label>
           <div className="flex gap-3">
-            {["barbearia", "salao", "spa"].map((cat) => (
+            {[
+              { id: "barbearia", label: "Barbearia" },
+              { id: "salao",     label: "Cabeleireiro & Penteados" },
+              { id: "spa",       label: "Unhas & Maquilhagem" },
+            ].map(({ id, label }) => (
               <button
-                key={cat} type="button"
-                onClick={() => setForm((f) => ({ ...f, category: cat }))}
-                className={`flex-1 border rounded-card py-3 text-sm transition-all duration-200 capitalize
-                  ${form.category === cat ? "border-ink text-ink font-medium" : "border-[#ebebeb] text-muted hover:border-[#bbb]"}`}
+                key={id} type="button"
+                onClick={() => setForm((f) => ({ ...f, category: id }))}
+                className={`flex-1 border rounded-card py-3 text-sm transition-all duration-200
+                  ${form.category === id ? "border-ink text-ink font-medium" : "border-[#ebebeb] text-muted hover:border-[#bbb]"}`}
               >
-                {cat}
+                {label}
               </button>
             ))}
           </div>

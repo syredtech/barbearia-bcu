@@ -75,8 +75,8 @@ function VenueCard({ v }: { v: VenueResult }) {
 
 const CATEGORIES = [
   { id: "barbearia",  label: "Barbearia", symbol: "✂" },
-  { id: "salao",      label: "Salão",     symbol: "✿" },
-  { id: "spa",        label: "Spa",       symbol: "◈" },
+  { id: "salao",      label: "Cabeleireiro & Penteados", symbol: "✿" },
+  { id: "spa",        label: "Unhas & Maquilhagem",    symbol: "◈" },
 ];
 
 export default function TimeSearch({ onActiveChange }: { onActiveChange?: (active: boolean) => void }) {
