@@ -76,9 +76,9 @@ function VenueCard({ v }: { v: VenueResult }) {
 }
 
 const CATEGORIES = [
-  { id: "barbearia",  label: "Barbearia", symbol: "✂" },
-  { id: "salao",      label: "Cabeleireiro & Penteados", symbol: "✿" },
-  { id: "spa",        label: "Unhas & Maquilhagem",    symbol: "◈" },
+  { id: "barbearia",  label: "Barbearia",                short: "Barbearia",    symbol: "✂" },
+  { id: "salao",      label: "Cabeleireiro & Penteados", short: "Cabeleireiro", symbol: "✿" },
+  { id: "spa",        label: "Unhas & Maquilhagem",      short: "Unhas",        symbol: "◈" },
 ];
 
 export default function TimeSearch({ onActiveChange }: { onActiveChange?: (active: boolean) => void }) {
@@ -149,7 +149,7 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
 
       {/* Expanded form */}
       {(open || results !== null) && (
-        <div className="bg-[#111]/80 backdrop-blur-md border border-white/10 rounded-card p-5">
+        <div className="bg-[#111]/80 backdrop-blur-md border border-white/10 rounded-card p-5 max-w-lg">
           <div className="flex items-center justify-between mb-4">
             <p className="text-xs font-medium uppercase tracking-widest text-white/50">
               Buscar por disponibilidade
@@ -180,7 +180,7 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
                     }`}
                 >
                   <span className="text-[18px] leading-none">{cat.symbol}</span>
-                  {cat.label}
+                  {cat.short}
                 </button>
               ))}
             </div>
