@@ -55,10 +55,11 @@ async function main() {
     { name: "Sofia Delgado",     email: "sofia@glam.cv" },
   ];
 
+  const ownerPassword = await hash("senha123");
   const owners = await Promise.all(
     ownerData.map((o) =>
       prisma.user.create({
-        data: { name: o.name, email: o.email, password: "", role: "owner" },
+        data: { name: o.name, email: o.email, password: ownerPassword, role: "owner" },
       })
     )
   );
