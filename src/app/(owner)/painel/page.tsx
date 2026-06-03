@@ -98,7 +98,7 @@ export default async function PainelPage() {
 
       {/* Subscription */}
       <div className="mb-10">
-        <AssinaturaCard status={venue.subscriptionStatus} expiresAt={venue.subscriptionExpiresAt} />
+        <AssinaturaCard status={venue.subscriptionStatus} expiresAt={venue.subscriptionExpiresAt} venueStatus={venue.status} />
       </div>
 
       {/* Recent appointments */}

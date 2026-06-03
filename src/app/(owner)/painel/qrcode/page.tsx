@@ -20,7 +20,8 @@ export default function QRCodePage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const url = slug ? `${window.location.origin}/estabelecimentos/${slug}` : "";
+  const origin = typeof window !== "undefined" ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL ?? "https://barbearia-bcu.vercel.app");
+  const url = slug ? `${origin}/estabelecimentos/${slug}` : "";
 
   function download() {
     const canvas = canvasRef.current?.querySelector("canvas");

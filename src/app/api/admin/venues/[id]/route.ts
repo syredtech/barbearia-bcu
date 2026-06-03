@@ -17,10 +17,13 @@ export async function PATCH(
     return NextResponse.json({ error: "Status inválido." }, { status: 400 });
   }
 
-  const venue = await prisma.venue.update({
-    where: { id: params.id },
-    data: { status },
-  });
-
-  return NextResponse.json(venue);
+  try {
+    const venue = await prisma.venue.update({
+      where: { id: params.id },
+      data: { status },
+    });
+    return NextResponse.json(venue);
+  } catch {
+    return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
+  }
 }

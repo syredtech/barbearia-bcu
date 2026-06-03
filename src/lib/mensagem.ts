@@ -30,7 +30,10 @@ export async function enviarConfirmacao({
   const authToken  = process.env.TWILIO_AUTH_TOKEN;
   const from       = process.env.TWILIO_SMS_FROM;
 
-  if (!accountSid || !authToken || !from) return;
+  if (!accountSid || !authToken || !from) {
+    console.warn("[mensagem] Twilio não configurado — envio de SMS/WhatsApp desativado");
+    return;
+  }
 
   const body =
     `Agendamento confirmado!\n\n` +

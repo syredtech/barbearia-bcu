@@ -336,7 +336,7 @@ export default function HorarioPage() {
           {preview.length === 0 ? (
             <p className="text-sm text-muted">Nenhum horário disponível com esta configuração.</p>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1">
               {preview.map((slot) => (
                 <span
                   key={slot}

@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <main>
       {/* Hero — full viewport height on mobile */}
-      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[100svh] lg:min-h-[580px] flex flex-col">
+      <div className="bg-[#f7f4f0] relative overflow-hidden min-h-[88svh] lg:min-h-[580px] flex flex-col">
         <HeroSlideshow />
 
         <section className="flex-1 w-full max-w-content mx-auto px-4 sm:px-6 pt-12 sm:pt-16 lg:py-14 pb-5 relative z-20 flex flex-col lg:justify-center">
@@ -44,7 +44,7 @@ export default function Home() {
               <p className="mt-7 text-xl font-light max-w-[320px] fade-up-1 lg:hidden"
                 style={{
                   color: "rgba(247,244,240,0.95)",
-                  textShadow: "-0.7px -0.7px 0 rgba(0,0,0,0.9), 0.7px -0.7px 0 rgba(0,0,0,0.9), -0.7px 0.7px 0 rgba(0,0,0,0.9), 0.7px 0.7px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.4), 0 2px 16px rgba(0,0,0,0.25)",
+                  textShadow: "0 1px 8px rgba(0,0,0,0.55)",
                 }}>
                 A forma mais fácil de marcar o seu corte, penteado ou maquilhagem.{" "}
                 Escolha a hora e reserve já.<br />

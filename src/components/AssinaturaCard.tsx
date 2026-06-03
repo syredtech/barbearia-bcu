@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 interface Props {
   status: string | null | undefined;
   expiresAt: Date | string | null | undefined;
+  venueStatus?: string;
 }
 
-export default function AssinaturaCard({ status, expiresAt }: Props) {
+export default function AssinaturaCard({ status, expiresAt, venueStatus }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const isActive =
@@ -32,7 +33,7 @@ export default function AssinaturaCard({ status, expiresAt }: Props) {
           )}
         </div>
 
-        {!isActive && (
+        {!isActive && venueStatus === "approved" && (
           <button
             disabled={loading}
             onClick={async () => {

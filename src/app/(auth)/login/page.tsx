@@ -7,7 +7,8 @@ import Link from "next/link";
 function LoginContent() {
   const router       = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl  = searchParams.get("callbackUrl") || "/";
+  const rawCallback  = searchParams.get("callbackUrl");
+  const callbackUrl  = rawCallback?.startsWith("/") ? rawCallback : "/";
 
   const [mode, setMode]     = useState<"login" | "register">("login");
   const [form, setForm]     = useState({ name: "", email: "", password: "" });
@@ -20,7 +21,7 @@ function LoginContent() {
   }
 
   async function handleGoogle() {
-    await signIn("google", { callbackUrl });
+    await signIn("google", { callbackUrl: callbackUrl });
   }
 
   async function handleSubmit(e: React.FormEvent) {

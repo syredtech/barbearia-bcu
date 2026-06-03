@@ -138,7 +138,7 @@ export default async function EstabelecimentoPage({
         {/* Header */}
         <div className="max-w-[640px] mb-8">
           <span className="text-xs font-medium uppercase tracking-widest text-muted">
-            {venue.category}
+            {CATEGORY_LABEL[venue.category] ?? venue.category}
           </span>
           <h1 className="font-serif text-5xl font-bold text-ink mt-2 mb-4 leading-tight">
             {venue.name}

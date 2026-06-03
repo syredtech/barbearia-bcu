@@ -139,6 +139,8 @@ model Notificacao {
   body      String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  @@index([ownerId, createdAt])
 }
 
 model Review {

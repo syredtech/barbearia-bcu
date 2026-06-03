@@ -17,8 +17,9 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const [servicoId, setServicoId] = useState(searchParams.get("servicoId") || "");
   const [date, setDate]       = useState("");
   const [horario, setHorario] = useState("");
-  const [slots, setSlots]     = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [slots, setSlots]         = useState<string[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [loading, setLoading]     = useState(false);
   const [done, setDone]       = useState(false);
   const [bookingError, setBookingError] = useState("");
   const [guestName, setGuestName]   = useState("");
@@ -30,9 +31,12 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
 
   useEffect(() => {
     if (!servicoId || !date || !venue) return;
+    setSlotsLoading(true);
+    setSlots([]);
     fetch(`/api/horarios-disponiveis?venueId=${venue.id}&date=${date}`)
       .then((r) => r.json())
-      .then((d) => setSlots(d.slots || []));
+      .then((d) => setSlots(d.slots || []))
+      .finally(() => setSlotsLoading(false));
   }, [servicoId, date, venue]);
 
   const isGuest = status === "unauthenticated";
@@ -185,7 +189,9 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
               <label className="block text-xs text-muted mb-3 uppercase tracking-widest">
                 Escolha o horário
               </label>
-              {slots.length === 0 ? (
+              {slotsLoading ? (
+                <p className="text-muted text-sm font-light mb-6">A carregar horários…</p>
+              ) : slots.length === 0 ? (
                 <p className="text-muted text-sm font-light mb-6">
                   Nenhum horário disponível nesta data.
                 </p>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CancelButton({ agendamentoId }: { agendamentoId: string }) {
@@ -7,6 +7,13 @@ export default function CancelButton({ agendamentoId }: { agendamentoId: string 
   const [loading, setLoading]     = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError]         = useState("");
+
+  // Auto-reset confirmation state after 5 s
+  useEffect(() => {
+    if (!confirmed) return;
+    const t = setTimeout(() => setConfirmed(false), 5000);
+    return () => clearTimeout(t);
+  }, [confirmed]);
 
   async function cancel() {
     if (!confirmed) { setConfirmed(true); return; }
@@ -21,6 +28,7 @@ export default function CancelButton({ agendamentoId }: { agendamentoId: string 
       const data = await res.json().catch(() => ({}));
       setError(data.error || "Erro ao cancelar agendamento.");
       setLoading(false);
+      setConfirmed(false);
       return;
     }
     router.refresh();

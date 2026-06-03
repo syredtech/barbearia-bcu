@@ -1,0 +1,43 @@
+
+> barba-cabelo-e-unha@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 3.3s
+ ○ Compiling / ...
+ ✓ Compiled / in 6s (650 modules)
+ GET / 200 in 6637ms
+ ✓ Compiled in 655ms (310 modules)
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 3.5s (352 modules)
+ ✓ Compiled (587 modules)
+ GET / 200 in 139ms
+ GET /api/auth/session 200 in 39ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/venues 200 in 760ms
+ GET /api/venues 200 in 745ms
+ GET / 200 in 29ms
+ GET /api/auth/session 200 in 30ms
+ GET /api/auth/session 200 in 14ms
+ GET /api/venues 200 in 866ms
+ GET /api/venues 200 in 747ms
+ ✓ Compiled /api/profissionais-disponiveis in 197ms (589 modules)
+ GET /api/profissionais-disponiveis?date=2026-06-01&time=09%3A00&category=barbearia 200 in 1225ms
+ ✓ Compiled in 227ms (310 modules)
+ ✓ Compiled in 217ms (310 modules)
+ ✓ Compiled in 130ms (310 modules)
+ ✓ Compiled in 730ms (632 modules)
+ GET / 200 in 201ms
+ ✓ Compiled /api/auth/[...nextauth] in 82ms (352 modules)
+ ✓ Compiled (587 modules)
+ GET /api/auth/session 200 in 524ms
+ GET /api/auth/session 200 in 13ms
+ GET /api/venues 200 in 2111ms
+ GET /api/venues 200 in 747ms
+ ✓ Compiled /api/profissionais-disponiveis in 97ms (589 modules)
+ GET /api/profissionais-disponiveis?date=2026-06-01&time=09%3A00&category=barbearia 200 in 1084ms
+prisma:error Error in PostgreSQL connection: Error { kind: Io, cause: Some(Os { code: 10054, kind: ConnectionReset, message: "Uma ligação existente foi forçada a fechar pelo anfitrião remoto." }) }

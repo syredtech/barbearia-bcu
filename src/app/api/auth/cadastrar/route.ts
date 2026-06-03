@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { name, email, password } = await req.json();
+  const { name, email: rawEmail, password } = await req.json();
+  const email = rawEmail?.toLowerCase().trim();
 
   if (!name || !email || !password) {
     return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });

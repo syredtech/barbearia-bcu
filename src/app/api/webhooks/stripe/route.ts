@@ -5,27 +5,35 @@ import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
-  const sig = req.headers.get("stripe-signature")!;
+  const sig  = req.headers.get("stripe-signature");
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!sig || !secret) {
+    return NextResponse.json({ error: "Configuração incompleta." }, { status: 400 });
+  }
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    event = stripe.webhooks.constructEvent(body, sig, secret);
   } catch {
     return NextResponse.json({ error: "Webhook inválido." }, { status: 400 });
   }
 
-  // Idempotency check
-  const existing = await prisma.webhookEvent.findUnique({ where: { id: event.id } });
-  if (existing) return NextResponse.json({ received: true });
-  await prisma.webhookEvent.create({ data: { id: event.id } });
+  // Idempotency: atomic insert — handles concurrent redeliveries safely
+  try {
+    await prisma.webhookEvent.create({ data: { id: event.id } });
+  } catch {
+    return NextResponse.json({ received: true });
+  }
 
   const getVenueId = (obj: Stripe.Subscription | Stripe.Invoice) =>
     (obj.metadata as Record<string, string>)?.venueId ||
     (obj as any).customer_metadata?.venueId;
+
+  const periodEnd = (sub: any): Date | undefined => {
+    const ts = sub.current_period_end;
+    return ts ? new Date(ts * 1000) : undefined;
+  };
 
   switch (event.type) {
     case "invoice.payment_succeeded": {
@@ -38,7 +46,7 @@ export async function POST(req: NextRequest) {
           data: {
             subscriptionStatus: "active",
             stripeSubscriptionId: sub.id,
-            subscriptionExpiresAt: new Date((sub as any).current_period_end * 1000),
+            ...(periodEnd(sub) && { subscriptionExpiresAt: periodEnd(sub) }),
           },
         });
       }
@@ -81,7 +89,7 @@ export async function POST(req: NextRequest) {
           where: { id: venueId },
           data: {
             subscriptionStatus: sub.status === "active" ? "active" : sub.status,
-            subscriptionExpiresAt: new Date((sub as any).current_period_end * 1000),
+            ...(periodEnd(sub) && { subscriptionExpiresAt: periodEnd(sub) }),
           },
         });
       }

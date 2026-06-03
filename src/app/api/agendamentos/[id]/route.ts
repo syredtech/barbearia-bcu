@@ -28,6 +28,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (status !== "cancelled") {
       return NextResponse.json({ error: "Clientes só podem cancelar." }, { status: 403 });
     }
+    // Cooldown: must cancel at least 24 h before the appointment
+    const apptDateTime = new Date(`${agendamento.date}T${agendamento.horario}:00`);
+    if (apptDateTime > new Date()) {
+      const hoursUntil = (apptDateTime.getTime() - Date.now()) / (1000 * 60 * 60);
+      if (hoursUntil < 24) {
+        return NextResponse.json(
+          { error: "Cancelamentos devem ser feitos com pelo menos 24 horas de antecedência." },
+          { status: 400 },
+        );
+      }
+    }
   }
 
   // Owner can manage their venue's appointments

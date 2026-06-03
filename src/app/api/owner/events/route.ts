@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "update" })}\n\n`));
           }
         } catch { /* ignore transient DB errors */ }
-      }, 2000);
+      }, 10000);
 
       // Close after 25 s — EventSource auto-reconnects
       const timeout = setTimeout(() => {
