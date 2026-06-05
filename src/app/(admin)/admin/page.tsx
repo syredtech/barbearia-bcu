@@ -282,18 +282,18 @@ export default function AdminPage() {
                       <TD>
                         {venueFilter === "pending" && (
                           <div className="flex gap-2">
-                            <button onClick={() => updateVenueStatus(v.id, "approved")} disabled={loadingId === v.id}
+                            <button type="button" onClick={() => updateVenueStatus(v.id, "approved")} disabled={loadingId === v.id}
                               className="bg-ink text-white px-4 py-1.5 rounded-pill text-xs font-medium hover:bg-[#333] transition-all duration-200 disabled:opacity-40">
                               Aprovar
                             </button>
-                            <button onClick={() => updateVenueStatus(v.id, "rejected")} disabled={loadingId === v.id}
+                            <button type="button" onClick={() => updateVenueStatus(v.id, "rejected")} disabled={loadingId === v.id}
                               className="border border-[#ebebeb] text-muted px-4 py-1.5 rounded-pill text-xs hover:border-red-400 hover:text-red-600 transition-all duration-200 disabled:opacity-40">
                               Rejeitar
                             </button>
                           </div>
                         )}
                         {venueFilter !== "pending" && (
-                          <button onClick={() => updateVenueStatus(v.id, "pending")}
+                          <button type="button" onClick={() => updateVenueStatus(v.id, "pending")}
                             className="text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors">
                             Repor
                           </button>
@@ -314,7 +314,7 @@ export default function AdminPage() {
           {/* Role toggle */}
           <div className="flex gap-3 mb-8">
             {(["owner", "client"] as const).map((r) => (
-              <button key={r} onClick={() => setUserRole(r)}
+              <button type="button" key={r} onClick={() => setUserRole(r)}
                 className={`px-5 py-2 rounded-pill text-sm transition-all duration-200
                   ${userRole === r ? "bg-ink text-white" : "border border-[#ebebeb] text-muted hover:border-ink hover:text-ink"}`}>
                 {r === "owner" ? "Proprietários" : "Clientes"}

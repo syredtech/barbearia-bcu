@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { rateLimit } from "@/lib/rate-limit";
 import { enviarConfirmacao } from "@/lib/mensagem";
 
@@ -43,6 +44,7 @@ export async function GET() {
       where: { venueId: venue.id },
       include: { client: { select: { name: true } }, servico: true },
       orderBy: [{ date: "desc" }, { horario: "asc" }],
+      take: 200,
     });
     return NextResponse.json(agendamentos);
   }
@@ -103,25 +105,25 @@ export async function POST(req: NextRequest) {
   if (!session && guestPhone && !/^[0-9+\s]{7,15}$/.test(guestPhone.trim())) {
     return NextResponse.json({ error: "Formato de telefone inválido." }, { status: 400 });
   }
+  if (!session && guestName && (guestName.trim().length > 100 || /[<>]/.test(guestName))) {
+    return NextResponse.json({ error: "Nome inválido." }, { status: 400 });
+  }
 
   const servico = await prisma.servico.findUnique({ where: { id: servicoId } });
   if (!servico || servico.venueId !== venueId) {
     return NextResponse.json({ error: "Serviço inválido." }, { status: 400 });
   }
 
-  const [bookedCount, venue] = await Promise.all([
-    prisma.agendamento.count({ where: { venueId, date, horario, status: "confirmed" } }),
-    prisma.venue.findUnique({
-      where: { id: venueId },
-      select: {
-        status: true,
-        scheduleStart: true, scheduleEnd: true, slotDuration: true,
-        breakStart: true, breakEnd: true, break2Start: true, break2End: true,
-        closedDays: true,
-        _count: { select: { funcionarios: true } },
-      },
-    }),
-  ]);
+  const venue = await prisma.venue.findUnique({
+    where: { id: venueId },
+    select: {
+      status: true,
+      scheduleStart: true, scheduleEnd: true, slotDuration: true,
+      breakStart: true, breakEnd: true, break2Start: true, break2End: true,
+      closedDays: true,
+      _count: { select: { funcionarios: true } },
+    },
+  });
 
   if (!venue || venue.status !== "approved") {
     return NextResponse.json({ error: "Estabelecimento não disponível." }, { status: 404 });
@@ -142,27 +144,38 @@ export async function POST(req: NextRequest) {
   }
 
   const capacity = Math.max(1, venue._count.funcionarios);
-  if (bookedCount >= capacity) {
-    return NextResponse.json({ error: "Horário indisponível." }, { status: 409 });
-  }
 
-  const agendamento = await prisma.agendamento.create({
-    data: {
-      venueId,
-      servicoId,
-      date,
-      horario,
-      status: "confirmed",
-      clientId: session?.user.id ?? null,
-      guestName: session ? null : guestName.trim(),
-      guestPhone: session ? null : guestPhone.trim(),
-    },
-    include: {
-      venue: { select: { ownerId: true, name: true } },
-      servico: { select: { name: true } },
-      client: { select: { name: true } },
-    },
-  });
+  let agendamento;
+  try {
+    agendamento = await prisma.$transaction(async (tx) => {
+      const currentCount = await tx.agendamento.count({
+        where: { venueId, date, horario, status: "confirmed" },
+      });
+      if (currentCount >= capacity) throw new Error("SLOT_TAKEN");
+      return tx.agendamento.create({
+        data: {
+          venueId,
+          servicoId,
+          date,
+          horario,
+          status: "confirmed",
+          clientId: session?.user.id ?? null,
+          guestName: session ? null : guestName.trim(),
+          guestPhone: session ? null : guestPhone.trim(),
+        },
+        include: {
+          venue: { select: { ownerId: true, name: true } },
+          servico: { select: { name: true } },
+          client: { select: { name: true } },
+        },
+      });
+    }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
+  } catch (err) {
+    if (err instanceof Error && err.message === "SLOT_TAKEN") {
+      return NextResponse.json({ error: "Horário indisponível." }, { status: 409 });
+    }
+    throw err;
+  }
 
   if (agendamento.guestPhone) {
     enviarConfirmacao({
@@ -174,7 +187,7 @@ export async function POST(req: NextRequest) {
     }).catch((err) => { console.error("[mensagem] Falha ao enviar confirmação:", err); });
   }
 
-  const clientLabel = agendamento.client?.name ?? agendamento.guestName ?? "Cliente";
+  const clientLabel = (agendamento.client?.name ?? agendamento.guestName ?? "Cliente").slice(0, 100);
   const [day, month, year] = [
     date.split("-")[2],
     ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][parseInt(date.split("-")[1]) - 1],

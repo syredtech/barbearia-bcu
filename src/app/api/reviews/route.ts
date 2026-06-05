@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
       client: { select: { name: true } },
     },
     orderBy: { createdAt: "desc" },
+    take: 50,
   });
   return NextResponse.json(reviews);
 }

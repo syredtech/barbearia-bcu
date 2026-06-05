@@ -10,8 +10,8 @@ generator client {
 
 model User {
   id            String          @id @default(cuid())
-  name          String
-  email         String          @unique
+  name          String          @db.VarChar(100)
+  email         String          @unique @db.VarChar(254)
   password      String?
   role          String          @default("client")
   createdAt     DateTime        @default(now())
@@ -61,8 +61,8 @@ model VerificationToken {
 model Venue {
   id                    String        @id @default(cuid())
   slug                  String        @unique
-  name                  String
-  description           String?
+  name                  String        @db.VarChar(100)
+  description           String?       @db.VarChar(500)
   category              String        @default("barbearia")
   address               String?
   phone                 String?
@@ -94,7 +94,7 @@ model Venue {
 
 model Funcionario {
   id        String   @id @default(cuid())
-  name      String
+  name      String   @db.VarChar(100)
   venueId   String
   venue     Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -102,8 +102,8 @@ model Funcionario {
 
 model Servico {
   id           String        @id @default(cuid())
-  name         String
-  description  String?
+  name         String        @db.VarChar(100)
+  description  String?       @db.VarChar(500)
   duration     Int
   price        Float
   venueId      String
@@ -135,8 +135,8 @@ model Notificacao {
   id        String   @id @default(cuid())
   ownerId   String
   owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  title     String
-  body      String
+  title     String   @db.VarChar(200)
+  body      String   @db.VarChar(500)
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 

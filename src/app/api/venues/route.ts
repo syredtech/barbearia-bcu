@@ -24,6 +24,7 @@ export async function GET() {
       servicos: { select: { id: true, price: true } },
     },
     orderBy: { name: "asc" },
+    take: 100,
   });
   return NextResponse.json(venues);
 }

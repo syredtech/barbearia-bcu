@@ -8,7 +8,7 @@ function LoginContent() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const rawCallback  = searchParams.get("callbackUrl");
-  const callbackUrl  = rawCallback?.startsWith("/") ? rawCallback : "/";
+  const callbackUrl  = rawCallback?.startsWith("/") && !rawCallback.startsWith("//") ? rawCallback : "/";
 
   const [mode, setMode]     = useState<"login" | "register">("login");
   const [form, setForm]     = useState({ name: "", email: "", password: "" });

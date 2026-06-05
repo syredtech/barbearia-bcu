@@ -96,6 +96,7 @@ export default function QRCodePage() {
         {/* Actions */}
         <div className="flex flex-col gap-3">
           <button
+            type="button"
             onClick={download}
             className="w-full bg-ink text-white rounded-card py-3.5 text-sm font-medium
                        hover:bg-[#333] transition-all duration-200"
@@ -103,6 +104,7 @@ export default function QRCodePage() {
             Descarregar PNG
           </button>
           <button
+            type="button"
             onClick={copyUrl}
             className="w-full border border-[#ebebeb] rounded-card py-3.5 text-sm font-medium
                        text-ink hover:border-ink transition-all duration-200"
@@ -114,6 +116,13 @@ export default function QRCodePage() {
         <p className="text-xs text-muted font-light mt-6 text-center">
           Ao ler este QR code, os clientes são direcionados diretamente para a página de agendamento do seu estabelecimento.
         </p>
+
+        <noscript>
+          <p className="text-xs text-muted mt-4 text-center">
+            URL do estabelecimento:{" "}
+            <a href={url} className="underline text-ink">{url}</a>
+          </p>
+        </noscript>
       </div>
     </main>
   );

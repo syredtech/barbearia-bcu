@@ -26,6 +26,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
+  // Cleanup old events (older than 30 days) — fire and forget
+  prisma.webhookEvent.deleteMany({
+    where: { processedAt: { lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
+  }).catch(() => {});
+
   const getVenueId = (obj: Stripe.Subscription | Stripe.Invoice) =>
     (obj.metadata as Record<string, string>)?.venueId ||
     (obj as any).customer_metadata?.venueId;

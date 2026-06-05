@@ -112,8 +112,8 @@ export default function ServicosPage() {
                     </p>
                   </div>
                   <div className="flex gap-4">
-                    <button onClick={() => startEdit(s)} className="text-xs text-muted hover:text-ink transition-colors underline underline-offset-2">Editar</button>
-                    <button onClick={() => handleDelete(s.id)} className="text-xs text-muted hover:text-red-600 transition-colors underline underline-offset-2">Remover</button>
+                    <button type="button" onClick={() => startEdit(s)} className="text-xs text-muted hover:text-ink transition-colors underline underline-offset-2">Editar</button>
+                    <button type="button" onClick={() => handleDelete(s.id)} className="text-xs text-muted hover:text-red-600 transition-colors underline underline-offset-2">Remover</button>
                   </div>
                 </div>
               ))}

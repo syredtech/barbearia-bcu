@@ -154,7 +154,7 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
             <p className="text-xs font-medium uppercase tracking-widest text-white/50">
               Buscar por disponibilidade
             </p>
-            <button onClick={reset} className="text-xs text-white/40 hover:text-white transition-colors">
+            <button type="button" onClick={reset} className="text-xs text-white/40 hover:text-white transition-colors">
               ✕ Fechar
             </button>
           </div>

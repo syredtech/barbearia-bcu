@@ -52,6 +52,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Formato de data inválido." }, { status: 400 });
   }
 
+  const today = new Date().toISOString().split("T")[0];
+  if (date < today) {
+    return NextResponse.json({ error: "Não é possível consultar datas passadas." }, { status: 400 });
+  }
+
   const venue = await prisma.venue.findUnique({
     where: { id: venueId },
     select: {

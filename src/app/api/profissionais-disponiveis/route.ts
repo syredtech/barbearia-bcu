@@ -128,8 +128,22 @@ export async function GET(req: NextRequest) {
     results.sort((a, b) => (a._distance ?? Infinity) - (b._distance ?? Infinity));
   }
 
-  // Return top 10, strip agendamentos
-  const top10 = results.slice(0, 10).map(({ agendamentos: _a, ...rest }) => rest);
+  // Return top 10, strip agendamentos and internal schedule/location fields
+  const top10 = results.slice(0, 10).map(({
+    agendamentos: _a,
+    latitude: _lat,
+    longitude: _lng,
+    scheduleStart: _ss,
+    scheduleEnd: _se,
+    slotDuration: _sd,
+    breakStart: _bs,
+    breakEnd: _be,
+    break2Start: _bs2,
+    break2End: _be2,
+    closedDays: _cd,
+    _count: _c,
+    ...rest
+  }) => rest);
 
   return NextResponse.json({ results: top10, total: available.length });
 }

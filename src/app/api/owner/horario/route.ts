@@ -69,6 +69,12 @@ export async function PUT(req: NextRequest) {
     }
   }
 
+  if (closedDays !== undefined && closedDays !== null) {
+    if (!Array.isArray(closedDays) || closedDays.some((d: unknown) => !Number.isInteger(d) || (d as number) < 0 || (d as number) > 6)) {
+      return NextResponse.json({ error: "closedDays deve ser um array de inteiros entre 0 e 6." }, { status: 400 });
+    }
+  }
+
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
@@ -82,7 +88,7 @@ export async function PUT(req: NextRequest) {
       breakEnd: breakEnd || null,
       break2Start: break2Start || null,
       break2End: break2End || null,
-      closedDays: JSON.stringify(closedDays || []),
+      closedDays: JSON.stringify(Array.isArray(closedDays) ? closedDays.filter((d: number) => Number.isInteger(d) && d >= 0 && d <= 6) : []),
     },
     select: {
       scheduleStart: true, scheduleEnd: true, slotDuration: true,

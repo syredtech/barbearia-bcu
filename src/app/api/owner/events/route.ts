@@ -42,11 +42,11 @@ export async function GET(req: NextRequest) {
         } catch { /* ignore transient DB errors */ }
       }, 10000);
 
-      // Close after 25 s — EventSource auto-reconnects
+      // Close after 15 s — EventSource auto-reconnects
       const timeout = setTimeout(() => {
         clearInterval(interval);
         if (!closed) { closed = true; try { controller.close(); } catch {} }
-      }, 25000);
+      }, 15000);
 
       req.signal.addEventListener("abort", () => {
         closed = true;

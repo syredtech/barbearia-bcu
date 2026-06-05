@@ -31,6 +31,7 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
 
   if (!open) return (
     <button
+      type="button"
       onClick={() => setOpen(true)}
       className="text-xs text-ink underline underline-offset-2 font-light"
     >
@@ -44,6 +45,7 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
       <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((s) => (
           <button
+            type="button"
             key={s}
             onMouseEnter={() => setHover(s)}
             onMouseLeave={() => setHover(0)}
@@ -68,13 +70,14 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
       {error && <p className="text-xs text-red-500">{error}</p>}
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={submit}
           disabled={loading || rating === 0}
           className="bg-ink text-white px-4 py-2 rounded-pill text-xs font-medium hover:bg-[#333] transition-all disabled:opacity-40"
         >
           {loading ? "A enviar…" : "Enviar avaliação"}
         </button>
-        <button onClick={() => setOpen(false)} className="text-xs text-muted">
+        <button type="button" onClick={() => setOpen(false)} className="text-xs text-muted">
           Cancelar
         </button>
       </div>

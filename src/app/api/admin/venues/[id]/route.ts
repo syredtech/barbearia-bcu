@@ -24,7 +24,10 @@ export async function PATCH(
       select: { id: true, name: true, status: true, updatedAt: true },
     });
     return NextResponse.json(venue);
-  } catch {
-    return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
+  } catch (err: any) {
+    if (err?.code === "P2025") {
+      return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
+    }
+    return NextResponse.json({ error: "Erro interno." }, { status: 500 });
   }
 }

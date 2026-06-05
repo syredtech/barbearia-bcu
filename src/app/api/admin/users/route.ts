@@ -9,9 +9,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
   const role = req.nextUrl.searchParams.get("role");
+  const allowedRoles = ["owner", "client"];
+  const safeRole = role && allowedRoles.includes(role) ? role : null;
+
+  const page = Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0"));
+  const take = 50;
+  const skip = page * take;
 
   const users = await prisma.user.findMany({
-    where: role ? { role } : { role: { not: "admin" } },
+    where: safeRole ? { role: safeRole } : { role: { not: "admin" } },
     select: {
       id: true,
       name: true,
@@ -23,6 +29,8 @@ export async function GET(req: NextRequest) {
       _count: { select: { agendamentos: true } },
     },
     orderBy: { createdAt: "desc" },
+    take,
+    skip,
   });
 
   return NextResponse.json(users);

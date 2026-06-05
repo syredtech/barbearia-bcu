@@ -23,6 +23,16 @@ export async function GET() {
     },
   });
 
+  if (
+    venue &&
+    venue.subscriptionExpiresAt &&
+    venue.subscriptionExpiresAt < new Date() &&
+    venue.subscriptionStatus !== "expired"
+  ) {
+    await prisma.venue.update({ where: { id: venue.id }, data: { subscriptionStatus: "expired" } });
+    return NextResponse.json({ ...venue, subscriptionStatus: "expired" });
+  }
+
   return NextResponse.json(venue);
 }
 

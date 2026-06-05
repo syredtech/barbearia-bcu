@@ -7,6 +7,19 @@ import bcrypt from "bcryptjs";
 
 if (!process.env.NEXTAUTH_SECRET) throw new Error("NEXTAUTH_SECRET não está configurada.");
 
+function truncatingAdapter(prismaClient: typeof prisma) {
+  const base = PrismaAdapter(prismaClient) as any;
+  return {
+    ...base,
+    createUser: async (user: any) => {
+      if (user.name && typeof user.name === "string" && user.name.length > 100) {
+        user.name = user.name.slice(0, 100);
+      }
+      return base.createUser(user);
+    },
+  };
+}
+
 declare module "next-auth" {
   interface Session {
     user: {
@@ -30,7 +43,7 @@ declare module "next-auth/jwt" {
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: truncatingAdapter(prisma) as any,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   cookies: {

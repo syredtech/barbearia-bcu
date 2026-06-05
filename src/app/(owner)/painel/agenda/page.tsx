@@ -148,7 +148,9 @@ export default function AgendaPage() {
   })();
 
   const countByDate = agendamentos.reduce<Record<string, number>>((acc, a) => {
-    acc[a.date] = (acc[a.date] ?? 0) + 1;
+    if (a.status !== "cancelled") {
+      acc[a.date] = (acc[a.date] ?? 0) + 1;
+    }
     return acc;
   }, {});
 
@@ -158,6 +160,7 @@ export default function AgendaPage() {
     if (!bySlot[a.horario]) bySlot[a.horario] = [];
     bySlot[a.horario].push(a);
   });
+  const activeDayCount = dayAgendamentos.filter((a) => a.status !== "cancelled").length;
 
   function prevWeek() {
     const d = new Date(weekBase); d.setDate(d.getDate() - 7); setWeekBase(d);
@@ -187,15 +190,15 @@ export default function AgendaPage() {
           <h1 className="font-serif text-4xl font-bold text-ink">Agenda</h1>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={prevWeek}
+          <button type="button" onClick={prevWeek}
             className="border border-[#ebebeb] px-3.5 py-2 rounded-pill text-sm text-muted hover:border-ink hover:text-ink transition-all duration-200">
             ←
           </button>
-          <button onClick={goToday}
+          <button type="button" onClick={goToday}
             className="border border-[#ebebeb] px-4 py-2 rounded-pill text-sm text-muted hover:border-ink hover:text-ink transition-all duration-200">
             Hoje
           </button>
-          <button onClick={nextWeek}
+          <button type="button" onClick={nextWeek}
             className="border border-[#ebebeb] px-3.5 py-2 rounded-pill text-sm text-muted hover:border-ink hover:text-ink transition-all duration-200">
             →
           </button>
@@ -255,9 +258,9 @@ export default function AgendaPage() {
               ? "A carregar…"
               : allSlots.length === 0
               ? "Dia de folga"
-              : dayAgendamentos.length === 0
+              : activeDayCount === 0
               ? "Nenhuma marcação"
-              : `${dayAgendamentos.length} marcaç${dayAgendamentos.length !== 1 ? "ões" : "ão"} em ${Object.keys(bySlot).length} horário${Object.keys(bySlot).length !== 1 ? "s" : ""}`
+              : `${activeDayCount} marcaç${activeDayCount !== 1 ? "ões" : "ão"} em ${Object.keys(bySlot).length} horário${Object.keys(bySlot).length !== 1 ? "s" : ""}`
             }
           </p>
         </div>
