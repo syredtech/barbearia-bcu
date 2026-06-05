@@ -14,6 +14,10 @@ export async function GET() {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
+  if (!rateLimit(`owner:servicos-get:${session.user.id}`, 60, 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
+
   const venue = await getVenue(session.user.id);
   if (!venue) return NextResponse.json([]);
 
@@ -66,6 +70,11 @@ export async function POST(req: NextRequest) {
   }
   if (isNaN(priceNum) || priceNum < 1 || priceNum > 1000000) {
     return NextResponse.json({ error: "Preço inválido (mínimo 1 ECV)." }, { status: 400 });
+  }
+
+  const servicoCount = await prisma.servico.count({ where: { venueId: venue.id } });
+  if (servicoCount >= 100) {
+    return NextResponse.json({ error: "Limite de 100 serviços atingido." }, { status: 409 });
   }
 
   const servico = await prisma.servico.create({

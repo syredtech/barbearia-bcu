@@ -9,6 +9,10 @@ export async function GET() {
   if (!session || session.user.role !== "owner")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
+  if (!rateLimit(`owner:notificacoes-get:${session.user.id}`, 60, 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
+
   const notificacoes = await prisma.notificacao.findMany({
     where: { ownerId: session.user.id },
     orderBy: { createdAt: "desc" },

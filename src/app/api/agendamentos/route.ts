@@ -32,9 +32,13 @@ function generateSlots(
   return slots;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+
+  const page = Math.min(Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0")), 1000);
+  const take = 100;
+  const skip = page * take;
 
   if (session.user.role === "owner") {
     const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
@@ -44,7 +48,8 @@ export async function GET() {
       where: { venueId: venue.id },
       include: { client: { select: { name: true } }, servico: true },
       orderBy: [{ date: "desc" }, { horario: "asc" }],
-      take: 200,
+      take,
+      skip,
     });
     return NextResponse.json(agendamentos);
   }
@@ -56,7 +61,8 @@ export async function GET() {
       servico: true,
     },
     orderBy: [{ date: "desc" }, { horario: "asc" }],
-    take: 200,
+    take,
+    skip,
   });
   return NextResponse.json(agendamentos);
 }

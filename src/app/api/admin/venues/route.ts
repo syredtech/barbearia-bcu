@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const raw = searchParams.get("status");
   const allowed = ["pending", "approved", "rejected"];
   const status = raw && allowed.includes(raw) ? raw : "pending";
-  const page = Math.max(0, parseInt(searchParams.get("page") ?? "0"));
+  const page = Math.min(Math.max(0, parseInt(searchParams.get("page") ?? "0")), 1000);
   const take = 100;
   const skip = page * take;
 

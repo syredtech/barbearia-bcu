@@ -7,6 +7,11 @@ import { rateLimit } from "@/lib/rate-limit";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!rateLimit(`reviews-get:${ip}`, 60, 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
+
   const venueId = req.nextUrl.searchParams.get("venueId");
   if (!venueId || typeof venueId !== "string" || venueId.length > 100) return NextResponse.json([], { status: 200 });
 
