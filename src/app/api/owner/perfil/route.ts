@@ -56,6 +56,16 @@ export async function PUT(req: NextRequest) {
   if (imageUrl && !imageUrl.startsWith("https://")) {
     return NextResponse.json({ error: "imageUrl deve começar com https://." }, { status: 400 });
   }
+  if (imageUrl) {
+    try {
+      const urlObj = new URL(imageUrl);
+      if (/^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1|0\.0\.0\.0)/.test(urlObj.hostname)) {
+        return NextResponse.json({ error: "imageUrl inválida." }, { status: 400 });
+      }
+    } catch {
+      return NextResponse.json({ error: "imageUrl inválida." }, { status: 400 });
+    }
+  }
   if (imageUrl && imageUrl.length > 500) {
     return NextResponse.json({ error: "URL de imagem inválida (máx. 500 caracteres)." }, { status: 400 });
   }

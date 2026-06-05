@@ -6,6 +6,23 @@ import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
+// 5-second in-memory cache keyed by venueId to reduce DB load when multiple SSE clients share an instance
+const countCache = new Map<string, { agCount: number; notifCount: number; at: number }>();
+const COUNT_CACHE_TTL = 5000;
+
+async function getCounts(venueId: string, ownerId: string) {
+  const now = Date.now();
+  const cached = countCache.get(venueId);
+  if (cached && now - cached.at < COUNT_CACHE_TTL) return cached;
+  const [agCount, notifCount] = await Promise.all([
+    prisma.agendamento.count({ where: { venueId } }),
+    prisma.notificacao.count({ where: { ownerId } }),
+  ]);
+  const entry = { agCount, notifCount, at: now };
+  countCache.set(venueId, entry);
+  return entry;
+}
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
@@ -25,8 +42,9 @@ export async function GET(req: NextRequest) {
 
   const stream = new ReadableStream({
     async start(controller) {
-      let lastAgCount = await prisma.agendamento.count({ where: { venueId } });
-      let lastNotifCount = await prisma.notificacao.count({ where: { ownerId } });
+      const initial = await getCounts(venueId, ownerId);
+      let lastAgCount = initial.agCount;
+      let lastNotifCount = initial.notifCount;
 
       // Initial keepalive
       controller.enqueue(encoder.encode(": ping\n\n"));
@@ -34,10 +52,7 @@ export async function GET(req: NextRequest) {
       const interval = setInterval(async () => {
         if (closed) { clearInterval(interval); return; }
         try {
-          const [agCount, notifCount] = await Promise.all([
-            prisma.agendamento.count({ where: { venueId } }),
-            prisma.notificacao.count({ where: { ownerId } }),
-          ]);
+          const { agCount, notifCount } = await getCounts(venueId, ownerId);
           if (agCount !== lastAgCount || notifCount !== lastNotifCount) {
             lastAgCount = agCount;
             lastNotifCount = notifCount;

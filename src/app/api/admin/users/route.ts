@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const allowedRoles = ["owner", "client"];
   const safeRole = role && allowedRoles.includes(role) ? role : null;
 
-  const page = Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0"));
+  const page = Math.min(Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0")), 1000);
   const take = 50;
   const skip = page * take;
 

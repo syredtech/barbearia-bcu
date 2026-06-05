@@ -4,6 +4,10 @@ const store = new Map<string, { count: number; reset: number }>();
 
 export function rateLimit(key: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
+  // Sweep expired entries to prevent unbounded memory growth
+  if (store.size > 10_000) {
+    store.forEach((v, k) => { if (now > v.reset) store.delete(k); });
+  }
   const entry = store.get(key);
   if (!entry || now > entry.reset) {
     store.set(key, { count: 1, reset: now + windowMs });

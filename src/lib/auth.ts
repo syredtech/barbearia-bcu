@@ -43,6 +43,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     role: string;
+    roleCheckedAt?: number;
   }
 }
 
@@ -90,17 +91,21 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account, trigger }) {
       if (user) {
         token.id = user.id;
-        // Google sign-in: busca role do banco pois o objeto user não carrega role
         if (account?.provider === "google") {
-          const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+          const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { role: true } });
           token.role = dbUser?.role ?? "client";
         } else {
           token.role = user.role;
         }
+        token.roleCheckedAt = Date.now();
       }
-      if (trigger === "update") {
-        const dbUser = await prisma.user.findUnique({ where: { id: token.id } });
+      // Re-sync role from DB every 5 minutes to pick up demotions/promotions
+      const now = Date.now();
+      const stale = !token.roleCheckedAt || now - token.roleCheckedAt > 5 * 60 * 1000;
+      if (trigger === "update" || stale) {
+        const dbUser = await prisma.user.findUnique({ where: { id: token.id }, select: { role: true } });
         if (dbUser) token.role = dbUser.role;
+        token.roleCheckedAt = now;
       }
       return token;
     },

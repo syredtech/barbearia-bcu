@@ -93,6 +93,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       if (currentCount >= capacity) {
         return NextResponse.json({ error: "Horário indisponível." }, { status: 409 });
       }
+      // Verify the service still exists and belongs to this venue
+      const servico = await prisma.servico.findFirst({
+        where: { id: agendamento.servicoId, venueId: venue.id },
+      });
+      if (!servico) {
+        return NextResponse.json({ error: "Serviço não encontrado ou removido." }, { status: 409 });
+      }
     }
   }
 

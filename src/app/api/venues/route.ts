@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const page = Math.min(Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0")), 100);
+  const take = 20;
+  const skip = page * take;
+
   const venues = await prisma.venue.findMany({
     where: {
       status: "approved",
@@ -24,7 +28,8 @@ export async function GET() {
       servicos: { select: { id: true, price: true } },
     },
     orderBy: { name: "asc" },
-    take: 100,
+    take,
+    skip,
   });
   return NextResponse.json(venues);
 }

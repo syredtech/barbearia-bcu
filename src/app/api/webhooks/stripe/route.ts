@@ -49,6 +49,8 @@ export async function POST(req: NextRequest) {
       const sub = await stripe.subscriptions.retrieve(invoice.subscription as string);
       const venueId = getVenueId(sub);
       if (venueId) {
+        const venue = await prisma.venue.findUnique({ where: { id: venueId }, select: { stripeCustomerId: true } });
+        if (!venue || venue.stripeCustomerId !== sub.customer) break;
         await prisma.venue.update({
           where: { id: venueId },
           data: {
@@ -67,6 +69,8 @@ export async function POST(req: NextRequest) {
       const sub = await stripe.subscriptions.retrieve(invoice.subscription as string);
       const venueId = getVenueId(sub);
       if (venueId) {
+        const venue = await prisma.venue.findUnique({ where: { id: venueId }, select: { stripeCustomerId: true } });
+        if (!venue || venue.stripeCustomerId !== sub.customer) break;
         await prisma.venue.update({
           where: { id: venueId },
           data: { subscriptionStatus: "past_due" },
@@ -79,6 +83,8 @@ export async function POST(req: NextRequest) {
       const sub = event.data.object as Stripe.Subscription;
       const venueId = getVenueId(sub);
       if (venueId) {
+        const venue = await prisma.venue.findUnique({ where: { id: venueId }, select: { stripeCustomerId: true } });
+        if (!venue || venue.stripeCustomerId !== sub.customer) break;
         await prisma.venue.update({
           where: { id: venueId },
           data: {
@@ -94,6 +100,8 @@ export async function POST(req: NextRequest) {
       const sub = event.data.object as Stripe.Subscription;
       const venueId = getVenueId(sub);
       if (venueId) {
+        const venue = await prisma.venue.findUnique({ where: { id: venueId }, select: { stripeCustomerId: true } });
+        if (!venue || venue.stripeCustomerId !== sub.customer) break;
         const allowedStatuses = ["active","past_due","canceled","unpaid","trialing","incomplete","incomplete_expired","paused"];
         const safeStatus = allowedStatuses.includes(sub.status) ? sub.status : "past_due";
         await prisma.venue.update({

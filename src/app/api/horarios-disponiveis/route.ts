@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 function generateSlots(
   start: string,
@@ -40,6 +41,11 @@ function generateSlots(
 }
 
 export async function GET(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!rateLimit(`horarios:${ip}`, 60, 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
+
   const { searchParams } = req.nextUrl;
   const venueId = searchParams.get("venueId");
   const date    = searchParams.get("date");
