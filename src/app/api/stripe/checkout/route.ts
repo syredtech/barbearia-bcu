@@ -31,21 +31,25 @@ export async function POST() {
     return NextResponse.json({ error: "Estabelecimento ainda não aprovado." }, { status: 403 });
   }
 
-  const customerId = await obterOuCriarStripeCustomer(
-    venue.id,
-    session.user.email!,
-    session.user.name!
-  );
+  try {
+    const customerId = await obterOuCriarStripeCustomer(
+      venue.id,
+      session.user.email!,
+      session.user.name!
+    );
 
-  const checkoutSession = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    line_items: [{ price: STRIPE_PRICE_ID, quantity: 1 }],
-    success_url: `${process.env.NEXTAUTH_URL}/painel?assinatura=sucesso`,
-    cancel_url: `${process.env.NEXTAUTH_URL}/painel`,
-    metadata: { venueId: venue.id },
-    subscription_data: { metadata: { venueId: venue.id } },
-  });
+    const checkoutSession = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: "subscription",
+      line_items: [{ price: STRIPE_PRICE_ID, quantity: 1 }],
+      success_url: `${process.env.NEXTAUTH_URL}/painel?assinatura=sucesso`,
+      cancel_url: `${process.env.NEXTAUTH_URL}/painel`,
+      metadata: { venueId: venue.id },
+      subscription_data: { metadata: { venueId: venue.id } },
+    });
 
-  return NextResponse.json({ url: checkoutSession.url });
+    return NextResponse.json({ url: checkoutSession.url });
+  } catch {
+    return NextResponse.json({ error: "Erro ao criar sessão de pagamento." }, { status: 502 });
+  }
 }
