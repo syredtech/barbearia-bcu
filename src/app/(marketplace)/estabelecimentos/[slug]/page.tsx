@@ -52,7 +52,12 @@ export default async function EstabelecimentoPage({
 }) {
   const venue = await prisma.venue.findUnique({
     where: { slug: params.slug },
-    include: { servicos: true },
+    select: {
+      id: true, slug: true, name: true, description: true, category: true,
+      address: true, phone: true, imageUrl: true,
+      status: true, subscriptionStatus: true, subscriptionExpiresAt: true,
+      servicos: { select: { id: true, name: true, description: true, duration: true, price: true } },
+    },
   });
 
   const reviews = venue ? await prisma.review.findMany({

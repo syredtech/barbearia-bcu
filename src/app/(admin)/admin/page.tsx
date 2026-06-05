@@ -24,7 +24,6 @@ interface Agendamento {
   id: string; date: string; horario: string; status: string;
   client: { name: string; email: string } | null;
   guestName: string | null;
-  guestPhone: string | null;
   venue: { name: string; category: string };
   servico: { name: string; price: number };
 }
@@ -398,7 +397,7 @@ export default function AdminPage() {
                       className={`${i < agendamentos.length - 1 ? "border-b border-[#ebebeb]" : ""} hover:bg-[#fafafa] transition-colors`}>
                       <TD>
                         <p className="font-medium text-ink">{a.client?.name ?? a.guestName ?? "Convidado"}</p>
-                        <p className="text-xs text-muted font-light">{a.client?.email ?? (a.guestPhone ? `***${a.guestPhone.slice(-4)}` : "")}</p>
+                        <p className="text-xs text-muted font-light">{a.client?.email ?? (a.guestName ? "Convidado" : "")}</p>
                       </TD>
                       <TD>
                         <p className="text-ink font-light">{a.venue.name}</p>
