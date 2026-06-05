@@ -29,7 +29,12 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const rawBody = await req.json();
+  let rawBody: Record<string, unknown>;
+  try {
+    rawBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
   const { imageUrl, description, address, phone } = rawBody;
 
   if (imageUrl && !imageUrl.startsWith("https://")) {

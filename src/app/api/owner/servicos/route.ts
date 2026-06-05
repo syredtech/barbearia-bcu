@@ -38,7 +38,13 @@ export async function POST(req: NextRequest) {
   const venue = await getVenue(session.user.id);
   if (!venue) return NextResponse.json({ error: "Venue não encontrado." }, { status: 404 });
 
-  const { name, description, duration, price } = await req.json();
+  let parsedBody: Record<string, unknown>;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { name, description, duration, price } = parsedBody;
   if (!name || !duration || price === undefined) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
   }

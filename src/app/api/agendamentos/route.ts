@@ -71,7 +71,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { venueId, servicoId, date, horario, guestName, guestPhone } = await req.json();
+  let body: { venueId?: unknown; servicoId?: unknown; date?: unknown; horario?: unknown; guestName?: unknown; guestPhone?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { venueId, servicoId, date, horario, guestName, guestPhone } = body;
 
   if (!venueId || typeof venueId !== "string" || !venueId.trim()) {
     return NextResponse.json({ error: "venueId inválido." }, { status: 400 });
@@ -119,6 +125,8 @@ export async function POST(req: NextRequest) {
     where: { id: venueId },
     select: {
       status: true,
+      subscriptionStatus: true,
+      subscriptionExpiresAt: true,
       scheduleStart: true, scheduleEnd: true, slotDuration: true,
       breakStart: true, breakEnd: true, break2Start: true, break2End: true,
       closedDays: true,
@@ -126,7 +134,13 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  if (!venue || venue.status !== "approved") {
+  if (
+    !venue ||
+    venue.status !== "approved" ||
+    venue.subscriptionStatus !== "active" ||
+    !venue.subscriptionExpiresAt ||
+    venue.subscriptionExpiresAt < new Date()
+  ) {
     return NextResponse.json({ error: "Estabelecimento não disponível." }, { status: 404 });
   }
 

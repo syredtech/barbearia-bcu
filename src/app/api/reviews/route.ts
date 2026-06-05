@@ -33,7 +33,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { agendamentoId, venueId, rating, comment } = await req.json();
+  let parsedBody: Record<string, unknown>;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { agendamentoId, venueId, rating, comment } = parsedBody;
 
   if (!agendamentoId || !venueId || !rating || rating < 1 || rating > 5) {
     return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });

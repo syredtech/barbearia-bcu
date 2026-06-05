@@ -29,7 +29,13 @@ export async function PUT(
   const servico = await authorize(params.id, session.user.id);
   if (!servico) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
-  const { name, description, duration, price } = await req.json();
+  let parsedBody: Record<string, unknown>;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { name, description, duration, price } = parsedBody;
 
   if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
     return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });

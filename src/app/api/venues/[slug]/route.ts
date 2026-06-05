@@ -9,6 +9,8 @@ export async function GET(
     where: {
       slug: params.slug,
       status: "approved",
+      subscriptionStatus: "active",
+      subscriptionExpiresAt: { gt: new Date() },
     },
     select: {
       id: true,

@@ -12,7 +12,13 @@ export async function PATCH(
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  const { status } = await req.json();
+  let parsedBody: Record<string, unknown>;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { status } = parsedBody;
   if (!["approved", "rejected", "pending"].includes(status)) {
     return NextResponse.json({ error: "Status inválido." }, { status: 400 });
   }

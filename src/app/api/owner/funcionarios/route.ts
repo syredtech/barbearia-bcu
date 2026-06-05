@@ -32,7 +32,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { name } = await req.json();
+  let parsedBody: Record<string, unknown>;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { name } = parsedBody;
   if (!name?.trim()) return NextResponse.json({ error: "Nome obrigatório." }, { status: 400 });
   if (typeof name !== "string" || name.trim().length > 100) {
     return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });

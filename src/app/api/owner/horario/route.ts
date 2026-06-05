@@ -16,7 +16,13 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { scheduleStart, scheduleEnd, slotDuration, breakStart, breakEnd, break2Start, break2End, closedDays } = await req.json();
+  let parsedBody: Record<string, unknown>;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { scheduleStart, scheduleEnd, slotDuration, breakStart, breakEnd, break2Start, break2End, closedDays } = parsedBody;
 
   if (!scheduleStart || !scheduleEnd || !slotDuration) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });

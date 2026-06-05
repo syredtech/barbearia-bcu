@@ -44,7 +44,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Já é owner." }, { status: 400 });
   }
 
-  const body = await req.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
   const { name, slug, category, description, address, phone, latitude, longitude } = body;
 
   if (!name || !slug) {

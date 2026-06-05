@@ -21,6 +21,10 @@ export default withAuth(
     }
 
     if (pathname.startsWith("/api/owner/")) {
+      // POST /api/owner/venue promotes a client to owner — any authenticated user is allowed
+      if (pathname === "/api/owner/venue" && req.method === "POST") {
+        return NextResponse.next();
+      }
       if (token?.role !== "owner") {
         return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
       }
