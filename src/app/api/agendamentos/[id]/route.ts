@@ -7,9 +7,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  const { status } = await req.json();
+  let body: { status?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { status } = body;
   const validStatuses = ["cancelled", "completed", "confirmed"];
-  if (!validStatuses.includes(status)) {
+  if (typeof status !== "string" || !validStatuses.includes(status)) {
     return NextResponse.json({ error: "Status inválido." }, { status: 400 });
   }
 
@@ -43,9 +49,21 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   // Owner can manage their venue's appointments
   if (session.user.role === "owner") {
-    const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+    const venue = await prisma.venue.findUnique({
+      where: { ownerId: session.user.id },
+      select: { id: true, _count: { select: { funcionarios: true } } },
+    });
     if (!venue || agendamento.venueId !== venue.id) {
       return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
+    }
+    if (status === "confirmed") {
+      const capacity = Math.max(1, venue._count.funcionarios);
+      const currentCount = await prisma.agendamento.count({
+        where: { venueId: venue.id, date: agendamento.date, horario: agendamento.horario, status: "confirmed" },
+      });
+      if (currentCount >= capacity) {
+        return NextResponse.json({ error: "Horário indisponível." }, { status: 409 });
+      }
     }
   }
 

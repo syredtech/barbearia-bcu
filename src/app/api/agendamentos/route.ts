@@ -56,6 +56,7 @@ export async function GET() {
       servico: true,
     },
     orderBy: [{ date: "desc" }, { horario: "asc" }],
+    take: 200,
   });
   return NextResponse.json(agendamentos);
 }

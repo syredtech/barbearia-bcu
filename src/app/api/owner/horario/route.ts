@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 const toMin = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
 
@@ -9,6 +10,10 @@ export async function PUT(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+
+  if (!rateLimit(`owner:horario:${session.user.id}`, 10, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
   const { scheduleStart, scheduleEnd, slotDuration, breakStart, breakEnd, break2Start, break2End, closedDays } = await req.json();
@@ -88,7 +93,9 @@ export async function PUT(req: NextRequest) {
       breakEnd: breakEnd || null,
       break2Start: break2Start || null,
       break2End: break2End || null,
-      closedDays: JSON.stringify(Array.isArray(closedDays) ? closedDays.filter((d: number) => Number.isInteger(d) && d >= 0 && d <= 6) : []),
+      ...(closedDays !== undefined && closedDays !== null && {
+        closedDays: JSON.stringify((closedDays as number[]).filter((d) => Number.isInteger(d) && d >= 0 && d <= 6)),
+      }),
     },
     select: {
       scheduleStart: true, scheduleEnd: true, slotDuration: true,

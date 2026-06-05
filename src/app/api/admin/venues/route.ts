@@ -10,7 +10,9 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = req.nextUrl;
-  const status = searchParams.get("status") || "pending";
+  const raw = searchParams.get("status");
+  const allowed = ["pending", "approved", "rejected"];
+  const status = raw && allowed.includes(raw) ? raw : "pending";
 
   const venues = await prisma.venue.findMany({
     where: { status },

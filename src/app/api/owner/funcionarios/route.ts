@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export async function GET() {
   const funcionarios = await prisma.funcionario.findMany({
     where: { venueId: venue.id },
     orderBy: { createdAt: "asc" },
+    take: 100,
   });
   return NextResponse.json(funcionarios);
 }
@@ -25,6 +27,11 @@ export async function POST(req: NextRequest) {
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
+
+  if (!rateLimit(`owner:funcionarios:${session.user.id}`, 20, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
+  }
+
   const { name } = await req.json();
   if (!name?.trim()) return NextResponse.json({ error: "Nome obrigatório." }, { status: 400 });
   if (typeof name !== "string" || name.trim().length > 100) {

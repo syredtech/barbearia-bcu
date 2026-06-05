@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,12 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  const { imageUrl, description, address, phone } = await req.json();
+  if (!rateLimit(`owner:perfil:${session.user.id}`, 10, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
+  }
+
+  const rawBody = await req.json();
+  const { imageUrl, description, address, phone } = rawBody;
 
   if (imageUrl && !imageUrl.startsWith("https://")) {
     return NextResponse.json({ error: "imageUrl deve começar com https://." }, { status: 400 });
@@ -54,14 +60,15 @@ export async function PUT(req: NextRequest) {
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
+  const updateData: Record<string, string | null> = {};
+  if ("imageUrl" in rawBody) updateData.imageUrl = imageUrl || null;
+  if ("description" in rawBody) updateData.description = description || null;
+  if ("address" in rawBody) updateData.address = address || null;
+  if ("phone" in rawBody) updateData.phone = phone || null;
+
   const updated = await prisma.venue.update({
     where: { id: venue.id },
-    data: {
-      imageUrl: imageUrl || null,
-      description: description || null,
-      address: address || null,
-      phone: phone || null,
-    },
+    data: updateData,
     select: { slug: true, name: true, imageUrl: true, description: true, address: true, phone: true },
   });
 

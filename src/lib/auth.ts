@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
+import { rateLimit } from "./rate-limit";
 
 if (!process.env.NEXTAUTH_SECRET) throw new Error("NEXTAUTH_SECRET não está configurada.");
 
@@ -49,7 +50,7 @@ export const authOptions: NextAuthOptions = {
   cookies: {
     sessionToken: {
       name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token",
-      options: { httpOnly: true, sameSite: "strict" as const, path: "/", secure: process.env.NODE_ENV === "production" },
+      options: { httpOnly: true, sameSite: "lax" as const, path: "/", secure: process.env.NODE_ENV === "production" },
     },
   },
   providers: [
@@ -65,6 +66,9 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+
+        const key = `login:${credentials.email.toLowerCase().trim()}`;
+        if (!rateLimit(key, 10, 15 * 60 * 1000)) return null;
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email.toLowerCase().trim() },

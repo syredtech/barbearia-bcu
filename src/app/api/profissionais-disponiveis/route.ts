@@ -70,6 +70,7 @@ export async function GET(req: NextRequest) {
       subscriptionExpiresAt: { gt: new Date() },
       ...(category ? { category } : {}),
     },
+    take: 100,
     select: {
       id: true,
       slug: true,

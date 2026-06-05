@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 async function getVenue(ownerId: string) {
   return prisma.venue.findUnique({ where: { ownerId } });
@@ -30,6 +31,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
+  if (!rateLimit(`owner:servicos:${session.user.id}`, 30, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
+  }
+
   const venue = await getVenue(session.user.id);
   if (!venue) return NextResponse.json({ error: "Venue não encontrado." }, { status: 404 });
 
@@ -43,8 +48,8 @@ export async function POST(req: NextRequest) {
   if (/[<>]/.test(name)) {
     return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
   }
-  if (description && description.length > 300) {
-    return NextResponse.json({ error: "Descrição inválida (máx. 300 caracteres)." }, { status: 400 });
+  if (description && description.length > 500) {
+    return NextResponse.json({ error: "Descrição inválida (máx. 500 caracteres)." }, { status: 400 });
   }
   const durNum = Number(duration);
   const priceNum = Number(price);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 async function authorize(servicoId: string, ownerId: string) {
   const servico = await prisma.servico.findUnique({
@@ -21,6 +22,10 @@ export async function PUT(
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
+  if (!rateLimit(`owner:servicos:${session.user.id}`, 30, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
+  }
+
   const servico = await authorize(params.id, session.user.id);
   if (!servico) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
@@ -32,8 +37,8 @@ export async function PUT(
   if (/[<>]/.test(name)) {
     return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
   }
-  if (description && description.length > 300) {
-    return NextResponse.json({ error: "Descrição inválida (máx. 300 caracteres)." }, { status: 400 });
+  if (description && description.length > 500) {
+    return NextResponse.json({ error: "Descrição inválida (máx. 500 caracteres)." }, { status: 400 });
   }
   const durNum = Number(duration);
   const priceNum = Number(price);
@@ -59,6 +64,10 @@ export async function DELETE(
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+
+  if (!rateLimit(`owner:servicos:${session.user.id}`, 30, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
   const servico = await authorize(params.id, session.user.id);

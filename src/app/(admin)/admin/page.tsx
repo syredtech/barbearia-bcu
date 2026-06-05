@@ -123,21 +123,25 @@ export default function AdminPage() {
   // fetch helpers
   const loadStats = useCallback(async () => {
     const r = await fetch("/api/admin/stats");
+    if (!r.ok) return;
     setStats(await r.json());
   }, []);
 
   const loadVenues = useCallback(async () => {
     const r = await fetch(`/api/admin/venues?status=${venueFilter}`);
+    if (!r.ok) return;
     setVenues(await r.json());
   }, [venueFilter]);
 
   const loadUsers = useCallback(async () => {
     const r = await fetch(`/api/admin/users?role=${userRole}`);
+    if (!r.ok) return;
     setUsers(await r.json());
   }, [userRole]);
 
   const loadAgendamentos = useCallback(async () => {
     const r = await fetch("/api/admin/agendamentos");
+    if (!r.ok) return;
     setAgendamentos(await r.json());
   }, []);
 

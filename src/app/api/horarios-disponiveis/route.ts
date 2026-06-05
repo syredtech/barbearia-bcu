@@ -57,6 +57,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Não é possível consultar datas passadas." }, { status: 400 });
   }
 
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
+  if (date > maxDate.toISOString().split("T")[0]) {
+    return NextResponse.json({ error: "Data demasiado distante (máx. 1 ano)." }, { status: 400 });
+  }
+
   const venue = await prisma.venue.findUnique({
     where: { id: venueId },
     select: {

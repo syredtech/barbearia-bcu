@@ -76,6 +76,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Telefone contém caracteres inválidos." }, { status: 400 });
   }
 
+  const allowedCategories = ["barbearia", "salao", "spa"];
+  if (category && !allowedCategories.includes(category)) {
+    return NextResponse.json({ error: "Categoria inválida." }, { status: 400 });
+  }
+
   const safeSlug = slug?.toLowerCase().replace(/[^a-z0-9-]/g, "").substring(0, 100);
   if (!safeSlug || safeSlug.length < 3) {
     return NextResponse.json({ error: "Slug inválido." }, { status: 400 });
