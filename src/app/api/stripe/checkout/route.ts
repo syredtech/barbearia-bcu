@@ -6,8 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST() {
-  if (!process.env.NEXTAUTH_URL) {
-    return NextResponse.json({ error: "Configuração incompleta." }, { status: 500 });
+  if (!process.env.NEXTAUTH_URL || !STRIPE_PRICE_ID) {
+    return NextResponse.json({ error: "Configuração incompleta." }, { status: 503 });
   }
 
   const session = await getServerSession(authOptions);
