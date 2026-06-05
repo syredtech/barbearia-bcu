@@ -29,7 +29,8 @@ export async function PUT(
   const servico = await authorize(params.id, session.user.id);
   if (!servico) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
-  let parsedBody: Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let parsedBody: any;
   try {
     parsedBody = await req.json();
   } catch {

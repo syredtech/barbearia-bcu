@@ -38,7 +38,8 @@ export async function POST(req: NextRequest) {
   const venue = await getVenue(session.user.id);
   if (!venue) return NextResponse.json({ error: "Venue não encontrado." }, { status: 404 });
 
-  let parsedBody: Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let parsedBody: any;
   try {
     parsedBody = await req.json();
   } catch {

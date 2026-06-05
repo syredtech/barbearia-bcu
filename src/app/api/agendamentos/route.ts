@@ -71,7 +71,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  let body: { venueId?: unknown; servicoId?: unknown; date?: unknown; horario?: unknown; guestName?: unknown; guestPhone?: unknown };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
   try {
     body = await req.json();
   } catch {

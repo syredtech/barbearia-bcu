@@ -29,7 +29,8 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  let rawBody: Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let rawBody: any;
   try {
     rawBody = await req.json();
   } catch {
