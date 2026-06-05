@@ -83,7 +83,7 @@ export async function PUT(req: NextRequest) {
   }
 
   if (closedDays !== undefined && closedDays !== null) {
-    if (!Array.isArray(closedDays) || closedDays.some((d: unknown) => !Number.isInteger(d) || (d as number) < 0 || (d as number) > 6)) {
+    if (!Array.isArray(closedDays) || closedDays.length > 7 || closedDays.some((d: unknown) => !Number.isInteger(d) || (d as number) < 0 || (d as number) > 6)) {
       return NextResponse.json({ error: "closedDays deve ser um array de inteiros entre 0 e 6." }, { status: 400 });
     }
   }

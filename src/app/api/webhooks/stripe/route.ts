@@ -26,10 +26,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  // Cleanup old events (older than 30 days) — fire and forget
-  prisma.webhookEvent.deleteMany({
-    where: { processedAt: { lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
-  }).catch(() => {});
+  // Cleanup old events (older than 30 days) — probabilistic to avoid per-request DB write
+  if (Math.random() < 0.01) {
+    prisma.webhookEvent.deleteMany({
+      where: { processedAt: { lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
+    }).catch(() => {});
+  }
 
   const getVenueId = (obj: Stripe.Subscription | Stripe.Invoice) =>
     (obj.metadata as Record<string, string>)?.venueId ||
@@ -92,10 +94,12 @@ export async function POST(req: NextRequest) {
       const sub = event.data.object as Stripe.Subscription;
       const venueId = getVenueId(sub);
       if (venueId) {
+        const allowedStatuses = ["active","past_due","canceled","unpaid","trialing","incomplete","incomplete_expired","paused"];
+        const safeStatus = allowedStatuses.includes(sub.status) ? sub.status : "past_due";
         await prisma.venue.update({
           where: { id: venueId },
           data: {
-            subscriptionStatus: sub.status === "active" ? "active" : sub.status,
+            subscriptionStatus: safeStatus,
             ...(periodEnd(sub) && { subscriptionExpiresAt: periodEnd(sub) }),
           },
         });

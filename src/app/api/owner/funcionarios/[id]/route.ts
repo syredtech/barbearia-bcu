@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+  if (!rateLimit(`owner:funcionarios:${session.user.id}`, 30, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });

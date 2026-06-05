@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   }
   const { name, slug, category, description, address, phone, latitude, longitude } = body;
 
-  if (!name || !slug) {
+  if (!name || typeof name !== "string" || !name.trim() || !slug) {
     return NextResponse.json({ error: "Nome e URL são obrigatórios." }, { status: 400 });
   }
 
@@ -105,36 +105,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Slug inválido." }, { status: 400 });
   }
 
-  const existing = await prisma.venue.findUnique({ where: { slug: safeSlug } });
-  if (existing) {
-    return NextResponse.json({ error: "Esta URL já está em uso." }, { status: 409 });
+  // Atomic: create venue first (unique constraints are the gate), then promote role
+  let venue;
+  try {
+    venue = await prisma.$transaction(async (tx) => {
+      const created = await tx.venue.create({
+        data: {
+          name: name.trim(), slug: safeSlug, category, description, address, phone,
+          latitude: latitude != null ? Number(latitude) : null,
+          longitude: longitude != null ? Number(longitude) : null,
+          ownerId: session.user.id,
+        },
+        select: {
+          id: true, slug: true, name: true, description: true,
+          category: true, address: true, phone: true, imageUrl: true,
+          latitude: true, longitude: true, status: true, createdAt: true,
+        },
+      });
+      await tx.user.update({ where: { id: session.user.id }, data: { role: "owner" } });
+      return created;
+    });
+  } catch (err: any) {
+    if (err?.code === "P2002") {
+      const target: string = err?.meta?.target ?? "";
+      if (target.includes("slug")) return NextResponse.json({ error: "Esta URL já está em uso." }, { status: 409 });
+      if (target.includes("ownerId")) return NextResponse.json({ error: "Você já tem um estabelecimento cadastrado." }, { status: 409 });
+    }
+    throw err;
   }
-
-  const alreadyHasVenue = await prisma.venue.findUnique({
-    where: { ownerId: session.user.id },
-  });
-  if (alreadyHasVenue) {
-    return NextResponse.json({ error: "Você já tem um estabelecimento cadastrado." }, { status: 409 });
-  }
-
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: { role: "owner" },
-  });
-
-  const venue = await prisma.venue.create({
-    data: {
-      name, slug: safeSlug, category, description, address, phone,
-      latitude: latitude != null ? Number(latitude) : null,
-      longitude: longitude != null ? Number(longitude) : null,
-      ownerId: session.user.id,
-    },
-    select: {
-      id: true, slug: true, name: true, description: true,
-      category: true, address: true, phone: true, imageUrl: true,
-      latitude: true, longitude: true, status: true, createdAt: true,
-    },
-  });
 
   return NextResponse.json(venue, { status: 201 });
 }

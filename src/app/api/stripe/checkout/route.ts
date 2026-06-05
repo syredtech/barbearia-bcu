@@ -3,11 +3,16 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { stripe, STRIPE_PRICE_ID, obterOuCriarStripeCustomer } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+
+  if (!rateLimit(`stripe:checkout:${session.user.id}`, 5, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 
   const venue = await prisma.venue.findUnique({
@@ -16,6 +21,10 @@ export async function POST() {
 
   if (!venue) {
     return NextResponse.json({ error: "Venue não encontrado." }, { status: 404 });
+  }
+
+  if (venue.status !== "approved") {
+    return NextResponse.json({ error: "Estabelecimento ainda não aprovado." }, { status: 403 });
   }
 
   const customerId = await obterOuCriarStripeCustomer(

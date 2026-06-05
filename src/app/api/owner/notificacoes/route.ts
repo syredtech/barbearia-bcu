@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -22,6 +23,10 @@ export async function PATCH() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+
+  if (!rateLimit(`owner:notificacoes:${session.user.id}`, 60, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
 
   await prisma.notificacao.updateMany({
     where: { ownerId: session.user.id, read: false },

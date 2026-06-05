@@ -51,6 +51,11 @@ export async function POST(req: NextRequest) {
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
+  const count = await prisma.funcionario.count({ where: { venueId: venue.id } });
+  if (count >= 50) {
+    return NextResponse.json({ error: "Limite de 50 funcionários atingido." }, { status: 409 });
+  }
+
   const f = await prisma.funcionario.create({
     data: { name: name.trim(), venueId: venue.id },
   });

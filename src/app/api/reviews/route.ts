@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const venueId = req.nextUrl.searchParams.get("venueId");
-  if (!venueId) return NextResponse.json([], { status: 200 });
+  if (!venueId || typeof venueId !== "string" || venueId.length > 100) return NextResponse.json([], { status: 200 });
 
   const reviews = await prisma.review.findMany({
     where: { venueId },
@@ -40,9 +40,9 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
   }
-  const { agendamentoId, venueId, rating, comment } = parsedBody;
+  const { agendamentoId, rating, comment } = parsedBody;
 
-  if (!agendamentoId || !venueId || !rating || rating < 1 || rating > 5) {
+  if (!agendamentoId || typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) {
     return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
   }
   if (comment && (typeof comment !== "string" || comment.length > 500)) {
@@ -58,8 +58,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
   }
 
-  if (agendamento.status === "cancelled") {
-    return NextResponse.json({ error: "Não é possível avaliar um agendamento cancelado." }, { status: 400 });
+  if (agendamento.status !== "completed") {
+    return NextResponse.json({ error: "Só é possível avaliar serviços concluídos." }, { status: 400 });
   }
 
   const apptTime = new Date(`${agendamento.date}T${agendamento.horario}:00`);
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   const review = await prisma.review.create({
     data: {
       agendamentoId,
-      venueId,
+      venueId: agendamento.venueId,
       rating,
       comment: comment?.trim() || null,
       clientId: session.user.id,

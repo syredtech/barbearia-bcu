@@ -107,14 +107,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Data demasiado distante (máx. 1 ano)." }, { status: 400 });
   }
 
-  if (!session && (!guestName?.trim() || !guestPhone?.trim())) {
-    return NextResponse.json({ error: "Nome e telefone obrigatórios." }, { status: 400 });
-  }
-  if (!session && guestPhone && !/^[0-9+\s]{7,15}$/.test(guestPhone.trim())) {
-    return NextResponse.json({ error: "Formato de telefone inválido." }, { status: 400 });
-  }
-  if (!session && guestName && (guestName.trim().length > 100 || /[<>]/.test(guestName))) {
-    return NextResponse.json({ error: "Nome inválido." }, { status: 400 });
+  if (!session) {
+    if (typeof guestName !== "string" || typeof guestPhone !== "string") {
+      return NextResponse.json({ error: "Nome e telefone obrigatórios." }, { status: 400 });
+    }
+    if (!guestName.trim() || !guestPhone.trim()) {
+      return NextResponse.json({ error: "Nome e telefone obrigatórios." }, { status: 400 });
+    }
+    if (!/^[0-9+\s]{7,15}$/.test(guestPhone.trim())) {
+      return NextResponse.json({ error: "Formato de telefone inválido." }, { status: 400 });
+    }
+    if (guestName.trim().length > 100 || /[<>]/.test(guestName)) {
+      return NextResponse.json({ error: "Nome inválido." }, { status: 400 });
+    }
+    // Guest bookings limited to 14 days out to reduce slot-flooding abuse
+    const maxGuestDate = new Date();
+    maxGuestDate.setDate(maxGuestDate.getDate() + 14);
+    if (date > maxGuestDate.toISOString().split("T")[0]) {
+      return NextResponse.json({ error: "Reservas sem conta têm limite de 14 dias." }, { status: 400 });
+    }
+    // Per-venue per-IP rate limit for guest bookings (3 per hour)
+    if (!rateLimit(`agendamentos:guest:${ip}:${venueId}`, 3, 60 * 60 * 1000)) {
+      return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
+    }
   }
 
   const servico = await prisma.servico.findUnique({ where: { id: servicoId } });

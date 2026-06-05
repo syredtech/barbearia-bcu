@@ -50,6 +50,9 @@ export async function PUT(req: NextRequest) {
   if (phone !== undefined && phone !== null && typeof phone !== "string") {
     return NextResponse.json({ error: "Telefone inválido." }, { status: 400 });
   }
+  if (imageUrl && /[<>"']/.test(imageUrl)) {
+    return NextResponse.json({ error: "imageUrl contém caracteres inválidos." }, { status: 400 });
+  }
   if (imageUrl && !imageUrl.startsWith("https://")) {
     return NextResponse.json({ error: "imageUrl deve começar com https://." }, { status: 400 });
   }

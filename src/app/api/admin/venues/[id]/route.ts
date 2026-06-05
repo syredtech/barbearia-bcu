@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function PATCH(
   req: NextRequest,
@@ -10,6 +11,10 @@ export async function PATCH(
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "admin") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+
+  if (!rateLimit(`admin:venue-patch:${session.user.id}`, 60, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

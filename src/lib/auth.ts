@@ -16,6 +16,9 @@ function truncatingAdapter(prismaClient: typeof prisma) {
       if (user.name && typeof user.name === "string" && user.name.length > 100) {
         user.name = user.name.slice(0, 100);
       }
+      if (user.email && typeof user.email === "string" && user.email.length > 254) {
+        throw new Error("E-mail demasiado longo.");
+      }
       return base.createUser(user);
     },
   };

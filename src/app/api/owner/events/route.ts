@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,9 @@ export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "owner") {
     return new Response("Não autorizado", { status: 401 });
+  }
+  if (!rateLimit(`owner:events:${session.user.id}`, 20, 60 * 1000)) {
+    return new Response("Demasiadas ligações. Aguarde um momento.", { status: 429 });
   }
 
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
