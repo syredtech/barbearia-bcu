@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const SITE_URL = "https://barbearia-bcu.vercel.app";
+const SITE_URL = (process.env.NEXTAUTH_URL ?? "https://belabelo.cv").replace(/\/$/, "");
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

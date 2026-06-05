@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/painel", "/minha-conta", "/api/"],
     },
-    sitemap: "https://barbearia-bcu.vercel.app/sitemap.xml",
+    sitemap: `${(process.env.NEXTAUTH_URL ?? "https://belabelo.cv").replace(/\/$/, "")}/sitemap.xml`,
   };
 }

@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!rateLimit(`reviews-get:${ip}`, 60, 60 * 1000)) {
+  const ip = getClientIp(req);
+  if (!(await rateLimit(`reviews-get:${ip}`, 60, 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 

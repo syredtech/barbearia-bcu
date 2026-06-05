@@ -129,6 +129,8 @@ model Agendamento {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   review     Review?
+
+  @@index([venueId, date, horario, status])
 }
 
 model Notificacao {

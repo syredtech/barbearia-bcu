@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import ShareButton from "@/components/ShareButton";
 import type { Metadata } from "next";
 
-const SITE_URL = (process.env.NEXTAUTH_URL ?? "https://barbearia-bcu.vercel.app").replace(/\/$/, "");
+const SITE_URL = (process.env.NEXTAUTH_URL ?? "https://belabelo.cv").replace(/\/$/, "");
 const CATEGORY_LABEL: Record<string, string> = {
   barbearia: "Barbearia",
   salao: "Cabeleireiro & Penteados",

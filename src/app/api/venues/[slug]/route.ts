@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { slug: string } }
 ) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!rateLimit(`venues-slug:${ip}`, 60, 60 * 1000)) {
+  const ip = getClientIp(req);
+  if (!(await rateLimit(`venues-slug:${ip}`, 60, 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
   const venue = await prisma.venue.findUnique({

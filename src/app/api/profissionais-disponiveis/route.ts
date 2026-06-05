@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +43,8 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
 }
 
 export async function GET(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!rateLimit(`profissionais:${ip}`, 30, 60 * 1000)) {
+  const ip = getClientIp(req);
+  if (!(await rateLimit(`profissionais:${ip}`, 30, 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 

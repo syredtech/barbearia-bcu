@@ -3,7 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { prismairect } from "@/lib/prisma-direct";
 import { enviarConfirmacao } from "@/lib/mensagem";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +47,20 @@ export async function GET(req: NextRequest) {
 
     const agendamentos = await prisma.agendamento.findMany({
       where: { venueId: venue.id },
-      include: { client: { select: { name: true } }, servico: true },
+      select: {
+        id: true,
+        date: true,
+        horario: true,
+        status: true,
+        venueId: true,
+        servicoId: true,
+        clientId: true,
+        guestName: true,
+        createdAt: true,
+        updatedAt: true,
+        client: { select: { name: true } },
+        servico: true,
+      },
       orderBy: [{ date: "desc" }, { horario: "asc" }],
       take,
       skip,
@@ -68,12 +82,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const ip = getClientIp(req);
   const session = await getServerSession(authOptions);
 
   // Rate limit by userId when authenticated, otherwise by IP
   const rateLimitKey = session ? `agendamentos:user:${session.user.id}` : `agendamentos:${ip}`;
-  if (!rateLimit(rateLimitKey, 10, 60 * 60 * 1000)) {
+  if (!(await rateLimit(rateLimitKey, 10, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
@@ -133,7 +147,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Reservas sem conta têm limite de 14 dias." }, { status: 400 });
     }
     // Per-venue per-IP rate limit for guest bookings (3 per hour)
-    if (!rateLimit(`agendamentos:guest:${ip}:${venueId}`, 3, 60 * 60 * 1000)) {
+    if (!(await rateLimit(`agendamentos:guest:${ip}:${venueId}`, 3, 60 * 60 * 1000))) {
       return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
     }
   }
@@ -184,7 +198,7 @@ export async function POST(req: NextRequest) {
 
   let agendamento;
   try {
-    agendamento = await prisma.$transaction(async (tx) => {
+    agendamento = await prismairect.$transaction(async (tx) => {
       const currentCount = await tx.agendamento.count({
         where: { venueId, date, horario, status: "confirmed" },
       });

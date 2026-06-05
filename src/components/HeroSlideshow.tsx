@@ -5,11 +5,18 @@ type Slide =
   | { gradient: string; src?: undefined }
   | { src: string; alt: string; gradient?: undefined };
 
-const SLIDES: Slide[] = [
+const DESKTOP_SLIDES: Slide[] = [
   { src: "/hero/hero-1.webp", alt: "Barbearia" },
   { src: "/hero/hero-2.webp", alt: "Barbearia" },
   { src: "/hero/hero-3.webp", alt: "Barbearia" },
   { src: "/hero/hero-4.webp", alt: "Barbearia" },
+];
+
+const MOBILE_SLIDES: Slide[] = [
+  { src: "/hero/hero-5.jpg", alt: "Barbearia" },
+  { src: "/hero/hero-6.jpg", alt: "Barbearia" },
+  { src: "/hero/hero-8.jpg", alt: "Barbearia" },
+  { src: "/hero/hero-7.jpg", alt: "Barbearia" },
 ];
 
 export default function HeroSlideshow() {
@@ -17,7 +24,7 @@ export default function HeroSlideshow() {
 
   useEffect(() => {
     const t = setInterval(() => {
-      setCurrent((c) => (c + 1) % SLIDES.length);
+      setCurrent((c) => (c + 1) % DESKTOP_SLIDES.length);
     }, 5000);
     return () => clearInterval(t);
   }, []);
@@ -27,25 +34,44 @@ export default function HeroSlideshow() {
       className="absolute inset-0 pointer-events-none"
       aria-hidden="true"
     >
-      {SLIDES.map((slide, i) => (
-        <div
-          key={i}
-          className={`absolute inset-0 hero-slide-bg${i === current ? " hero-slide-active" : ""}`}
-          style={{
-            backgroundImage: slide.src ? `url(${slide.src})` : undefined,
-            background: slide.src ? undefined : slide.gradient,
-            opacity: i === current ? 1 : 0,
-            transition: "opacity 1s ease-in-out",
-          }}
-        />
-      ))}
+      {/* Desktop slides — hidden on mobile */}
+      <div className="hidden md:block absolute inset-0">
+        {DESKTOP_SLIDES.map((slide, i) => (
+          <div
+            key={i}
+            className={`absolute inset-0 hero-slide-bg${i === current ? " hero-slide-active" : ""}`}
+            style={{
+              backgroundImage: slide.src ? `url(${slide.src})` : undefined,
+              background: slide.src ? undefined : slide.gradient,
+              opacity: i === current ? 1 : 0,
+              transition: "opacity 1s ease-in-out",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Mobile slides — hidden on desktop */}
+      <div className="block md:hidden absolute inset-0">
+        {MOBILE_SLIDES.map((slide, i) => (
+          <div
+            key={i}
+            className={`absolute inset-0 hero-slide-bg${i === current ? " hero-slide-active" : ""}`}
+            style={{
+              backgroundImage: slide.src ? `url(${slide.src})` : undefined,
+              background: slide.src ? undefined : slide.gradient,
+              opacity: i === current ? 1 : 0,
+              transition: "opacity 1s ease-in-out",
+            }}
+          />
+        ))}
+      </div>
 
       {/* Overlay: gradiente top→bottom (mobile) / tint uniforme (desktop) */}
       <div className="absolute inset-0 z-10 hero-tint" />
 
       {/* Indicadores */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
-        {SLIDES.map((_, i) => (
+        {DESKTOP_SLIDES.map((_, i) => (
           <div
             key={i}
             className="w-2.5 h-2.5 rounded-full transition-all duration-500"
