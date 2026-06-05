@@ -30,10 +30,11 @@ export async function PUT(req: NextRequest) {
   }
 
   const timeRegex = /^\d{2}:\d{2}$/;
-  if (!timeRegex.test(scheduleStart)) {
+  const validTime = (t: string) => { const [h, m] = t.split(":").map(Number); return h >= 0 && h <= 23 && m >= 0 && m <= 59; };
+  if (!timeRegex.test(scheduleStart) || !validTime(scheduleStart)) {
     return NextResponse.json({ error: "scheduleStart inválido. Use o formato HH:MM." }, { status: 400 });
   }
-  if (!timeRegex.test(scheduleEnd)) {
+  if (!timeRegex.test(scheduleEnd) || !validTime(scheduleEnd)) {
     return NextResponse.json({ error: "scheduleEnd inválido. Use o formato HH:MM." }, { status: 400 });
   }
   if (toMin(scheduleEnd) <= toMin(scheduleStart)) {
@@ -41,15 +42,15 @@ export async function PUT(req: NextRequest) {
   }
 
   const slotNum = Number(slotDuration);
-  if (isNaN(slotNum) || slotNum < 15 || slotNum > 480) {
-    return NextResponse.json({ error: "slotDuration deve ser um número entre 15 e 480." }, { status: 400 });
+  if (isNaN(slotNum) || !Number.isInteger(slotNum) || slotNum < 15 || slotNum > 480) {
+    return NextResponse.json({ error: "slotDuration deve ser um inteiro entre 15 e 480." }, { status: 400 });
   }
 
   if (breakStart || breakEnd) {
-    if (!breakStart || !timeRegex.test(breakStart)) {
+    if (!breakStart || !timeRegex.test(breakStart) || !validTime(breakStart)) {
       return NextResponse.json({ error: "breakStart inválido. Use o formato HH:MM." }, { status: 400 });
     }
-    if (!breakEnd || !timeRegex.test(breakEnd)) {
+    if (!breakEnd || !timeRegex.test(breakEnd) || !validTime(breakEnd)) {
       return NextResponse.json({ error: "breakEnd inválido. Use o formato HH:MM." }, { status: 400 });
     }
     if (toMin(breakEnd) <= toMin(breakStart)) {
@@ -61,10 +62,10 @@ export async function PUT(req: NextRequest) {
   }
 
   if (break2Start || break2End) {
-    if (!break2Start || !timeRegex.test(break2Start)) {
+    if (!break2Start || !timeRegex.test(break2Start) || !validTime(break2Start)) {
       return NextResponse.json({ error: "break2Start inválido. Use o formato HH:MM." }, { status: 400 });
     }
-    if (!break2End || !timeRegex.test(break2End)) {
+    if (!break2End || !timeRegex.test(break2End) || !validTime(break2End)) {
       return NextResponse.json({ error: "break2End inválido. Use o formato HH:MM." }, { status: 400 });
     }
     if (toMin(break2End) <= toMin(break2Start)) {

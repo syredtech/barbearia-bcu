@@ -45,12 +45,23 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const date     = searchParams.get("date");
   const time     = searchParams.get("time");
-  const category = searchParams.get("category") || null; // null or "" means all
-  const lat  = searchParams.get("lat")  ? parseFloat(searchParams.get("lat")!)  : null;
-  const lng  = searchParams.get("lng")  ? parseFloat(searchParams.get("lng")!)  : null;
+  const allowedCategories = ["barbearia", "salao", "spa"];
+  const rawCategory = searchParams.get("category");
+  const category = rawCategory && allowedCategories.includes(rawCategory) ? rawCategory : null;
+  const rawLat = searchParams.get("lat");
+  const rawLng = searchParams.get("lng");
+  const lat = rawLat ? parseFloat(rawLat) : null;
+  const lng = rawLng ? parseFloat(rawLng) : null;
 
   if (!date || !time) {
     return NextResponse.json({ error: "date e time são obrigatórios." }, { status: 400 });
+  }
+
+  if (lat !== null && (isNaN(lat) || lat < -90 || lat > 90)) {
+    return NextResponse.json({ error: "Latitude inválida." }, { status: 400 });
+  }
+  if (lng !== null && (isNaN(lng) || lng < -180 || lng > 180)) {
+    return NextResponse.json({ error: "Longitude inválida." }, { status: 400 });
   }
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(Date.parse(date + "T12:00:00"))) {

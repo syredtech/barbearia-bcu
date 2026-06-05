@@ -89,8 +89,8 @@ export async function POST(req: NextRequest) {
   if (!date || !horario) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
   }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return NextResponse.json({ error: "Formato de data inválido." }, { status: 400 });
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(Date.parse(date + "T12:00:00"))) {
+    return NextResponse.json({ error: "Data inválida." }, { status: 400 });
   }
   if (!/^\d{2}:\d{2}$/.test(horario)) {
     return NextResponse.json({ error: "Formato de horário inválido." }, { status: 400 });

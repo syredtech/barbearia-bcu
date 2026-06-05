@@ -8,7 +8,11 @@ export async function GET(req: NextRequest) {
   if (!session || session.user.role !== "admin")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  const venueId = req.nextUrl.searchParams.get("venueId");
+  const rawVenueId = req.nextUrl.searchParams.get("venueId");
+  const venueId = rawVenueId && rawVenueId.length <= 100 ? rawVenueId : null;
+  const page = Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0"));
+  const take = 100;
+  const skip = page * take;
 
   const agendamentos = await prisma.agendamento.findMany({
     where: venueId ? { venueId } : undefined,
@@ -18,7 +22,8 @@ export async function GET(req: NextRequest) {
       servico: { select: { name: true, price: true } },
     },
     orderBy: [{ date: "desc" }, { horario: "asc" }],
-    take: 100,
+    take,
+    skip,
   });
 
   return NextResponse.json(agendamentos);

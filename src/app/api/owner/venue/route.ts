@@ -57,6 +57,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nome e URL são obrigatórios." }, { status: 400 });
   }
 
+  if (latitude != null) {
+    const latNum = Number(latitude);
+    if (isNaN(latNum) || latNum < -90 || latNum > 90) {
+      return NextResponse.json({ error: "Latitude inválida (deve estar entre -90 e 90)." }, { status: 400 });
+    }
+  }
+  if (longitude != null) {
+    const lngNum = Number(longitude);
+    if (isNaN(lngNum) || lngNum < -180 || lngNum > 180) {
+      return NextResponse.json({ error: "Longitude inválida (deve estar entre -180 e 180)." }, { status: 400 });
+    }
+  }
+
   if (typeof name !== "string" || name.trim().length > 100) {
     return NextResponse.json({ error: "Nome inválido (máx. 100 caracteres)." }, { status: 400 });
   }
@@ -112,8 +125,8 @@ export async function POST(req: NextRequest) {
   const venue = await prisma.venue.create({
     data: {
       name, slug: safeSlug, category, description, address, phone,
-      latitude: latitude != null && !isNaN(Number(latitude)) ? Number(latitude) : null,
-      longitude: longitude != null && !isNaN(Number(longitude)) ? Number(longitude) : null,
+      latitude: latitude != null ? Number(latitude) : null,
+      longitude: longitude != null ? Number(longitude) : null,
       ownerId: session.user.id,
     },
     select: {

@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       agendamentoId,
       venueId,
       rating,
-      comment: comment || null,
+      comment: comment?.trim() || null,
       clientId: session.user.id,
     },
   });

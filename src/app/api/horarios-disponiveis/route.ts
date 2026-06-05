@@ -47,6 +47,9 @@ export async function GET(req: NextRequest) {
   if (!venueId || !date) {
     return NextResponse.json({ error: "venueId e date são obrigatórios." }, { status: 400 });
   }
+  if (venueId.length > 100) {
+    return NextResponse.json({ error: "venueId inválido." }, { status: 400 });
+  }
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(Date.parse(date + "T12:00:00"))) {
     return NextResponse.json({ error: "Formato de data inválido." }, { status: 400 });

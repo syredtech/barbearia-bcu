@@ -9,8 +9,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
-  const { name: rawName, email: rawEmail, password } = await req.json();
-  const email = rawEmail?.toLowerCase().trim();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let rawBody: any;
+  try {
+    rawBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo inválido." }, { status: 400 });
+  }
+  const { name: rawName, email: rawEmail, password } = rawBody;
+  const email = typeof rawEmail === "string" ? rawEmail.toLowerCase().trim() : "";
   const name  = typeof rawName === "string" ? rawName.trim() : "";
 
   if (!name || !email || !password) {
@@ -29,8 +36,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "E-mail inválido." }, { status: 400 });
   }
 
-  if (!password || password.length < 8) {
+  if (typeof password !== "string" || password.length < 8) {
     return NextResponse.json({ error: "A password deve ter pelo menos 8 caracteres." }, { status: 400 });
+  }
+  if (password.length > 72) {
+    return NextResponse.json({ error: "A password é demasiado longa (máx. 72 caracteres)." }, { status: 400 });
   }
 
   const exists = await prisma.user.findUnique({ where: { email } });

@@ -13,6 +13,9 @@ export async function GET(req: NextRequest) {
   const raw = searchParams.get("status");
   const allowed = ["pending", "approved", "rejected"];
   const status = raw && allowed.includes(raw) ? raw : "pending";
+  const page = Math.max(0, parseInt(searchParams.get("page") ?? "0"));
+  const take = 100;
+  const skip = page * take;
 
   const venues = await prisma.venue.findMany({
     where: { status },
@@ -24,6 +27,8 @@ export async function GET(req: NextRequest) {
       owner: { select: { name: true, email: true } },
     },
     orderBy: { createdAt: "desc" },
+    take,
+    skip,
   });
 
   return NextResponse.json(venues);

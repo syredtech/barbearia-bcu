@@ -49,8 +49,8 @@ export async function PUT(
   }
   const durNum = Number(duration);
   const priceNum = Number(price);
-  if (isNaN(durNum) || durNum < 5 || durNum > 480) {
-    return NextResponse.json({ error: "Duração inválida (5–480 min)." }, { status: 400 });
+  if (isNaN(durNum) || !Number.isInteger(durNum) || durNum < 5 || durNum > 480) {
+    return NextResponse.json({ error: "Duração inválida (5–480 min, inteiro)." }, { status: 400 });
   }
   if (isNaN(priceNum) || priceNum < 1 || priceNum > 1000000) {
     return NextResponse.json({ error: "Preço inválido (mínimo 1 ECV)." }, { status: 400 });

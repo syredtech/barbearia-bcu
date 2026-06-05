@@ -38,6 +38,18 @@ export async function PUT(req: NextRequest) {
   }
   const { imageUrl, description, address, phone } = rawBody;
 
+  if (imageUrl !== undefined && imageUrl !== null && typeof imageUrl !== "string") {
+    return NextResponse.json({ error: "imageUrl inválido." }, { status: 400 });
+  }
+  if (description !== undefined && description !== null && typeof description !== "string") {
+    return NextResponse.json({ error: "Descrição inválida." }, { status: 400 });
+  }
+  if (address !== undefined && address !== null && typeof address !== "string") {
+    return NextResponse.json({ error: "Endereço inválido." }, { status: 400 });
+  }
+  if (phone !== undefined && phone !== null && typeof phone !== "string") {
+    return NextResponse.json({ error: "Telefone inválido." }, { status: 400 });
+  }
   if (imageUrl && !imageUrl.startsWith("https://")) {
     return NextResponse.json({ error: "imageUrl deve começar com https://." }, { status: 400 });
   }
