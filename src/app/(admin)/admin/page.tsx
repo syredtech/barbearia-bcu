@@ -118,6 +118,7 @@ export default function AdminPage() {
   const [userRole, setUserRole]     = useState<"owner" | "client">("owner");
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loadingId, setLoadingId]   = useState<string | null>(null);
+  const [actionError, setActionError] = useState("");
 
   // fetch helpers
   const loadStats = useCallback(async () => {
@@ -151,12 +152,18 @@ export default function AdminPage() {
 
   async function updateVenueStatus(id: string, status: string) {
     setLoadingId(id);
-    await fetch(`/api/admin/venues/${id}`, {
+    setActionError("");
+    const res = await fetch(`/api/admin/venues/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
     setLoadingId(null);
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setActionError(d.error || "Erro ao actualizar estado do estabelecimento.");
+      return;
+    }
     loadVenues();
     loadStats();
   }
@@ -236,6 +243,9 @@ export default function AdminPage() {
       {/* ── ESTABELECIMENTOS ────────────────────────────────── */}
       {tab === "venues" && (
         <div>
+          {actionError && (
+            <p className="mb-4 text-sm text-red-600 bg-red-50 px-4 py-2 rounded-card">{actionError}</p>
+          )}
           {/* Sub-filter */}
           <div className="flex gap-1 border-b border-[#ebebeb] mb-8">
             {VENUE_FILTERS.map((f) => (

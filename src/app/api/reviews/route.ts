@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
   }
   const { agendamentoId, rating, comment } = parsedBody;
 
-  if (!agendamentoId || typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+  if (!agendamentoId || typeof agendamentoId !== "string" || typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) {
     return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
   }
   if (comment && (typeof comment !== "string" || comment.length > 500)) {
@@ -58,7 +58,10 @@ export async function POST(req: NextRequest) {
   }
 
   // Verify the appointment belongs to this client
-  const agendamento = await prisma.agendamento.findUnique({ where: { id: agendamentoId } });
+  const agendamento = await prisma.agendamento.findUnique({
+    where: { id: agendamentoId },
+    select: { clientId: true, venueId: true, status: true, date: true, horario: true },
+  });
   if (!agendamento || agendamento.clientId !== session.user.id) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
   }
@@ -72,7 +75,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Só é possível avaliar após a data do serviço." }, { status: 400 });
   }
 
-  const existingReview = await prisma.review.findUnique({ where: { agendamentoId } });
+  const existingReview = await prisma.review.findUnique({ where: { agendamentoId }, select: { id: true } });
   if (existingReview) {
     return NextResponse.json({ error: "Já avaliou este serviço." }, { status: 409 });
   }
