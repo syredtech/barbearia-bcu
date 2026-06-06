@@ -84,16 +84,12 @@ export async function DELETE(
   const servico = await authorize(params.id, session.user.id);
   if (!servico) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
-  const futureBookings = await prisma.agendamento.count({
-    where: {
-      servicoId: params.id,
-      status: "confirmed",
-      date: { gte: new Date().toISOString().split("T")[0] },
-    },
+  const anyBookings = await prisma.agendamento.count({
+    where: { servicoId: params.id },
   });
-  if (futureBookings > 0) {
+  if (anyBookings > 0) {
     return NextResponse.json(
-      { error: "Não é possível eliminar um serviço com marcações futuras confirmadas." },
+      { error: "Não é possível eliminar um serviço com marcações associadas." },
       { status: 409 },
     );
   }
