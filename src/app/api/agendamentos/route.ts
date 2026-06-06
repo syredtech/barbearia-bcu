@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
   const skip = page * take;
 
   if (session.user.role === "owner") {
-    const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+    const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
     if (!venue) return NextResponse.json([]);
 
     const agendamentos = await prisma.agendamento.findMany({

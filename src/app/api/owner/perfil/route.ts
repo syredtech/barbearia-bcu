@@ -88,7 +88,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Telefone contém caracteres inválidos." }, { status: 400 });
   }
 
-  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
   const updateData: Record<string, string | null> = {};

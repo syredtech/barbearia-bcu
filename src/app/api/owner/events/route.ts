@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     return new Response("Demasiadas ligações. Aguarde um momento.", { status: 429 });
   }
 
-  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return new Response("Estabelecimento não encontrado", { status: 404 });
 
   const ownerId = session.user.id;

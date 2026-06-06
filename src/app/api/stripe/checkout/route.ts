@@ -21,6 +21,7 @@ export async function POST() {
 
   const venue = await prisma.venue.findUnique({
     where: { ownerId: session.user.id },
+    select: { id: true, status: true },
   });
 
   if (!venue) {

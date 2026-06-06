@@ -88,7 +88,7 @@ export async function PUT(req: NextRequest) {
     }
   }
 
-  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
   const updated = await prisma.venue.update({
