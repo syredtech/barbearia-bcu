@@ -52,14 +52,10 @@ export async function GET(req: NextRequest) {
         date: true,
         horario: true,
         status: true,
-        venueId: true,
-        servicoId: true,
-        clientId: true,
         guestName: true,
         createdAt: true,
-        updatedAt: true,
         client: { select: { name: true } },
-        servico: true,
+        servico: { select: { name: true, duration: true, price: true } },
       },
       orderBy: [{ date: "desc" }, { horario: "asc" }],
       take,
@@ -219,7 +215,9 @@ export async function POST(req: NextRequest) {
           guestName: session ? null : guestName.trim(),
           guestPhone: session ? null : guestPhone.trim(),
         },
-        include: {
+        select: {
+          id: true, date: true, horario: true, status: true,
+          guestPhone: true, guestName: true,
           venue: { select: { ownerId: true, name: true } },
           servico: { select: { name: true } },
           client: { select: { name: true } },
@@ -257,5 +255,13 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json(agendamento, { status: 201 });
+  return NextResponse.json({
+    id: agendamento.id,
+    date: agendamento.date,
+    horario: agendamento.horario,
+    status: agendamento.status,
+    venue: { name: agendamento.venue.name },
+    servico: { name: agendamento.servico.name },
+    client: agendamento.client,
+  }, { status: 201 });
 }

@@ -31,11 +31,15 @@ export async function POST() {
     return NextResponse.json({ error: "Estabelecimento ainda não aprovado." }, { status: 403 });
   }
 
+  if (!session.user.email) {
+    return NextResponse.json({ error: "Email não disponível." }, { status: 400 });
+  }
+
   try {
     const customerId = await obterOuCriarStripeCustomer(
       venue.id,
-      session.user.email!,
-      session.user.name!
+      session.user.email,
+      session.user.name ?? session.user.email
     );
 
     const checkoutSession = await stripe.checkout.sessions.create({
