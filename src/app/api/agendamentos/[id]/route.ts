@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
+import { generateSlots } from "@/lib/slots";
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -86,18 +87,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         return NextResponse.json({ error: "Não é possível confirmar um agendamento passado." }, { status: 400 });
       }
       // Re-validate slot against current venue schedule
-      const toMin = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
-      const toStr = (min: number) => `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
-      const startMin = toMin(venue.scheduleStart); const endMin = toMin(venue.scheduleEnd);
-      const bsMin = venue.breakStart ? toMin(venue.breakStart) : null; const beMin = venue.breakEnd ? toMin(venue.breakEnd) : null;
-      const bs2Min = venue.break2Start ? toMin(venue.break2Start) : null; const be2Min = venue.break2End ? toMin(venue.break2End) : null;
-      const slots: string[] = [];
-      let cur = startMin;
-      while (cur + venue.slotDuration <= endMin) {
-        if (bsMin !== null && beMin !== null && cur >= bsMin && cur < beMin) { cur = beMin; continue; }
-        if (bs2Min !== null && be2Min !== null && cur >= bs2Min && cur < be2Min) { cur = be2Min; continue; }
-        slots.push(toStr(cur)); cur += venue.slotDuration;
-      }
+      const slots = generateSlots(
+        venue.scheduleStart, venue.scheduleEnd, venue.slotDuration,
+        venue.breakStart, venue.breakEnd, venue.break2Start, venue.break2End,
+      );
       const closedDays: number[] = (() => { try { return JSON.parse(venue.closedDays || "[]"); } catch { return []; } })();
       const weekday = new Date(agendamento.date + "T12:00:00").getDay();
       if (closedDays.includes(weekday) || !slots.includes(agendamento.horario)) {
