@@ -12,7 +12,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   if (!(await rateLimit(`owner:funcionarios:${session.user.id}`, 30, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
-  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
   const f = await prisma.funcionario.findUnique({ where: { id: params.id } });

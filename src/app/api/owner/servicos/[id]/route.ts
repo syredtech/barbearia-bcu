@@ -7,7 +7,7 @@ import { rateLimit } from "@/lib/rate-limit";
 async function authorize(servicoId: string, ownerId: string) {
   const servico = await prisma.servico.findUnique({
     where: { id: servicoId },
-    include: { venue: true },
+    select: { venue: { select: { ownerId: true } } },
   });
   if (!servico || servico.venue.ownerId !== ownerId) return null;
   return servico;

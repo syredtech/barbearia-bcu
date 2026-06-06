@@ -11,7 +11,7 @@ export async function GET() {
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
-  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
   const funcionarios = await prisma.funcionario.findMany({
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nome contém caracteres inválidos." }, { status: 400 });
   }
 
-  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });
+  const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
   const count = await prisma.funcionario.count({ where: { venueId: venue.id } });

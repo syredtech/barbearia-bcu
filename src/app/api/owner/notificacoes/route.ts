@@ -15,6 +15,7 @@ export async function GET() {
 
   const notificacoes = await prisma.notificacao.findMany({
     where: { ownerId: session.user.id },
+    select: { id: true, title: true, body: true, read: true, createdAt: true },
     orderBy: { createdAt: "desc" },
     take: 30,
   });
