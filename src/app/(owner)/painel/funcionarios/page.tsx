@@ -37,8 +37,13 @@ export default function FuncionariosPage() {
 
   async function remove(id: string) {
     setRemovingId(id);
-    await fetch(`/api/owner/funcionarios/${id}`, { method: "DELETE" });
+    setError("");
+    const res = await fetch(`/api/owner/funcionarios/${id}`, { method: "DELETE" });
     setRemovingId(null);
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setError(d.error || "Erro ao remover funcionário.");
+    }
     load();
   }
 

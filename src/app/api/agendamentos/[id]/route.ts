@@ -74,6 +74,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (!venue || agendamento.venueId !== venue.id) {
       return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
     }
+    if (status === "completed" && agendamento.status !== "confirmed") {
+      return NextResponse.json(
+        { error: "Só é possível concluir marcações confirmadas." },
+        { status: 400 },
+      );
+    }
     if (status === "confirmed") {
       const apptDateTime = new Date(`${agendamento.date}T${agendamento.horario}:00`);
       if (apptDateTime <= new Date()) {
@@ -117,7 +123,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const updated = await prisma.agendamento.update({
     where: { id: params.id },
     data: { status },
-    select: { id: true, status: true, date: true, horario: true, venueId: true },
+    select: { id: true, status: true, date: true, horario: true },
   });
 
   return NextResponse.json(updated);
