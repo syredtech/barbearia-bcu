@@ -7,6 +7,12 @@ import Link from "next/link";
 interface Servico { id: string; name: string; duration: number; price: number }
 interface VenueData { id: string; name: string; slug: string; category: string; address: string | null; servicos: Servico[] }
 
+const CATEGORY_LABEL: Record<string, string> = {
+  barbearia: "Barbearia",
+  salao: "Cabeleireiro & Penteados",
+  spa: "Unhas & Maquilhagem",
+};
+
 export default function AgendarPage({ params }: { params: { slug: string } }) {
   const { data: session, status } = useSession();
   const router       = useRouter();
@@ -79,8 +85,19 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
 
   if (!venue) {
     return (
-      <main className="max-w-content mx-auto px-6 py-24 text-center">
-        <p className="text-muted text-sm">A carregar…</p>
+      <main className="max-w-content mx-auto px-6 py-16">
+        <div className="max-w-[540px] animate-pulse space-y-4">
+          <div className="h-3 bg-[#f0f0f0] rounded-full w-24" />
+          <div className="h-8 bg-[#f0f0f0] rounded-full w-48" />
+          <div className="mt-8 space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="border border-[#f0f0f0] rounded-card p-5">
+                <div className="h-4 bg-[#f0f0f0] rounded-full w-1/2 mb-2" />
+                <div className="h-3 bg-[#f0f0f0] rounded-full w-1/4" />
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
     );
   }
@@ -89,7 +106,13 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
     const servico = venue.servicos.find((s) => s.id === servicoId);
     return (
       <main className="max-w-content mx-auto px-6 py-24 text-center">
-        <p className="text-5xl mb-6 fade-up">✓</p>
+        <div className="mb-6 fade-up flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-ink flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+        </div>
         <h1 className="font-serif text-4xl font-bold text-ink mb-3 fade-up-1">
           Agendamento confirmado.
         </h1>
@@ -206,11 +229,15 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                 Escolha o horário
               </label>
               {slotsLoading ? (
-                <p className="text-muted text-sm font-light mb-6">A carregar horários…</p>
+                <div className="grid grid-cols-4 gap-2 mb-6 animate-pulse">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="border border-[#f0f0f0] rounded-card py-2.5 bg-[#f5f5f5] h-10" />
+                  ))}
+                </div>
               ) : slots.length === 0 ? (
-                <p className="text-muted text-sm font-light mb-6">
-                  Nenhum horário disponível nesta data.
-                </p>
+                <div className="border border-dashed border-[#e4e4e4] rounded-card p-8 text-center mb-6">
+                  <p className="text-muted text-sm font-light">Nenhum horário disponível nesta data.</p>
+                </div>
               ) : (
                 <div className="grid grid-cols-4 gap-2 mb-6">
                   {slots.map((slot) => (
@@ -303,7 +330,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
             {/* Venue card */}
             <div className="border border-[#ebebeb] rounded-card p-6">
               <p className="text-[10px] text-muted uppercase tracking-widest mb-2">
-                {venue.category}
+                {CATEGORY_LABEL[venue.category] ?? venue.category}
               </p>
               <p className="font-serif font-bold text-ink text-lg leading-snug">{venue.name}</p>
               {venue.address && (

@@ -19,9 +19,12 @@ export default function EstabelecimentosPage() {
 
   return (
     <main className="max-w-content mx-auto px-6 py-16">
-      <h1 className="font-serif text-4xl font-bold text-ink mb-8">
+      <h1 className="font-serif text-4xl font-bold text-ink mb-2">
         Estabelecimentos
       </h1>
+      <p className="text-muted font-light text-sm mb-8">
+        Encontre barbearias, cabeleireiros e salões de beleza em Cabo Verde.
+      </p>
 
       {/* Search bar */}
       <form

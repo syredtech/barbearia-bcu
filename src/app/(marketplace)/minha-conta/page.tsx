@@ -94,6 +94,7 @@ export default async function MinhaContaPage() {
 
       {anteriores.length > 0 && (
         <section>
+          <div className="divider mb-10" />
           <h2 className="font-serif text-xl font-bold text-ink mb-5">
             Histórico
             <span className="ml-2 text-xs font-sans font-medium text-muted">({anteriores.length})</span>
@@ -132,7 +133,10 @@ export default async function MinhaContaPage() {
                   {a.review && (
                     <div className="mt-4 pt-4 border-t border-[#f5f5f5] flex items-center gap-1 flex-wrap">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill={i < a.review!.rating ? "#141414" : "none"} stroke="#141414" strokeWidth="2">
+                        <svg key={i} width="12" height="12" viewBox="0 0 24 24"
+                          fill={i < a.review!.rating ? "#F59E0B" : "#e5e7eb"}
+                          stroke={i < a.review!.rating ? "#F59E0B" : "#d1d5db"}
+                          strokeWidth="1.5">
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
                       ))}

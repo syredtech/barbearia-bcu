@@ -228,16 +228,21 @@ export default async function EstabelecimentoPage({
             <div className="space-y-4">
               {reviews.map((r) => (
                 <div key={r.id} className="border border-[#ebebeb] rounded-card p-5">
-                  <div className="flex items-center gap-1 mb-2">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <svg key={i} width="14" height="14" viewBox="0 0 24 24"
-                        fill={i < r.rating ? "#F59E0B" : "#e5e7eb"}
-                        stroke={i < r.rating ? "#F59E0B" : "#d1d5db"}
-                        strokeWidth="1.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                      </svg>
-                    ))}
-                    <span className="text-xs text-muted ml-2">{r.client.name?.split(" ")[0]}</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <svg key={i} width="14" height="14" viewBox="0 0 24 24"
+                          fill={i < r.rating ? "#F59E0B" : "#e5e7eb"}
+                          stroke={i < r.rating ? "#F59E0B" : "#d1d5db"}
+                          strokeWidth="1.5">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      ))}
+                      <span className="text-xs text-muted ml-2">{r.client.name?.split(" ")[0]}</span>
+                    </div>
+                    <span className="text-xs text-muted">
+                      {new Date(r.createdAt).toLocaleDateString("pt-CV", { month: "short", year: "numeric" })}
+                    </span>
                   </div>
                   {r.comment && <p className="text-sm text-muted font-light">{r.comment}</p>}
                 </div>

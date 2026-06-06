@@ -122,6 +122,7 @@ export default async function PainelPage() {
             <p className="text-muted text-sm font-light">Nenhum agendamento ainda.</p>
           </div>
         ) : (
+          <>
           <div className="overflow-x-auto rounded-card border border-[#ebebeb]">
             <table className="w-full min-w-[520px] text-sm">
               <thead className="border-b border-[#ebebeb]">
@@ -156,6 +157,13 @@ export default async function PainelPage() {
               </tbody>
             </table>
           </div>
+          <div className="mt-3 text-right">
+            <Link href="/painel/agenda"
+              className="text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors">
+              Ver agenda completa →
+            </Link>
+          </div>
+          </>
         )}
       </div>
     </main>
