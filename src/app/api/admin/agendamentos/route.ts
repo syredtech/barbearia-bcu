@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "admin")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+
+  if (!(await rateLimit(`admin:agendamentos-list:${session.user.id}`, 120, 60 * 1000))) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
 
   const rawVenueId = req.nextUrl.searchParams.get("venueId");
   const venueId = rawVenueId && rawVenueId.length <= 100 ? rawVenueId : null;

@@ -49,9 +49,17 @@ export async function POST(req: NextRequest) {
   }
 
   const hashed = await bcrypt.hash(password, 12);
-  const user = await prisma.user.create({
-    data: { name, email, password: hashed, role: "client" },
-  });
+  let user;
+  try {
+    user = await prisma.user.create({
+      data: { name, email, password: hashed, role: "client" },
+    });
+  } catch (err: any) {
+    if (err?.code === "P2002") {
+      return NextResponse.json({ error: "E-mail já cadastrado." }, { status: 409 });
+    }
+    throw err;
+  }
 
   return NextResponse.json({ id: user.id, name: user.name, email: user.email }, { status: 201 });
 }
