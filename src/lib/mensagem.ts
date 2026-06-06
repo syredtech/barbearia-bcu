@@ -38,9 +38,9 @@ export async function enviarConfirmacao({
   const body =
     `Agendamento confirmado!\n\n` +
     `${venueName}\n` +
-    `${formatDate(date)} as ${horario}\n` +
+    `${formatDate(date)} às ${horario}\n` +
     `${servicoName}\n\n` +
-    `Obrigado pela marcacao!`;
+    `Obrigado pela marcação!`;
 
   await fetch(
     `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
