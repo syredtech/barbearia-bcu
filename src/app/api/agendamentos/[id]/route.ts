@@ -75,6 +75,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
     }
     if (status === "confirmed") {
+      const apptDateTime = new Date(`${agendamento.date}T${agendamento.horario}:00`);
+      if (apptDateTime <= new Date()) {
+        return NextResponse.json({ error: "Não é possível confirmar um agendamento passado." }, { status: 400 });
+      }
       // Re-validate slot against current venue schedule
       const toMin = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
       const toStr = (min: number) => `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;

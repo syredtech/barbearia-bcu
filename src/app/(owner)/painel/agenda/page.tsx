@@ -84,6 +84,7 @@ export default function AgendaPage() {
   const [schedule, setSchedule]       = useState<ScheduleConfig | null>(null);
   const [loading, setLoading]         = useState(true);
   const [updatingId, setUpdatingId]   = useState<string | null>(null);
+  const [actionError, setActionError] = useState("");
 
   const weekDates = getWeekDates(weekBase);
 
@@ -119,12 +120,17 @@ export default function AgendaPage() {
 
   async function updateStatus(id: string, status: string) {
     setUpdatingId(id);
-    await fetch(`/api/agendamentos/${id}`, {
+    setActionError("");
+    const res = await fetch(`/api/agendamentos/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
     setUpdatingId(null);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setActionError(data.error || "Erro ao actualizar agendamento.");
+    }
     load();
   }
 
@@ -265,6 +271,10 @@ export default function AgendaPage() {
           </p>
         </div>
       </div>
+
+      {actionError && (
+        <p className="mb-4 text-sm text-red-600 bg-red-50 px-4 py-2 rounded-card">{actionError}</p>
+      )}
 
       {/* Day timeline */}
       {loading ? (

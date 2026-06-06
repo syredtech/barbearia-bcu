@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
   try {
     user = await prisma.user.create({
       data: { name, email, password: hashed, role: "client" },
+      select: { id: true, name: true, email: true },
     });
   } catch (err: any) {
     if (err?.code === "P2002") {
