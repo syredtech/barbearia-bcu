@@ -15,7 +15,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id }, select: { id: true } });
   if (!venue) return NextResponse.json({ error: "Estabelecimento não encontrado." }, { status: 404 });
 
-  const f = await prisma.funcionario.findUnique({ where: { id: params.id } });
+  const f = await prisma.funcionario.findUnique({ where: { id: params.id }, select: { id: true, venueId: true } });
   if (!f || f.venueId !== venue.id) {
     return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
   }

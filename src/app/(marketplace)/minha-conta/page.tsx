@@ -117,14 +117,14 @@ export default async function MinhaContaPage() {
                       <span className={`text-xs px-2.5 py-1 rounded-pill font-medium ${
                         isCancelled ? "text-red-600 bg-red-50" : "text-muted bg-[#f5f5f5]"
                       }`}>
-                        {isCancelled ? "Cancelado" : "Concluído"}
+                        {isCancelled ? "Cancelado" : a.status === "completed" ? "Concluído" : "Confirmado"}
                       </span>
                       <p className="text-ink text-sm font-medium mt-3">
                         {a.servico.price.toLocaleString("pt-CV")} ECV
                       </p>
                     </div>
                   </div>
-                  {!isCancelled && !a.review && (
+                  {a.status === "completed" && !a.review && (
                     <div className="mt-4 pt-4 border-t border-[#f5f5f5]">
                       <AvaliarButton agendamentoId={a.id} venueId={a.venueId} />
                     </div>

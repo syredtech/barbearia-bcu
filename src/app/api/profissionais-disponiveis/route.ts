@@ -83,6 +83,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Hora inválida." }, { status: 400 });
   }
 
+  if (new Date(`${date}T${time}:00`) <= new Date()) {
+    return NextResponse.json({ error: "Este horário já passou." }, { status: 400 });
+  }
+
   const weekday = new Date(date + "T12:00:00").getDay();
 
   const venues = await prisma.venue.findMany({

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "A password é demasiado longa (máx. 72 caracteres)." }, { status: 400 });
   }
 
-  const exists = await prisma.user.findUnique({ where: { email } });
+  const exists = await prisma.user.findUnique({ where: { email }, select: { id: true } });
   if (exists) {
     return NextResponse.json({ error: "E-mail já cadastrado." }, { status: 409 });
   }
