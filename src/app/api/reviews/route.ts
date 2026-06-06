@@ -77,15 +77,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Já avaliou este serviço." }, { status: 409 });
   }
 
-  const review = await prisma.review.create({
-    data: {
-      agendamentoId,
-      venueId: agendamento.venueId,
-      rating,
-      comment: comment?.trim() || null,
-      clientId: session.user.id,
-    },
-  });
+  let review;
+  try {
+    review = await prisma.review.create({
+      data: {
+        agendamentoId,
+        venueId: agendamento.venueId,
+        rating,
+        comment: comment?.trim() || null,
+        clientId: session.user.id,
+      },
+      select: { id: true, rating: true, comment: true, createdAt: true },
+    });
+  } catch (err: any) {
+    if (err?.code === "P2002") {
+      return NextResponse.json({ error: "Já avaliou este serviço." }, { status: 409 });
+    }
+    throw err;
+  }
 
   return NextResponse.json(review, { status: 201 });
 }

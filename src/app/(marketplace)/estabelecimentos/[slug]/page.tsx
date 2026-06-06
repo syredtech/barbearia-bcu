@@ -62,7 +62,13 @@ export default async function EstabelecimentoPage({
 
   const reviews = venue ? await prisma.review.findMany({
     where: { venueId: venue.id },
-    include: { client: { select: { name: true } } },
+    select: {
+      id: true,
+      rating: true,
+      comment: true,
+      createdAt: true,
+      client: { select: { name: true } },
+    },
     orderBy: { createdAt: "desc" },
     take: 10,
   }) : [];
