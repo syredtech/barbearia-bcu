@@ -25,10 +25,8 @@ export async function GET(req: NextRequest) {
   const venues = await prisma.venue.findMany({
     where: { status },
     select: {
-      id: true, slug: true, name: true, description: true,
-      category: true, address: true, phone: true, imageUrl: true,
-      status: true, subscriptionStatus: true, subscriptionExpiresAt: true,
-      createdAt: true, updatedAt: true,
+      id: true, name: true, category: true,
+      status: true, subscriptionStatus: true, createdAt: true,
       owner: { select: { name: true, email: true } },
     },
     orderBy: { createdAt: "desc" },

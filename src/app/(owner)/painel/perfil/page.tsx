@@ -16,7 +16,7 @@ export default function PerfilPage() {
   const [phone, setPhone]             = useState("");
 
   useEffect(() => {
-    fetch("/api/owner/venue")
+    fetch("/api/owner/perfil")
       .then((r) => r.json())
       .then((d) => {
         if (d.imageUrl)     setImageUrl(d.imageUrl);

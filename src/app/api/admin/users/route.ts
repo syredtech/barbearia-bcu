@@ -29,7 +29,6 @@ export async function GET(req: NextRequest) {
       email: true,
       role: true,
       createdAt: true,
-      updatedAt: true,
       venue: { select: { name: true, status: true, subscriptionStatus: true } },
       _count: { select: { agendamentos: true } },
     },

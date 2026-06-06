@@ -21,7 +21,7 @@ export default async function MinhaContaPage() {
       horario: true,
       status: true,
       venueId: true,
-      venue: { select: { id: true, slug: true, name: true, category: true, address: true, phone: true, imageUrl: true } },
+      venue: { select: { name: true } },
       servico: { select: { id: true, name: true, duration: true, price: true } },
       review: { select: { id: true, rating: true, comment: true } },
     },
