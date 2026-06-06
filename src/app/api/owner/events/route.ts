@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   if (!session || session.user.role !== "owner") {
     return new Response("Não autorizado", { status: 401 });
   }
-  if (!rateLimit(`owner:events:${session.user.id}`, 20, 60 * 1000)) {
+  if (!(await rateLimit(`owner:events:${session.user.id}`, 20, 60 * 1000))) {
     return new Response("Demasiadas ligações. Aguarde um momento.", { status: 429 });
   }
 

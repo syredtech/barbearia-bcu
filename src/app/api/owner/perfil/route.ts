@@ -25,7 +25,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  if (!rateLimit(`owner:perfil:${session.user.id}`, 10, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`owner:perfil:${session.user.id}`, 10, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 

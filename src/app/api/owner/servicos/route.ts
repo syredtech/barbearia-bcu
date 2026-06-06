@@ -14,7 +14,7 @@ export async function GET() {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  if (!rateLimit(`owner:servicos-get:${session.user.id}`, 60, 60 * 1000)) {
+  if (!(await rateLimit(`owner:servicos-get:${session.user.id}`, 60, 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  if (!rateLimit(`owner:servicos:${session.user.id}`, 30, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`owner:servicos:${session.user.id}`, 30, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
@@ -62,6 +62,9 @@ export async function POST(req: NextRequest) {
   }
   if (description && description.length > 500) {
     return NextResponse.json({ error: "Descrição inválida (máx. 500 caracteres)." }, { status: 400 });
+  }
+  if (description && /[<>]/.test(description)) {
+    return NextResponse.json({ error: "Descrição contém caracteres inválidos." }, { status: 400 });
   }
   const durNum = Number(duration);
   const priceNum = Number(price);

@@ -9,7 +9,7 @@ export async function GET() {
   if (!session || session.user.role !== "admin")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  if (!rateLimit(`admin:stats:${session.user.id}`, 30, 60 * 1000)) {
+  if (!(await rateLimit(`admin:stats:${session.user.id}`, 30, 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 

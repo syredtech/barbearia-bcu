@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
+  const ip = getClientIp(req);
+  if (!(await rateLimit(`venues-list:${ip}`, 60, 60 * 1000))) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
   const page = Math.min(Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0")), 100);
   const take = 20;
   const skip = page * take;

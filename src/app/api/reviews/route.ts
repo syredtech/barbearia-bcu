@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  if (!rateLimit(`reviews:user:${session.user.id}`, 20, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`reviews:user:${session.user.id}`, 20, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 

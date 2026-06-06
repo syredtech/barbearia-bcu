@@ -74,6 +74,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Data inválida." }, { status: 400 });
   }
 
+  const today = new Date().toISOString().split("T")[0];
+  if (date < today) {
+    return NextResponse.json({ error: "Não é possível consultar datas passadas." }, { status: 400 });
+  }
+
   if (!/^\d{2}:\d{2}$/.test(time)) {
     return NextResponse.json({ error: "Hora inválida." }, { status: 400 });
   }

@@ -13,7 +13,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  if (!rateLimit(`admin:venue-patch:${session.user.id}`, 60, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`admin:venue-patch:${session.user.id}`, 60, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 

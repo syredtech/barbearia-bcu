@@ -72,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         const key = `login:${credentials.email.toLowerCase().trim()}`;
-        if (!rateLimit(key, 10, 15 * 60 * 1000)) return null;
+        if (!(await rateLimit(key, 10, 15 * 60 * 1000))) return null;
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email.toLowerCase().trim() },

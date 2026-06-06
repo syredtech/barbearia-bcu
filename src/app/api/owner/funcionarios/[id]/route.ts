@@ -9,7 +9,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
-  if (!rateLimit(`owner:funcionarios:${session.user.id}`, 30, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`owner:funcionarios:${session.user.id}`, 30, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
   const venue = await prisma.venue.findUnique({ where: { ownerId: session.user.id } });

@@ -8,7 +8,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  if (!rateLimit(`agendamentos:patch:${session.user.id}`, 20, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`agendamentos:patch:${session.user.id}`, 20, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 

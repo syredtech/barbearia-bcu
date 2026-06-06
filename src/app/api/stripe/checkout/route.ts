@@ -15,7 +15,7 @@ export async function POST() {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
-  if (!rateLimit(`stripe:checkout:${session.user.id}`, 5, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`stripe:checkout:${session.user.id}`, 5, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 

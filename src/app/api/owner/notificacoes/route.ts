@@ -9,7 +9,7 @@ export async function GET() {
   if (!session || session.user.role !== "owner")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  if (!rateLimit(`owner:notificacoes-get:${session.user.id}`, 60, 60 * 1000)) {
+  if (!(await rateLimit(`owner:notificacoes-get:${session.user.id}`, 60, 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 
@@ -28,7 +28,7 @@ export async function PATCH() {
   if (!session || session.user.role !== "owner")
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 
-  if (!rateLimit(`owner:notificacoes:${session.user.id}`, 60, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`owner:notificacoes:${session.user.id}`, 60, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
   }
 
