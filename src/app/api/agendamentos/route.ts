@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const servico = await prisma.servico.findUnique({ where: { id: servicoId } });
+  const servico = await prisma.servico.findUnique({ where: { id: servicoId }, select: { venueId: true } });
   if (!servico || servico.venueId !== venueId) {
     return NextResponse.json({ error: "Serviço inválido." }, { status: 400 });
   }

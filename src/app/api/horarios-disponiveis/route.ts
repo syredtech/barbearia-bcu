@@ -117,7 +117,10 @@ export async function GET(req: NextRequest) {
     countBySlot[a.horario] = (countBySlot[a.horario] ?? 0) + 1;
   }
 
-  const slots = allSlots.filter((s) => (countBySlot[s] ?? 0) < capacity);
+  const now = new Date();
+  const slots = allSlots.filter(
+    (s) => (countBySlot[s] ?? 0) < capacity && new Date(`${date}T${s}:00`) > now,
+  );
 
   return NextResponse.json({ slots });
 }

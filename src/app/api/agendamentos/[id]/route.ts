@@ -31,6 +31,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   if (!agendamento) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
+  if (agendamento.status === "completed") {
+    return NextResponse.json({ error: "Marcações concluídas não podem ser alteradas." }, { status: 400 });
+  }
+
   // Client can only cancel their own
   if (session.user.role === "client") {
     if (agendamento.clientId !== session.user.id) {
@@ -38,6 +42,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
     if (status !== "cancelled") {
       return NextResponse.json({ error: "Clientes só podem cancelar." }, { status: 403 });
+    }
+    if (agendamento.status !== "confirmed") {
+      return NextResponse.json({ error: "Apenas marcações confirmadas podem ser canceladas." }, { status: 400 });
     }
     // Cooldown: must cancel at least 24 h before the appointment
     const apptDateTime = new Date(`${agendamento.date}T${agendamento.horario}:00`);
