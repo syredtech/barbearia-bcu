@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -42,6 +43,10 @@ export async function POST(req: NextRequest) {
 
   if (session.user.role === "owner") {
     return NextResponse.json({ error: "Já é owner." }, { status: 400 });
+  }
+
+  if (!(await rateLimit(`owner:venue-create:${session.user.id}`, 5, 60 * 60 * 1000))) {
+    return NextResponse.json({ error: "Demasiadas tentativas. Tente novamente mais tarde." }, { status: 429 });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

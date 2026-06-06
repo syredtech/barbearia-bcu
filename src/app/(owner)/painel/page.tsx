@@ -13,10 +13,23 @@ export default async function PainelPage() {
 
   const venue = await prisma.venue.findUnique({
     where: { ownerId: session.user.id },
-    include: {
-      servicos: true,
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      subscriptionStatus: true,
+      subscriptionExpiresAt: true,
+      servicos: { select: { id: true } },
       agendamentos: {
-        include: { client: { select: { name: true } }, servico: true },
+        select: {
+          id: true,
+          date: true,
+          horario: true,
+          status: true,
+          guestName: true,
+          client: { select: { name: true } },
+          servico: { select: { name: true } },
+        },
         orderBy: [{ date: "desc" }, { horario: "asc" }],
         take: 10,
       },

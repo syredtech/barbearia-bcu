@@ -70,9 +70,14 @@ export async function GET(req: NextRequest) {
 
   const agendamentos = await prisma.agendamento.findMany({
     where: { clientId: session.user.id },
-    include: {
+    select: {
+      id: true,
+      date: true,
+      horario: true,
+      status: true,
+      createdAt: true,
       venue: { select: { id: true, slug: true, name: true, category: true, address: true, phone: true, imageUrl: true } },
-      servico: true,
+      servico: { select: { id: true, name: true, duration: true, price: true } },
     },
     orderBy: [{ date: "desc" }, { horario: "asc" }],
     take,

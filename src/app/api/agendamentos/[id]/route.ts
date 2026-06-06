@@ -106,6 +106,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const updated = await prisma.agendamento.update({
     where: { id: params.id },
     data: { status },
+    select: { id: true, status: true, date: true, horario: true, venueId: true },
   });
 
   return NextResponse.json(updated);
