@@ -10,6 +10,7 @@ export default function ServicosPage() {
   const [form, setForm]         = useState(emptyForm);
   const [editId, setEditId]     = useState<string | null>(null);
   const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState("");
 
   async function load() {
     const res = await fetch("/api/owner/servicos");
@@ -22,18 +23,29 @@ export default function ServicosPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    if (editId) {
-      await fetch(`/api/owner/servicos/${editId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      setEditId(null);
+    setError("");
+    const res = editId
+      ? await fetch(`/api/owner/servicos/${editId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) })
+      : await fetch("/api/owner/servicos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+    setLoading(false);
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setError(d.error || "Erro ao guardar serviço.");
     } else {
-      await fetch("/api/owner/servicos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      if (editId) setEditId(null);
+      setForm(emptyForm);
     }
-    setForm(emptyForm); setLoading(false); load();
+    load();
   }
 
   async function handleDelete(id: string) {
     if (!confirm("Remover este serviço?")) return;
-    await fetch(`/api/owner/servicos/${id}`, { method: "DELETE" });
+    setError("");
+    const res = await fetch(`/api/owner/servicos/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setError(d.error || "Erro ao remover serviço.");
+    }
     load();
   }
 
@@ -76,6 +88,7 @@ export default function ServicosPage() {
                   onChange={(e) => setForm((f) => ({ ...f, price: Number(e.target.value) }))} required className={inputClass} />
               </div>
             </div>
+            {error && <p className="text-red-500 text-sm font-light">{error}</p>}
             <div className="flex gap-3 pt-2">
               <button type="submit" disabled={loading}
                 className="flex-1 bg-ink text-white rounded-pill py-3 text-sm font-medium hover:bg-[#333] transition-all duration-200 disabled:opacity-40">

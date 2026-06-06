@@ -13,6 +13,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const searchParams = useSearchParams();
 
   const [venue, setVenue]     = useState<VenueData | null>(null);
+  const [venueError, setVenueError] = useState(false);
   const [step, setStep]       = useState<1 | 2 | 3>(() => searchParams.get("servicoId") ? 2 : 1);
   const [servicoId, setServicoId] = useState(searchParams.get("servicoId") || "");
   const [date, setDate]       = useState("");
@@ -26,7 +27,10 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const [guestPhone, setGuestPhone] = useState("");
 
   useEffect(() => {
-    fetch(`/api/venues/${params.slug}`).then((r) => r.json()).then(setVenue);
+    fetch(`/api/venues/${params.slug}`).then(async (r) => {
+      if (!r.ok) { setVenueError(true); return; }
+      setVenue(await r.json());
+    });
   }, [params.slug]);
 
   useEffect(() => {
@@ -63,6 +67,14 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
       const d = await res.json();
       setBookingError(d.error || "Erro ao confirmar o agendamento.");
     }
+  }
+
+  if (venueError) {
+    return (
+      <main className="max-w-content mx-auto px-6 py-24 text-center">
+        <p className="text-muted text-sm">Estabelecimento não encontrado ou indisponível.</p>
+      </main>
+    );
   }
 
   if (!venue) {
