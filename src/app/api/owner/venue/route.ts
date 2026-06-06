@@ -20,7 +20,7 @@ export async function GET() {
       scheduleStart: true, scheduleEnd: true, slotDuration: true,
       breakStart: true, breakEnd: true, break2Start: true, break2End: true,
       closedDays: true, createdAt: true, updatedAt: true,
-      servicos: true,
+      servicos: { select: { id: true, name: true, description: true, duration: true, price: true } },
     },
   });
 

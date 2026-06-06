@@ -26,7 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   const agendamento = await prisma.agendamento.findUnique({
     where: { id: params.id },
-    include: { venue: true },
+    select: { id: true, clientId: true, venueId: true, date: true, horario: true, servicoId: true, status: true },
   });
 
   if (!agendamento) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });

@@ -62,6 +62,7 @@ export async function PUT(
   const updated = await prisma.servico.update({
     where: { id: params.id },
     data: { name: name.trim(), description: description?.trim() || null, duration: durNum, price: priceNum },
+    select: { id: true, name: true, description: true, duration: true, price: true },
   });
 
   return NextResponse.json(updated);

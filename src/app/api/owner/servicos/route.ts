@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 
 async function getVenue(ownerId: string) {
-  return prisma.venue.findUnique({ where: { ownerId } });
+  return prisma.venue.findUnique({ where: { ownerId }, select: { id: true } });
 }
 
 export async function GET() {
@@ -23,6 +23,7 @@ export async function GET() {
 
   const servicos = await prisma.servico.findMany({
     where: { venueId: venue.id },
+    select: { id: true, name: true, description: true, duration: true, price: true },
     orderBy: { name: "asc" },
     take: 200,
   });
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
 
   const servico = await prisma.servico.create({
     data: { name: name.trim(), description: description?.trim() || null, duration: durNum, price: priceNum, venueId: venue.id },
+    select: { id: true, name: true, description: true, duration: true, price: true },
   });
 
   return NextResponse.json(servico, { status: 201 });

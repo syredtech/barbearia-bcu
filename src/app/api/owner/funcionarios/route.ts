@@ -16,6 +16,7 @@ export async function GET() {
 
   const funcionarios = await prisma.funcionario.findMany({
     where: { venueId: venue.id },
+    select: { id: true, name: true },
     orderBy: { createdAt: "asc" },
     take: 100,
   });
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
 
   const f = await prisma.funcionario.create({
     data: { name: name.trim(), venueId: venue.id },
+    select: { id: true, name: true },
   });
   return NextResponse.json(f);
 }
