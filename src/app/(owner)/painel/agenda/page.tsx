@@ -182,9 +182,9 @@ export default function AgendaPage() {
   const weekLabel = `${parseInt(wStart[2])}–${parseInt(wEnd[2])} de ${MONTHS[parseInt(wStart[1]) - 1]} ${wStart[0]}`;
 
   return (
-    <main className="max-w-content mx-auto px-6 py-16">
+    <main className="max-w-content mx-auto px-4 sm:px-6 py-8 sm:py-16">
       {/* Header */}
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center justify-between mb-6 sm:mb-10">
         <div>
           <p className="text-xs text-muted uppercase tracking-widest mb-2">Painel</p>
           <h1 className="font-serif text-4xl font-bold text-ink">Agenda</h1>
@@ -206,10 +206,10 @@ export default function AgendaPage() {
       </div>
 
       {/* Week label */}
-      <p className="text-xs text-muted uppercase tracking-widest mb-4">{weekLabel}</p>
+      <p className="text-xs text-muted uppercase tracking-widest mb-3 sm:mb-4">{weekLabel}</p>
 
       {/* Week strip */}
-      <div className="grid grid-cols-7 gap-2 mb-10">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-8 sm:mb-10">
         {weekDates.map((date, i) => {
           const isToday    = date === today;
           const isSelected = date === selectedDate;
@@ -218,7 +218,7 @@ export default function AgendaPage() {
             <button
               key={date}
               onClick={() => setSelectedDate(date)}
-              className={`rounded-card py-3 px-2 text-center transition-all duration-200 border
+              className={`rounded-card py-2.5 sm:py-3 px-1 sm:px-2 text-center transition-all duration-200 border
                 ${isSelected
                   ? "bg-ink border-ink"
                   : isToday
@@ -226,11 +226,11 @@ export default function AgendaPage() {
                   : "border-[#ebebeb] hover:border-[#bbb]"
                 }`}
             >
-              <p className={`text-[10px] font-medium uppercase tracking-widest mb-1
+              <p className={`text-[9px] sm:text-[10px] font-medium uppercase tracking-widest mb-1
                 ${isSelected ? "text-white/60" : "text-muted"}`}>
                 {WEEKDAYS_SHORT[i]}
               </p>
-              <p className={`font-serif font-bold text-xl leading-none
+              <p className={`font-serif font-bold text-lg sm:text-xl leading-none
                 ${isSelected ? "text-white" : "text-ink"}`}>
                 {parseInt(date.split("-")[2])}
               </p>
@@ -285,7 +285,7 @@ export default function AgendaPage() {
           {allSlots.map((slot) => {
             const slotBookings = bySlot[slot] ?? [];
             return (
-              <div key={slot} className="flex items-stretch gap-4">
+              <div key={slot} className="flex items-stretch gap-3 sm:gap-4">
                 {/* Time label */}
                 <span className="text-sm text-muted font-light w-14 shrink-0 flex items-center justify-end pr-1">
                   {slot}
