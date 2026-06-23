@@ -42,11 +42,13 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted font-light">A sua avaliação:</p>
-      <div className="flex gap-1">
+      <div className="flex gap-1" role="group" aria-label="Classificação">
         {[1, 2, 3, 4, 5].map((s) => (
           <button
             type="button"
             key={s}
+            aria-label={`${s} estrela${s !== 1 ? "s" : ""}`}
+            aria-pressed={rating === s}
             onMouseEnter={() => setHover(s)}
             onMouseLeave={() => setHover(0)}
             onClick={() => setRating(s)}

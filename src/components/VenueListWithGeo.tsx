@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { haversine, formatDistance } from "@/lib/geo";
+import { PLACEHOLDER_CONFIG, PLACEHOLDER_DEFAULT } from "@/lib/venue-placeholder";
 
 interface Servico { id: string; price: number }
 
@@ -28,17 +29,11 @@ interface Props {
   activeCategory?: string;
 }
 
-const PLACEHOLDER_CONFIG: Record<string, { bg: string; accent: string }> = {
-  barbearia: { bg: "linear-gradient(160deg, #1c1814 0%, #382d22 100%)", accent: "#b8860b" },
-  salao:     { bg: "linear-gradient(160deg, #1c1622 0%, #362840 100%)", accent: "#c8a0b8" },
-  spa:       { bg: "linear-gradient(160deg, #121e1c 0%, #1e3830 100%)", accent: "#6aaa96" },
-};
-
 function VenueImagePlaceholder({ venue }: { venue: Venue }) {
   const initials = venue.name
     .split(" ").slice(0, 2)
     .map((w) => w[0] ?? "").join("").toUpperCase();
-  const { bg, accent } = PLACEHOLDER_CONFIG[venue.category] ?? { bg: "linear-gradient(160deg, #1a1a1a 0%, #303030 100%)", accent: "#888" };
+  const { bg, accent } = PLACEHOLDER_CONFIG[venue.category] ?? PLACEHOLDER_DEFAULT;
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-3" style={{ background: bg }}>
       <span

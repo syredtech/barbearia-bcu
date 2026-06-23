@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDistance } from "@/lib/geo";
+import { PLACEHOLDER_CONFIG, PLACEHOLDER_DEFAULT } from "@/lib/venue-placeholder";
 
 const HALF_HOURS = Array.from({ length: 48 }, (_, i) => {
   const h = Math.floor(i / 2);
@@ -30,12 +31,7 @@ function VenueCard({ v }: { v: VenueResult }) {
     : 0;
 
   const initials = v.name.split(" ").slice(0, 2).map((w) => w[0] ?? "").join("").toUpperCase();
-  const placeholderCfg: Record<string, { bg: string; accent: string }> = {
-    barbearia: { bg: "linear-gradient(160deg, #1c1814 0%, #382d22 100%)", accent: "#b8860b" },
-    salao:     { bg: "linear-gradient(160deg, #1c1622 0%, #362840 100%)", accent: "#c8a0b8" },
-    spa:       { bg: "linear-gradient(160deg, #121e1c 0%, #1e3830 100%)", accent: "#6aaa96" },
-  };
-  const { bg, accent } = placeholderCfg[v.category] ?? { bg: "linear-gradient(160deg, #1a1a1a 0%, #303030 100%)", accent: "#888" };
+  const { bg, accent } = PLACEHOLDER_CONFIG[v.category] ?? PLACEHOLDER_DEFAULT;
 
   return (
     <Link href={`/estabelecimentos/${v.slug}`} className="group block cursor-pointer">

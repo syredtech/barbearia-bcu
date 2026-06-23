@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 
 interface Props {
   name: string;
@@ -6,19 +7,23 @@ interface Props {
 }
 
 export default function ShareButton({ name, slug }: Props) {
+  const [copied, setCopied] = useState(false);
+
   async function share() {
     const url = `${window.location.origin}/estabelecimentos/${slug}`;
     if (navigator.share) {
       await navigator.share({ title: name, url }).catch(() => {});
     } else {
       await navigator.clipboard.writeText(url).catch(() => {});
-      alert("Link copiado!");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   }
 
   return (
     <button
       onClick={share}
+      aria-label="Partilhar estabelecimento"
       className="inline-flex items-center gap-2 border border-[#ebebeb] text-muted px-4 py-2 rounded-pill text-sm
                  hover:border-ink hover:text-ink transition-all duration-200 mt-5"
     >
@@ -29,7 +34,7 @@ export default function ShareButton({ name, slug }: Props) {
         <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
         <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
       </svg>
-      Partilhar
+      {copied ? "Link copiado!" : "Partilhar"}
     </button>
   );
 }

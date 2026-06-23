@@ -37,14 +37,15 @@ export default function NotificacaoBell() {
   useEffect(() => {
     load();
     let es: EventSource;
+    let reconnectTimer: ReturnType<typeof setTimeout>;
     function connect() {
       es = new EventSource("/api/owner/events");
       es.onmessage = () => load();
       // Auto-reconnect when the 25 s window closes
-      es.onerror = () => { es.close(); setTimeout(connect, 1000); };
+      es.onerror = () => { es.close(); reconnectTimer = setTimeout(connect, 1000); };
     }
     connect();
-    return () => es?.close();
+    return () => { clearTimeout(reconnectTimer); es?.close(); };
   }, [load]);
 
   // Close on outside click
