@@ -37,28 +37,15 @@ async function main() {
   }
 
   const hash = await bcrypt.hash(password1, 12);
-  const admin = await prisma.user.update({
-    where: { email: "admin@bcu.cv" },
-    data: { email: "admin@belabelo.cv", password: hash },
+
+  const admin = await prisma.user.upsert({
+    where: { email: "admin@belabelo.cv" },
+    update: { password: hash },
+    create: { email: "admin@belabelo.cv", password: hash, role: "admin", name: "Admin" },
   });
-  console.log(`✅ Admin actualizado → ${admin.email}`);
+  console.log(`✅ Admin pronto → ${admin.email}`);
 
-  // Remover utilizadores de teste e os seus agendamentos
-  const testEmails = ["cliente@email.cv", "ana@email.cv", "rui@email.cv"];
-
-  const deletedAppts = await prisma.agendamento.deleteMany({
-    where: { client: { email: { in: testEmails } } },
-  });
-  if (deletedAppts.count > 0) {
-    console.log(`🗑  ${deletedAppts.count} agendamento(s) de teste removido(s)`);
-  }
-
-  const deletedUsers = await prisma.user.deleteMany({
-    where: { email: { in: testEmails } },
-  });
-  console.log(`🗑  ${deletedUsers.count} utilizador(es) de teste removido(s)`);
-
-  console.log("\n✅ Configuração de produção concluída.\n");
+  console.log("\n✅ Concluído.\n");
 }
 
 main()
