@@ -139,8 +139,6 @@ export async function POST(req: NextRequest) {
     where: { id: venueId },
     select: {
       status: true,
-      subscriptionStatus: true,
-      subscriptionExpiresAt: true,
       scheduleStart: true, scheduleEnd: true, slotDuration: true,
       breakStart: true, breakEnd: true, break2Start: true, break2End: true,
       closedDays: true,
@@ -150,10 +148,7 @@ export async function POST(req: NextRequest) {
 
   if (
     !venue ||
-    venue.status !== "approved" ||
-    venue.subscriptionStatus !== "active" ||
-    !venue.subscriptionExpiresAt ||
-    venue.subscriptionExpiresAt < new Date()
+    venue.status !== "approved"
   ) {
     return NextResponse.json({ error: "Estabelecimento não disponível." }, { status: 404 });
   }

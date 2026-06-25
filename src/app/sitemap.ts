@@ -7,8 +7,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const venues = await prisma.venue.findMany({
     where: {
       status: "approved",
-      subscriptionStatus: "active",
-      subscriptionExpiresAt: { gt: new Date() },
     },
     select: { slug: true, updatedAt: true },
   });

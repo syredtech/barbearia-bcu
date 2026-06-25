@@ -92,8 +92,6 @@ export async function GET(req: NextRequest) {
   const venues = await prisma.venue.findMany({
     where: {
       status: "approved",
-      subscriptionStatus: "active",
-      subscriptionExpiresAt: { gt: new Date() },
       ...(category ? { category } : {}),
     },
     take: 100,
