@@ -39,7 +39,7 @@ export default function PerfilPage() {
     });
     setSaving(false);
     if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000); }
-    else setError("Erro ao guardar. Tenta novamente.");
+    else { const d = await res.json().catch(() => ({})); setError(d.error || "Erro ao guardar. Tenta novamente."); }
   }
 
   if (loading) {
