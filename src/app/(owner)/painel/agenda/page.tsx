@@ -184,8 +184,8 @@ export default function AgendaPage() {
       {/* Week label */}
       <p className="text-xs text-muted uppercase tracking-widest mb-3 sm:mb-4">{weekLabel}</p>
 
-      {/* Week strip */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-8 sm:mb-10">
+      {/* Week strip — horizontal scroll on mobile, 7-col grid on sm+ */}
+      <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-4 px-4 mb-8 sm:grid sm:grid-cols-7 sm:gap-2 sm:overflow-visible sm:mx-0 sm:px-0 sm:mb-10">
         {weekDates.map((date, i) => {
           const isToday    = date === today;
           const isSelected = date === selectedDate;
@@ -194,7 +194,7 @@ export default function AgendaPage() {
             <button
               key={date}
               onClick={() => setSelectedDate(date)}
-              className={`rounded-card py-2.5 sm:py-3 px-1 sm:px-2 text-center transition-all duration-200 border
+              className={`shrink-0 min-w-[52px] sm:min-w-0 rounded-card py-2.5 sm:py-3 px-1 sm:px-2 text-center transition-all duration-200 border
                 ${isSelected
                   ? "bg-ink border-ink"
                   : isToday

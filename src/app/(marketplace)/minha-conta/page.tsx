@@ -9,29 +9,46 @@ import AvaliarButton from "@/components/AvaliarButton";
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
-export default async function MinhaContaPage() {
+export default async function MinhaContaPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
-  const agendamentos = await prisma.agendamento.findMany({
-    where: { clientId: session.user.id },
-    select: {
-      id: true,
-      date: true,
-      horario: true,
-      status: true,
-      venueId: true,
-      venue: { select: { name: true } },
-      servico: { select: { id: true, name: true, duration: true, price: true } },
-      review: { select: { id: true, rating: true, comment: true } },
-    },
-    orderBy: [{ date: "desc" }, { horario: "desc" }],
-    take: 200,
-  });
-
+  const hoje = new Date().toISOString().split("T")[0];
   const agora = new Date();
-  const proximos   = agendamentos.filter((a) => a.status !== "cancelled" && new Date(`${a.date}T${a.horario}:00`) > agora);
-  const anteriores = agendamentos.filter((a) => a.status === "cancelled" || new Date(`${a.date}T${a.horario}:00`) <= agora);
+  const HIST_PER_PAGE = 20;
+  const histPage = Math.max(0, parseInt(searchParams?.page ?? "0"));
+
+  const sharedSelect = {
+    id: true, date: true, horario: true, status: true, venueId: true,
+    venue: { select: { name: true } },
+    servico: { select: { id: true, name: true, duration: true, price: true } },
+    review: { select: { id: true, rating: true, comment: true } },
+  } as const;
+
+  const [proximos, anteriorRaw] = await Promise.all([
+    prisma.agendamento.findMany({
+      where: { clientId: session.user.id, status: { not: "cancelled" }, date: { gte: hoje } },
+      select: sharedSelect,
+      orderBy: [{ date: "asc" }, { horario: "asc" }],
+    }),
+    prisma.agendamento.findMany({
+      where: {
+        clientId: session.user.id,
+        OR: [{ status: "cancelled" }, { date: { lt: hoje } }],
+      },
+      select: sharedSelect,
+      orderBy: [{ date: "desc" }, { horario: "desc" }],
+      take: HIST_PER_PAGE + 1,
+      skip: histPage * HIST_PER_PAGE,
+    }),
+  ]);
+
+  const hasMore = anteriorRaw.length > HIST_PER_PAGE;
+  const anteriores = anteriorRaw.slice(0, HIST_PER_PAGE);
 
   return (
     <main className="max-w-[640px] mx-auto px-4 sm:px-6 py-10 sm:py-16">
@@ -97,7 +114,9 @@ export default async function MinhaContaPage() {
           <div className="divider mb-10" />
           <h2 className="font-serif text-xl font-bold text-ink mb-5">
             Histórico
-            <span className="ml-2 text-xs font-sans font-medium text-muted">({anteriores.length})</span>
+            <span className="ml-2 text-xs font-sans font-medium text-muted">
+              ({anteriores.length}{hasMore ? "+" : ""})
+            </span>
           </h2>
           <div className="space-y-3">
             {anteriores.map((a) => {
@@ -149,6 +168,26 @@ export default async function MinhaContaPage() {
               );
             })}
           </div>
+          {(histPage > 0 || hasMore) && (
+            <div className="flex items-center justify-between mt-6 pt-6 border-t border-[#f5f5f5]">
+              {histPage > 0 ? (
+                <Link
+                  href={histPage === 1 ? "/minha-conta" : `/minha-conta?page=${histPage - 1}`}
+                  className="text-sm text-muted hover:text-ink transition-colors underline underline-offset-2"
+                >
+                  ← Mais recentes
+                </Link>
+              ) : <span />}
+              {hasMore && (
+                <Link
+                  href={`/minha-conta?page=${histPage + 1}`}
+                  className="text-sm text-muted hover:text-ink transition-colors underline underline-offset-2"
+                >
+                  Ver mais →
+                </Link>
+              )}
+            </div>
+          )}
         </section>
       )}
     </main>
