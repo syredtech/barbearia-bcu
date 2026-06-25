@@ -11,6 +11,9 @@ export async function GET() {
   if (!session || session.user.role !== "owner") {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
+  if (!(await rateLimit(`owner:perfil-get:${session.user.id}`, 60, 60 * 1000))) {
+    return NextResponse.json({ error: "Demasiadas tentativas." }, { status: 429 });
+  }
   const venue = await prisma.venue.findUnique({
     where: { ownerId: session.user.id },
     select: { slug: true, name: true, imageUrl: true, description: true, address: true, phone: true },
