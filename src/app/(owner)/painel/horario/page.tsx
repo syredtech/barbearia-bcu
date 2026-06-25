@@ -76,7 +76,7 @@ export default function HorarioPage() {
         }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => { setError("Erro ao carregar configurações. Recarregue a página antes de guardar."); setLoading(false); });
   }, []);
 
   const preview = generatePreview(start, end, duration, breakStart, breakEnd, hasBreak, break2Start, break2End, hasBreak2);

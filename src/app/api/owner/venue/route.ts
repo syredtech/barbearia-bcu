@@ -136,7 +136,8 @@ export async function POST(req: NextRequest) {
       if (target.includes("slug")) return NextResponse.json({ error: "Esta URL já está em uso." }, { status: 409 });
       if (target.includes("ownerId")) return NextResponse.json({ error: "Você já tem um estabelecimento cadastrado." }, { status: 409 });
     }
-    throw err;
+    console.error("[owner/venue] Erro ao criar estabelecimento:", err);
+    return NextResponse.json({ error: "Erro ao criar estabelecimento. Tente novamente." }, { status: 500 });
   }
 
   return NextResponse.json(venue, { status: 201 });

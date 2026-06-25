@@ -180,6 +180,11 @@ export default async function EstabelecimentoPage({
 
         {/* Services */}
         <h2 className="font-serif text-2xl font-bold text-ink mb-6">Serviços</h2>
+        {venue.servicos.length === 0 ? (
+          <p className="text-muted text-sm font-light py-6">
+            Este estabelecimento ainda não tem serviços disponíveis.
+          </p>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {venue.servicos.map((servico) => (
             <div
@@ -209,6 +214,7 @@ export default async function EstabelecimentoPage({
             </div>
           ))}
         </div>
+        )}
 
         {reviews.length > 0 && (
           <>

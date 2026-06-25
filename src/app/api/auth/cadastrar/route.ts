@@ -59,7 +59,8 @@ export async function POST(req: NextRequest) {
     if (err?.code === "P2002") {
       return NextResponse.json({ error: "E-mail já cadastrado." }, { status: 409 });
     }
-    throw err;
+    console.error("[cadastrar] Erro ao criar utilizador:", err);
+    return NextResponse.json({ error: "Erro ao criar conta. Tente novamente." }, { status: 500 });
   }
 
   return NextResponse.json({ id: user.id, name: user.name, email: user.email }, { status: 201 });

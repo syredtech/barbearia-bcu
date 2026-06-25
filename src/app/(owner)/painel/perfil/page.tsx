@@ -25,7 +25,7 @@ export default function PerfilPage() {
         if (d.phone)        setPhone(d.phone);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => { setError("Erro ao carregar dados. Recarregue a página antes de guardar."); setLoading(false); });
   }, []);
 
   async function save(e: React.FormEvent) {

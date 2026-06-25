@@ -27,11 +27,15 @@ export default function NotificacaoBell() {
   useEffect(() => { setMounted(true); }, []);
 
   const load = useCallback(async () => {
-    const res = await fetch("/api/owner/notificacoes");
-    if (!res.ok) return;
-    const data = await res.json();
-    setNotificacoes(data.notificacoes);
-    setUnread(data.unread);
+    try {
+      const res = await fetch("/api/owner/notificacoes");
+      if (!res.ok) return;
+      const data = await res.json();
+      setNotificacoes(data.notificacoes);
+      setUnread(data.unread);
+    } catch {
+      // silently ignore network errors — bell just shows stale count
+    }
   }, []);
 
   useEffect(() => {
