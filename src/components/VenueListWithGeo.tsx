@@ -52,6 +52,7 @@ export default function VenueListWithGeo({ limit, searchQuery, activeCategory = 
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [geoStatus, setGeoStatus]       = useState<GeoStatus>("pending");
   const [loading, setLoading]           = useState(true);
+  const [fetchError, setFetchError]     = useState(false);
 
   function requestGeo() {
     setGeoStatus("pending");
@@ -64,9 +65,9 @@ export default function VenueListWithGeo({ limit, searchQuery, activeCategory = 
 
   useEffect(() => {
     fetch("/api/venues")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error("fetch"); return r.json(); })
       .then((d) => { setVenues(Array.isArray(d) ? d : []); setLoading(false); })
-      .catch(() => setLoading(false));
+      .catch(() => { setFetchError(true); setLoading(false); });
 
     if (typeof navigator !== "undefined" && "geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -116,6 +117,14 @@ export default function VenueListWithGeo({ limit, searchQuery, activeCategory = 
           </div>
         ))}
       </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <p className="text-center text-muted py-12 text-sm">
+        Não foi possível carregar os estabelecimentos. Tente recarregar a página.
+      </p>
     );
   }
 

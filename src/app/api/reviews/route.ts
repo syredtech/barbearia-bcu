@@ -96,7 +96,8 @@ export async function POST(req: NextRequest) {
     if (err?.code === "P2002") {
       return NextResponse.json({ error: "Já avaliou este serviço." }, { status: 409 });
     }
-    throw err;
+    console.error("[reviews] Erro ao criar review:", err);
+    return NextResponse.json({ error: "Erro ao processar avaliação." }, { status: 500 });
   }
 
   return NextResponse.json(review, { status: 201 });
