@@ -54,8 +54,7 @@ export default async function EstabelecimentoPage({
     where: { slug: params.slug },
     select: {
       id: true, slug: true, name: true, description: true, category: true,
-      address: true, phone: true, imageUrl: true,
-      status: true, subscriptionStatus: true, subscriptionExpiresAt: true,
+      address: true, phone: true, imageUrl: true, status: true,
       servicos: { select: { id: true, name: true, description: true, duration: true, price: true } },
     },
   });
@@ -73,12 +72,7 @@ export default async function EstabelecimentoPage({
     take: 10,
   }) : [];
 
-  const subscriptionOk =
-    venue?.subscriptionStatus === "active" &&
-    venue.subscriptionExpiresAt != null &&
-    new Date(venue.subscriptionExpiresAt) > new Date();
-
-  if (!venue || venue.status !== "approved" || !subscriptionOk) notFound();
+  if (!venue || venue.status !== "approved") notFound();
 
   const initials = venue.name.split(" ").slice(0, 2).map((w) => w[0] ?? "").join("").toUpperCase();
   const { bg, accent } = COVER_CONFIG[venue.category] ?? { bg: "linear-gradient(160deg, #1a1a1a 0%, #303030 100%)", accent: "#888" };

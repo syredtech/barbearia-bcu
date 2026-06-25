@@ -26,6 +26,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const [horario, setHorario] = useState("");
   const [slots, setSlots]         = useState<string[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsError, setSlotsError]     = useState(false);
   const [loading, setLoading]     = useState(false);
   const [done, setDone]       = useState(false);
   const [bookingError, setBookingError] = useState("");
@@ -33,19 +34,23 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const [guestPhone, setGuestPhone] = useState("");
 
   useEffect(() => {
-    fetch(`/api/venues/${params.slug}`).then(async (r) => {
-      if (!r.ok) { setVenueError(true); return; }
-      setVenue(await r.json());
-    });
+    fetch(`/api/venues/${params.slug}`)
+      .then(async (r) => {
+        if (!r.ok) { setVenueError(true); return; }
+        setVenue(await r.json());
+      })
+      .catch(() => setVenueError(true));
   }, [params.slug]);
 
   useEffect(() => {
     if (!servicoId || !date || !venue) return;
     setSlotsLoading(true);
     setSlots([]);
+    setSlotsError(false);
     fetch(`/api/horarios-disponiveis?venueId=${venue.id}&date=${date}`)
       .then((r) => r.json())
       .then((d) => setSlots(d.slots || []))
+      .catch(() => setSlotsError(true))
       .finally(() => setSlotsLoading(false));
   }, [servicoId, date, venue]);
 
@@ -233,6 +238,10 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                   {Array.from({ length: 8 }).map((_, i) => (
                     <div key={i} className="border border-[#f0f0f0] rounded-card py-2.5 bg-[#f5f5f5] h-10" />
                   ))}
+                </div>
+              ) : slotsError ? (
+                <div className="border border-dashed border-[#e4e4e4] rounded-card p-8 text-center mb-6">
+                  <p className="text-muted text-sm font-light">Erro ao carregar horários. Tente novamente.</p>
                 </div>
               ) : slots.length === 0 ? (
                 <div className="border border-dashed border-[#e4e4e4] rounded-card p-8 text-center mb-6">
