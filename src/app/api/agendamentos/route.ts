@@ -200,7 +200,8 @@ export async function POST(req: NextRequest) {
     if (err instanceof Error && err.message === "SLOT_TAKEN") {
       return NextResponse.json({ error: "Horário indisponível." }, { status: 409 });
     }
-    throw err;
+    console.error("[agendamentos] Erro na transação:", err);
+    return NextResponse.json({ error: "Erro ao processar agendamento." }, { status: 500 });
   }
 
   if (agendamento.guestPhone) {
@@ -219,13 +220,13 @@ export async function POST(req: NextRequest) {
     ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"][parseInt(date.split("-")[1]) - 1],
     date.split("-")[0],
   ];
-  await prisma.notificacao.create({
+  prisma.notificacao.create({
     data: {
       ownerId: agendamento.venue.ownerId,
       title: "Nova marcação",
       body: `${clientLabel} · ${agendamento.servico.name} · ${day} ${month} ${year} às ${horario}`,
     },
-  });
+  }).catch((err) => { console.error("[notificacao] Falha ao criar notificação:", err); });
 
   return NextResponse.json({
     id: agendamento.id,

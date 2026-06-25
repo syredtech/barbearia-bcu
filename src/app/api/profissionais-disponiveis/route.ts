@@ -1,37 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { generateSlots } from "@/lib/slots";
 
 export const dynamic = "force-dynamic";
-
-function toMin(t: string) {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
-function toStr(min: number) {
-  return `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
-}
-
-function generateSlots(
-  start: string, end: string, duration: number,
-  breakStart?: string | null, breakEnd?: string | null,
-  break2Start?: string | null, break2End?: string | null,
-): string[] {
-  const endMin  = toMin(end);
-  const bsMin   = breakStart  ? toMin(breakStart)  : null;
-  const beMin   = breakEnd    ? toMin(breakEnd)    : null;
-  const bs2Min  = break2Start ? toMin(break2Start) : null;
-  const be2Min  = break2End   ? toMin(break2End)   : null;
-  const slots: string[] = [];
-  let cur = toMin(start);
-  while (cur + duration <= endMin) {
-    if (bsMin !== null && beMin !== null && cur >= bsMin && cur < beMin) { cur = beMin; continue; }
-    if (bs2Min !== null && be2Min !== null && cur >= bs2Min && cur < be2Min) { cur = be2Min; continue; }
-    slots.push(toStr(cur));
-    cur += duration;
-  }
-  return slots;
-}
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371;
