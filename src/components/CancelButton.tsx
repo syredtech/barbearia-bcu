@@ -43,7 +43,7 @@ export default function CancelButton({ agendamentoId, blockedMessage }: { agenda
       <button
         onClick={cancel}
         disabled={loading}
-        className="text-xs text-muted hover:text-red-600 transition-colors font-light disabled:opacity-40"
+        className="text-xs text-muted hover:text-red-600 transition-colors font-light disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {loading ? "A cancelar…" : confirmed ? "Tem a certeza? Clique novamente." : "Cancelar agendamento"}
       </button>

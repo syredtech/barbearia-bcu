@@ -73,8 +73,8 @@ export default function ServicosPage() {
             </div>
             <div>
               <label htmlFor="servico-desc" className="block text-xs text-muted uppercase tracking-widest mb-2">Descrição</label>
-              <input id="servico-desc" type="text" placeholder="Opcional" value={form.description}
-                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className={inputClass} />
+              <textarea id="servico-desc" placeholder="Opcional" value={form.description} rows={2}
+                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className={`${inputClass} resize-none`} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>

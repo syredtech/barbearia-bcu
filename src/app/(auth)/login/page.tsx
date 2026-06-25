@@ -150,6 +150,8 @@ function LoginContent() {
             <input
               type="password" placeholder="Senha"
               aria-label="Senha"
+              minLength={mode === "register" ? 8 : undefined}
+              maxLength={72}
               value={form.password} onChange={(e) => update("password", e.target.value)}
               required
               className="border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
