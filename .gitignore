@@ -16,3 +16,9 @@ remove-*.mjs
 run-cleanup.mjs
 cap*.png
 sse-*.png
+
+.vercel
+.env*
+dev-server.log
+audit-*/
+audit-tmp/
