@@ -32,7 +32,7 @@ export default function FuncionariosPage() {
     });
     setSaving(false);
     if (res.ok) { setDraft(""); load(); }
-    else { const d = await res.json(); setError(d.error || "Erro ao adicionar."); }
+    else { const d = await res.json().catch(() => ({})); setError(d.error || "Erro ao adicionar."); }
   }
 
   async function remove(id: string) {

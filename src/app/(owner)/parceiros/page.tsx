@@ -57,7 +57,7 @@ export default function ParceirosPage() {
     });
     setLoading(false);
     if (res.ok) { await update(); router.push("/painel"); }
-    else { const d = await res.json(); setError(d.error || "Erro ao cadastrar."); }
+    else { const d = await res.json().catch(() => ({})); setError(d.error || "Erro ao cadastrar."); }
   }
 
   const inputClass = "w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light focus:outline-none focus:border-ink transition-colors duration-200";

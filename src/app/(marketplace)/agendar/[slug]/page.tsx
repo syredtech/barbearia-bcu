@@ -60,23 +60,28 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   async function confirmar() {
     if (!guestReady) return;
     setLoading(true);
-    const res = await fetch("/api/agendamentos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        venueId: venue!.id,
-        servicoId,
-        date,
-        horario,
-        ...(isGuest ? { guestName: guestName.trim(), guestPhone: guestPhone.trim() } : {}),
-      }),
-    });
-    setLoading(false);
-    if (res.ok) {
-      setDone(true);
-    } else {
-      const d = await res.json();
-      setBookingError(d.error || "Erro ao confirmar o agendamento.");
+    try {
+      const res = await fetch("/api/agendamentos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          venueId: venue!.id,
+          servicoId,
+          date,
+          horario,
+          ...(isGuest ? { guestName: guestName.trim(), guestPhone: guestPhone.trim() } : {}),
+        }),
+      });
+      if (res.ok) {
+        setDone(true);
+      } else {
+        const d = await res.json().catch(() => ({}));
+        setBookingError((d as { error?: string }).error || "Erro ao confirmar o agendamento.");
+      }
+    } catch {
+      setBookingError("Erro de rede. Verifique a sua ligação e tente novamente.");
+    } finally {
+      setLoading(false);
     }
   }
 
