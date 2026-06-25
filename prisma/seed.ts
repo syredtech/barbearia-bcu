@@ -18,9 +18,9 @@ async function main() {
 
   // ── Utilizadores fixos ─────────────────────────────────────────
   await prisma.user.upsert({
-    where: { email: "admin@bcu.cv" },
+    where: { email: "admin@belabelo.cv" },
     update: {},
-    create: { name: "Admin BCU", email: "admin@bcu.cv", password: await hash("admin123"), role: "admin" },
+    create: { name: "Admin Belabelo", email: "admin@belabelo.cv", password: await hash("admin123"), role: "admin" },
   });
 
   const cliente = await prisma.user.upsert({
@@ -335,7 +335,7 @@ async function main() {
 
   console.log("✅ Seed concluído — 10 estabelecimentos criados");
   console.log("");
-  console.log("  Admin:      admin@bcu.cv             / admin123");
+  console.log("  Admin:      admin@belabelo.cv          / admin123");
   console.log("");
   console.log("  Barbearias:");
   console.log("    tiago@barbearia.cv      — Barbearia Estilo (Praia, Santiago)");
