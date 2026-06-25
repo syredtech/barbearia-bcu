@@ -195,7 +195,7 @@ export default async function EstabelecimentoPage({
               <div>
                 <h3 className="font-serif font-bold text-ink text-[15px]">{servico.name}</h3>
                 {servico.description && (
-                  <p className="text-muted text-sm font-light mt-1">{servico.description}</p>
+                  <p className="text-muted text-sm font-light mt-1 line-clamp-2">{servico.description}</p>
                 )}
                 <p className="text-muted text-xs mt-2">{servico.duration} min</p>
               </div>
@@ -231,7 +231,7 @@ export default async function EstabelecimentoPage({
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-1">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <svg key={i} width="14" height="14" viewBox="0 0 24 24"
+                        <svg key={i} aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
                           fill={i < r.rating ? "#F59E0B" : "#e5e7eb"}
                           stroke={i < r.rating ? "#F59E0B" : "#d1d5db"}
                           strokeWidth="1.5">
@@ -244,7 +244,7 @@ export default async function EstabelecimentoPage({
                       {new Date(r.createdAt).toLocaleDateString("pt-CV", { month: "short", year: "numeric" })}
                     </span>
                   </div>
-                  {r.comment && <p className="text-sm text-muted font-light">{r.comment}</p>}
+                  {r.comment && <p className="text-sm text-muted font-light line-clamp-3">{r.comment}</p>}
                 </div>
               ))}
             </div>
