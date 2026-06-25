@@ -307,8 +307,9 @@ export default function AdminPage() {
                         )}
                         {venueFilter !== "pending" && (
                           <button type="button" onClick={() => updateVenueStatus(v.id, "pending")}
-                            className="text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors">
-                            Repor
+                            disabled={loadingId === v.id}
+                            className="text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors disabled:opacity-40">
+                            {loadingId === v.id ? "…" : "Repor"}
                           </button>
                         )}
                       </TD>

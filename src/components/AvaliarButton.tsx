@@ -26,6 +26,8 @@ export default function AvaliarButton({ agendamentoId, venueId }: { agendamentoI
       setLoading(false);
       return;
     }
+    setLoading(false);
+    setOpen(false);
     router.refresh();
   }
 
