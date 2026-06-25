@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
   }
   const { agendamentoId, rating, comment } = parsedBody;
 
-  if (!agendamentoId || typeof agendamentoId !== "string" || typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+  if (!agendamentoId || typeof agendamentoId !== "string" || agendamentoId.length > 100 || typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) {
     return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
   }
   if (comment && (typeof comment !== "string" || comment.length > 500)) {

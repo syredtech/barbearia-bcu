@@ -48,7 +48,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
     setSlots([]);
     setSlotsError(false);
     fetch(`/api/horarios-disponiveis?venueId=${venue.id}&date=${date}`)
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error("fetch"); return r.json(); })
       .then((d) => setSlots(d.slots || []))
       .catch(() => setSlotsError(true))
       .finally(() => setSlotsLoading(false));
@@ -293,6 +293,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                   <input
                     type="text" placeholder="Nome completo"
                     aria-label="Nome completo"
+                    required minLength={2} maxLength={100}
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
                     className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
@@ -301,6 +302,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                   <input
                     type="tel" placeholder="Número de telefone"
                     aria-label="Número de telefone"
+                    required minLength={7} maxLength={20}
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
                     className="w-full border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
