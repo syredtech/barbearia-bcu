@@ -14,9 +14,9 @@ export default function ShareButton({ name, slug }: Props) {
     if (navigator.share) {
       await navigator.share({ title: name, url }).catch(() => {});
     } else {
-      await navigator.clipboard.writeText(url).catch(() => {});
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(url)
+        .then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); })
+        .catch(() => {});
     }
   }
 

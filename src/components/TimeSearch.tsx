@@ -106,13 +106,20 @@ export default function TimeSearch({ onActiveChange }: { onActiveChange?: (activ
     const params = new URLSearchParams({ date, time });
     if (category) params.set("category", category);
     if (userLoc) { params.set("lat", String(userLoc.lat)); params.set("lng", String(userLoc.lng)); }
-    const res  = await fetch(`/api/profissionais-disponiveis?${params}`);
-    const data = await res.json();
-    setResults(data.results ?? []);
-    setTotal(data.total ?? 0);
-    setSearching(false);
-    onActiveChange?.(true);
-    setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    try {
+      const res = await fetch(`/api/profissionais-disponiveis?${params}`);
+      if (!res.ok) { setResults([]); setTotal(0); return; }
+      const data = await res.json();
+      setResults(data.results ?? []);
+      setTotal(data.total ?? 0);
+      onActiveChange?.(true);
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    } catch {
+      setResults([]);
+      setTotal(0);
+    } finally {
+      setSearching(false);
+    }
   }
 
   function reset() { setResults(null); setOpen(false); setCategory(null); onActiveChange?.(false); }

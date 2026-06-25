@@ -61,6 +61,10 @@ export async function POST(req: NextRequest) {
   if (!name || typeof name !== "string" || !name.trim() || !slug) {
     return NextResponse.json({ error: "Nome e URL são obrigatórios." }, { status: 400 });
   }
+  const allowedCategoriesEarly = ["barbearia", "salao", "spa"];
+  if (!category || !allowedCategoriesEarly.includes(category)) {
+    return NextResponse.json({ error: "Categoria obrigatória (barbearia, salao ou spa)." }, { status: 400 });
+  }
 
   if (latitude != null) {
     const latNum = Number(latitude);
@@ -98,11 +102,6 @@ export async function POST(req: NextRequest) {
   }
   if (phone && /[<>]/.test(phone)) {
     return NextResponse.json({ error: "Telefone contém caracteres inválidos." }, { status: 400 });
-  }
-
-  const allowedCategories = ["barbearia", "salao", "spa"];
-  if (category && !allowedCategories.includes(category)) {
-    return NextResponse.json({ error: "Categoria inválida." }, { status: 400 });
   }
 
   const safeSlug = slug?.toLowerCase().replace(/[^a-z0-9-]/g, "").substring(0, 100);
