@@ -34,12 +34,12 @@ let redis: Redis | null = null;
 const limiters = new Map<string, Ratelimit>();
 
 function getUpstashLimiter(limit: number, windowMs: number): Ratelimit | null {
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
+  // Support both Upstash native vars and Vercel KV Marketplace vars
+  const url   = process.env.UPSTASH_REDIS_REST_URL   ?? process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
   if (!redis) {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
+    redis = new Redis({ url, token });
   }
   const cacheKey = `${limit}:${windowMs}`;
   if (!limiters.has(cacheKey)) {
