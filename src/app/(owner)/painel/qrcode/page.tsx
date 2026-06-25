@@ -8,11 +8,12 @@ export default function QRCodePage() {
   const [slug, setSlug]     = useState<string | null>(null);
   const [name, setName]     = useState("");
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/owner/perfil")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error("fetch"); return r.json(); })
       .then((d) => {
         if (d.slug) { setSlug(d.slug); setName(d.name ?? ""); }
         setLoading(false);
@@ -34,7 +35,9 @@ export default function QRCodePage() {
 
   async function copyUrl() {
     if (!url) return;
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(url)
+      .then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); })
+      .catch(() => {});
   }
 
   if (loading) {
@@ -109,7 +112,7 @@ export default function QRCodePage() {
             className="w-full border border-[#ebebeb] rounded-card py-3.5 text-sm font-medium
                        text-ink hover:border-ink transition-all duration-200"
           >
-            Copiar link
+            {copied ? "Link copiado!" : "Copiar link"}
           </button>
         </div>
 
