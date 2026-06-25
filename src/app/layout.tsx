@@ -38,11 +38,13 @@ export const metadata: Metadata = {
     title: "Bela & Belo — Barba, Cabelo e Unha · Cabo Verde",
     description:
       "Agende o seu horário nas melhores barbearias, salões e spas de Cabo Verde.",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Bela & Belo" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bela & Belo — Barba, Cabelo e Unha · Cabo Verde",
     description: "Agende o seu horário nas melhores barbearias, salões e spas de Cabo Verde.",
+    images: ["/opengraph-image"],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: SITE_URL },
