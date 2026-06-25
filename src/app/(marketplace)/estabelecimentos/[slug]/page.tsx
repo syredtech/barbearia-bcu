@@ -120,7 +120,7 @@ export default async function EstabelecimentoPage({
       {/* Cover hero */}
       <div className="relative w-full h-[220px] sm:h-[300px] overflow-hidden" style={{ background: venue.imageUrl ? undefined : bg }}>
         {venue.imageUrl ? (
-          <Image src={venue.imageUrl} alt={venue.name} fill className="object-cover" sizes="100vw" />
+          <Image src={venue.imageUrl} alt={venue.name} fill priority className="object-cover" sizes="100vw" />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-3">
             <span className="font-serif font-bold select-none tracking-widest text-white/60 leading-none"
@@ -162,7 +162,7 @@ export default async function EstabelecimentoPage({
             {avgRating !== null && (
               <div className="flex items-center gap-1.5">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <svg key={i} width="14" height="14" viewBox="0 0 24 24"
+                  <svg key={i} aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
                     fill={i < Math.round(avgRating) ? "#F59E0B" : "#e5e7eb"}
                     stroke={i < Math.round(avgRating) ? "#F59E0B" : "#d1d5db"}
                     strokeWidth="1.5">

@@ -152,7 +152,7 @@ export default async function MinhaContaPage({
                   {a.review && (
                     <div className="mt-4 pt-4 border-t border-[#f5f5f5] flex items-center gap-1 flex-wrap">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <svg key={i} width="12" height="12" viewBox="0 0 24 24"
+                        <svg key={i} aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
                           fill={i < a.review!.rating ? "#F59E0B" : "#e5e7eb"}
                           stroke={i < a.review!.rating ? "#F59E0B" : "#d1d5db"}
                           strokeWidth="1.5">

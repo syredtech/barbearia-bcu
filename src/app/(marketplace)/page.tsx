@@ -110,6 +110,7 @@ export default function Home() {
         {!timeSearchOn && (
           <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-30 lg:hidden pointer-events-none">
             <svg
+              aria-hidden="true"
               className="w-9 h-9 animate-bounce"
               fill="none" stroke="rgba(255,255,255,0.82)" strokeWidth="2" viewBox="0 0 24 24"
             >
