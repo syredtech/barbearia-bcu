@@ -18,6 +18,7 @@ const securityHeaders = [
       "connect-src 'self' https://api.stripe.com https://r.stripe.com",
       "object-src 'none'",
       "base-uri 'self'",
+      "frame-ancestors 'self'",
     ].join("; "),
   },
 ];
