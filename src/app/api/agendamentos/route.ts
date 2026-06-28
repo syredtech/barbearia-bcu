@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
           guestPhone: true, guestName: true,
           venue: { select: { ownerId: true, name: true } },
           servico: { select: { name: true } },
-          client: { select: { name: true } },
+          client: { select: { name: true, phone: true } },
         },
       });
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
@@ -208,9 +208,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erro ao processar agendamento." }, { status: 500 });
   }
 
-  if (agendamento.guestPhone) {
+  const smsPhone = agendamento.guestPhone ?? agendamento.client?.phone ?? null;
+  if (smsPhone) {
     enviarConfirmacao({
-      phone: agendamento.guestPhone,
+      phone: smsPhone,
       venueName: agendamento.venue.name,
       date: agendamento.date,
       horario: agendamento.horario,

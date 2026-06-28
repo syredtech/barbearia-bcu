@@ -6,6 +6,7 @@ import Link from "next/link";
 import CancelButton from "@/components/CancelButton";
 import AvaliarButton from "@/components/AvaliarButton";
 import DeleteAccountButton from "@/components/DeleteAccountButton";
+import PhoneForm from "@/components/PhoneForm";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -192,6 +193,15 @@ export default async function MinhaContaPage({
         </section>
       )}
       <div className="divider mt-16 mb-10" />
+      <section className="mb-10">
+        <h2 className="font-serif text-base font-bold text-ink mb-1">Notificações</h2>
+        <p className="text-xs text-muted font-light mb-4">
+          Adiciona o teu número para receberes confirmação de agendamentos por SMS.
+        </p>
+        <PhoneForm />
+      </section>
+
+      <div className="divider mb-10" />
       <section>
         <h2 className="font-serif text-base font-bold text-ink mb-1">Zona de perigo</h2>
         <p className="text-xs text-muted font-light mb-4">
