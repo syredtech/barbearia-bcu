@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { analytics } from "@/lib/analytics";
 
 interface FormState {
   name: string; slug: string; category: string;
@@ -56,7 +57,7 @@ export default function ParceirosPage() {
       body: JSON.stringify(form),
     });
     setLoading(false);
-    if (res.ok) { await update(); router.push("/painel"); }
+    if (res.ok) { analytics.venueCreated(form.category); await update(); router.push("/painel"); }
     else { const d = await res.json().catch(() => ({})); setError(d.error || "Erro ao cadastrar."); }
   }
 

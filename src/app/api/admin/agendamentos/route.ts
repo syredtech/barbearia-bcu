@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
   const rawVenueId = req.nextUrl.searchParams.get("venueId");
   const venueId = rawVenueId && rawVenueId.length <= 100 ? rawVenueId : null;
-  const page = Math.min(Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0")), 1000);
+  const page = Math.min(Math.max(0, parseInt(req.nextUrl.searchParams.get("page") ?? "0")), 100);
   const take = 100;
   const skip = page * take;
 

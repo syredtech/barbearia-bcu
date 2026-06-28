@@ -3,6 +3,7 @@ import { Suspense, useState } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { analytics } from "@/lib/analytics";
 
 function LoginContent() {
   const router       = useRouter();
@@ -12,6 +13,8 @@ function LoginContent() {
 
   const [mode, setMode]     = useState<"login" | "register">("login");
   const [form, setForm]     = useState({ name: "", email: "", password: "" });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [ageConfirmed, setAgeConfirmed]   = useState(false);
   const [error, setError]   = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -30,6 +33,11 @@ function LoginContent() {
     setError("");
 
     if (mode === "register") {
+      if (!acceptedTerms || !ageConfirmed) {
+        setError("Deve aceitar os termos e confirmar a idade mínima.");
+        setLoading(false);
+        return;
+      }
       const res = await fetch("/api/auth/cadastrar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,6 +49,7 @@ function LoginContent() {
         setLoading(false);
         return;
       }
+      analytics.userSignup();
     }
 
     const result = await signIn("credentials", {
@@ -157,6 +166,38 @@ function LoginContent() {
               className="border border-[#ebebeb] rounded-card px-4 py-3 text-sm font-light
                          focus:outline-none focus:border-ink transition-colors duration-200"
             />
+
+            {mode === "register" && (
+              <div className="flex flex-col gap-2.5 mt-1">
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox" checked={ageConfirmed}
+                    onChange={(e) => { setAgeConfirmed(e.target.checked); setError(""); }}
+                    className="mt-0.5 shrink-0 accent-ink"
+                  />
+                  <span className="text-xs text-muted font-light leading-relaxed">
+                    Confirmo que tenho pelo menos 16 anos de idade.
+                  </span>
+                </label>
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox" checked={acceptedTerms}
+                    onChange={(e) => { setAcceptedTerms(e.target.checked); setError(""); }}
+                    className="mt-0.5 shrink-0 accent-ink"
+                  />
+                  <span className="text-xs text-muted font-light leading-relaxed">
+                    Li e aceito os{" "}
+                    <Link href="/termos" target="_blank" className="text-ink underline underline-offset-2">
+                      Termos e Condições
+                    </Link>{" "}
+                    e a{" "}
+                    <Link href="/privacidade" target="_blank" className="text-ink underline underline-offset-2">
+                      Política de Privacidade
+                    </Link>.
+                  </span>
+                </label>
+              </div>
+            )}
 
             {error && <p className="text-red-500 text-sm font-light">{error}</p>}
 

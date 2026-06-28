@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   const exists = await prisma.user.findUnique({ where: { email }, select: { id: true } });
   if (exists) {
-    return NextResponse.json({ error: "E-mail já cadastrado." }, { status: 409 });
+    return NextResponse.json({ error: "Não foi possível criar a conta com este e-mail." }, { status: 409 });
   }
 
   const hashed = await bcrypt.hash(password, 12);
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: any) {
     if (err?.code === "P2002") {
-      return NextResponse.json({ error: "E-mail já cadastrado." }, { status: 409 });
+      return NextResponse.json({ error: "Não foi possível criar a conta com este e-mail." }, { status: 409 });
     }
     console.error("[cadastrar] Erro ao criar utilizador:", err);
     return NextResponse.json({ error: "Erro ao criar conta. Tente novamente." }, { status: 500 });

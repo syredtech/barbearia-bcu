@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { analytics } from "@/lib/analytics";
 
 interface Servico { id: string; name: string; duration: number; price: number }
 interface VenueData { id: string; name: string; slug: string; category: string; address: string | null; servicos: Servico[] }
@@ -34,6 +35,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
   const [guestPhone, setGuestPhone] = useState("");
 
   useEffect(() => {
+    analytics.bookingStarted(params.slug);
     fetch(`/api/venues/${params.slug}`)
       .then(async (r) => {
         if (!r.ok) { setVenueError(true); return; }
@@ -73,6 +75,8 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
         }),
       });
       if (res.ok) {
+        const servico = venue!.servicos.find((s) => s.id === servicoId);
+        analytics.bookingCompleted(params.slug, servico?.price ?? 0, isGuest);
         setDone(true);
       } else {
         const d = await res.json().catch(() => ({}));
@@ -184,7 +188,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
               {venue.servicos.map((s) => (
                 <button
                   key={s.id}
-                  onClick={() => { setServicoId(s.id); setStep(2); }}
+                  onClick={() => { analytics.bookingServiceSelected(params.slug, s.name, s.price); setServicoId(s.id); setStep(2); }}
                   className={`w-full text-left border rounded-card p-5 transition-all duration-200
                     ${servicoId === s.id ? "border-ink" : "border-[#ebebeb] hover:border-[#bbb]"}`}
                 >
@@ -221,7 +225,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                   Voltar
                 </button>
                 <button
-                  onClick={() => date && setStep(3)}
+                  onClick={() => { if (date) { analytics.bookingDateSelected(params.slug); setStep(3); } }}
                   disabled={!date}
                   className="flex-1 bg-ink text-white rounded-pill py-3 text-sm font-medium
                              hover:bg-[#333] transition-all duration-200 disabled:opacity-30"
@@ -257,7 +261,7 @@ export default function AgendarPage({ params }: { params: { slug: string } }) {
                   {slots.map((slot) => (
                     <button
                       key={slot}
-                      onClick={() => setHorario(slot)}
+                      onClick={() => { analytics.bookingTimeSelected(params.slug, slot); setHorario(slot); }}
                       className={`border rounded-card py-2.5 text-sm transition-all duration-200
                         ${horario === slot
                           ? "bg-ink text-white border-ink"

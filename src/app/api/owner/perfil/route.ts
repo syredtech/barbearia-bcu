@@ -62,7 +62,7 @@ export async function PUT(req: NextRequest) {
   if (imageUrl) {
     try {
       const urlObj = new URL(imageUrl);
-      if (/^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1|0\.0\.0\.0)/.test(urlObj.hostname)) {
+      if (/^(localhost$|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1$|0\.0\.0\.0$|169\.254\.)/.test(urlObj.hostname) || /^\[/.test(urlObj.hostname)) {
         return NextResponse.json({ error: "imageUrl inválida." }, { status: 400 });
       }
     } catch {

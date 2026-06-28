@@ -61,7 +61,7 @@ export default function TermosPage() {
           <h2 className="font-serif text-xl font-bold text-ink mb-3">5. Parceiros (estabelecimentos)</h2>
           <ul className="list-disc list-inside space-y-2 text-muted">
             <li>O registo como parceiro está sujeito a aprovação pela nossa equipa.</li>
-            <li>A subscrição mensal é cobrada via Stripe e renovada automaticamente.</li>
+            <li>A subscrição é gerida pela equipa Bela &amp; Belo e renovada conforme acordado.</li>
             <li>A falta de pagamento suspende a visibilidade do estabelecimento no marketplace.</li>
             <li>O parceiro é responsável pela exactidão das informações do seu perfil.</li>
             <li>O parceiro compromete-se a honrar os agendamentos recebidos através da plataforma.</li>
@@ -71,9 +71,8 @@ export default function TermosPage() {
         <section>
           <h2 className="font-serif text-xl font-bold text-ink mb-3">6. Pagamentos</h2>
           <p className="text-muted">
-            Os pagamentos de subscrição são processados pela Stripe. Os preços dos serviços são definidos
-            pelos estabelecimentos parceiros e pagos directamente no estabelecimento (a plataforma não processa
-            pagamentos de serviços entre cliente e estabelecimento).
+            Os preços dos serviços são definidos pelos estabelecimentos parceiros e pagos directamente no
+            estabelecimento — a plataforma não processa pagamentos entre cliente e estabelecimento.
           </p>
         </section>
 

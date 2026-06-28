@@ -84,16 +84,16 @@ export async function DELETE(
   const servico = await authorize(params.id, session.user.id);
   if (!servico) return NextResponse.json({ error: "Não encontrado." }, { status: 404 });
 
-  const anyBookings = await prisma.agendamento.count({
-    where: { servicoId: params.id },
-  });
-  if (anyBookings > 0) {
-    return NextResponse.json(
-      { error: "Não é possível eliminar um serviço com marcações associadas." },
-      { status: 409 },
-    );
+  try {
+    await prisma.servico.delete({ where: { id: params.id } });
+  } catch (err: any) {
+    if (err?.code === "P2003") {
+      return NextResponse.json(
+        { error: "Não é possível eliminar um serviço com marcações associadas." },
+        { status: 409 },
+      );
+    }
+    throw err;
   }
-
-  await prisma.servico.delete({ where: { id: params.id } });
   return new NextResponse(null, { status: 204 });
 }

@@ -50,11 +50,16 @@ export default function PrivacidadePage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-bold text-ink mb-3">4. Cookies</h2>
+          <h2 className="font-serif text-xl font-bold text-ink mb-3">4. Cookies e análise</h2>
+          <p className="text-muted mb-3">
+            Utilizamos cookies estritamente necessários para a autenticação da sessão. Ao utilizar a plataforma,
+            aceita o uso destes cookies técnicos.
+          </p>
           <p className="text-muted">
-            Utilizamos apenas cookies estritamente necessários para a autenticação da sessão. Não usamos cookies
-            de rastreamento, publicidade ou análise de terceiros. Ao utilizar a plataforma, aceita o uso destes
-            cookies técnicos.
+            Utilizamos também o <span className="text-ink font-medium">Vercel Analytics</span> e o{" "}
+            <span className="text-ink font-medium">Vercel Speed Insights</span> para monitorização de desempenho
+            e análise de visitas de forma agregada e sem identificação pessoal. Estes serviços são fornecidos pela
+            Vercel Inc. e não partilham os dados com terceiros para fins publicitários.
           </p>
         </section>
 
@@ -65,9 +70,9 @@ export default function PrivacidadePage() {
             Os dados são partilhados apenas com:
           </p>
           <ul className="list-disc list-inside space-y-2 text-muted">
-            <li><span className="text-ink font-medium">Stripe</span> — processamento de pagamentos.</li>
-            <li><span className="text-ink font-medium">Supabase/PostgreSQL</span> — armazenamento seguro da base de dados.</li>
-            <li><span className="text-ink font-medium">Vercel</span> — alojamento e infraestrutura.</li>
+            <li><span className="text-ink font-medium">Vercel Inc.</span> — alojamento, infraestrutura e análise de desempenho.</li>
+            <li><span className="text-ink font-medium">Supabase</span> — armazenamento seguro da base de dados.</li>
+            <li><span className="text-ink font-medium">Google</span> — autenticação opcional via Google (se utilizar "Continuar com Google").</li>
             <li>O <span className="text-ink font-medium">estabelecimento parceiro</span> recebe o nome e telefone do cliente para gerir o agendamento.</li>
           </ul>
         </section>
@@ -75,7 +80,7 @@ export default function PrivacidadePage() {
         <section>
           <h2 className="font-serif text-xl font-bold text-ink mb-3">6. Os seus direitos</h2>
           <p className="text-muted mb-3">
-            Ao abrigo do RGPD e legislação aplicável, tem direito a:
+            Ao abrigo da Lei n.º 133/V/2001 (Lei de Protecção de Dados de Cabo Verde) e demais legislação aplicável, tem direito a:
           </p>
           <ul className="list-disc list-inside space-y-2 text-muted">
             <li>Aceder aos seus dados pessoais.</li>
