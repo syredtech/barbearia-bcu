@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import VenueListWithGeo from "@/components/VenueListWithGeo";
 import TimeSearch from "@/components/TimeSearch";
 import HeroSlideshow from "@/components/HeroSlideshow";
@@ -16,6 +16,11 @@ export default function Home() {
   const [active, setActive]             = useState("");
   const [timeSearchOn, setTimeSearchOn] = useState(false);
   const [activeCategory, setActiveCategory] = useState("");
+  const listRef = useRef<HTMLElement>(null);
+
+  function scrollToList() {
+    setTimeout(() => listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  }
 
   return (
     <main>
@@ -58,7 +63,7 @@ export default function Home() {
           {/* Search + category pills (mobile) + TimeSearch */}
           <div className="pb-4">
             <form
-              onSubmit={(e) => { e.preventDefault(); setActive(draft); }}
+              onSubmit={(e) => { e.preventDefault(); setActive(draft); scrollToList(); }}
               className="flex gap-3 mb-4 fade-up-2 rounded-pill backdrop-blur-sm bg-white/10 lg:max-w-[560px]"
             >
               <label htmlFor="hero-search" className="sr-only">Pesquisar estabelecimentos</label>
@@ -86,7 +91,7 @@ export default function Home() {
                 {CATEGORIES.filter((cat) => cat.id !== "").map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setActiveCategory(activeCategory === cat.id ? "" : cat.id)}
+                    onClick={() => { setActiveCategory(activeCategory === cat.id ? "" : cat.id); scrollToList(); }}
                     className={`flex items-center justify-center gap-1 px-1 py-2 rounded-pill text-xs font-medium
                       backdrop-blur-sm transition-all duration-200 ${
                         activeCategory === cat.id
@@ -125,7 +130,7 @@ export default function Home() {
 
       {/* Listing */}
       {!timeSearchOn && (
-        <section className="max-w-content mx-auto px-4 sm:px-6 pt-2 pb-12 sm:pb-16">
+        <section ref={listRef} className="max-w-content mx-auto px-4 sm:px-6 pt-2 pb-12 sm:pb-16">
           <h2 className="sr-only">Estabelecimentos</h2>
 
           {/* Category pills — desktop only */}
@@ -133,7 +138,7 @@ export default function Home() {
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
+                onClick={() => { setActiveCategory(cat.id); scrollToList(); }}
                 className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-pill text-sm font-medium
                   transition-all duration-200 ${
                     activeCategory === cat.id
