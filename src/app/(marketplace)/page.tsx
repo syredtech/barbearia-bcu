@@ -152,17 +152,7 @@ export default function Home() {
             ))}
           </div>
 
-          <VenueListWithGeo searchQuery={active} activeCategory={activeCategory} limit={3} />
-
-          <div className="mt-8 text-center">
-            <a
-              href="/estabelecimentos"
-              className="inline-flex items-center gap-2 text-sm text-muted border border-[#e0dbd4] rounded-pill px-6 py-2.5
-                         hover:border-ink hover:text-ink transition-all duration-200"
-            >
-              Ver todos os estabelecimentos
-            </a>
-          </div>
+          <VenueListWithGeo searchQuery={active} activeCategory={activeCategory} />
         </section>
       )}
     </main>
