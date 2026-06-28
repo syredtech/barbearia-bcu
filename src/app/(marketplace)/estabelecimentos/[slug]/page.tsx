@@ -26,8 +26,9 @@ export async function generateMetadata(
   const desc  = venue.description
     ?? `${venue.name} em ${venue.address ?? "Cabo Verde"}. Agende o seu horário online.`;
   const url   = `${SITE_URL}/estabelecimentos/${venue.slug}`;
-  const images = venue.imageUrl
-    ? [{ url: venue.imageUrl, width: 1200, height: 630, alt: venue.name }]
+  const safeImg = safeImageUrl(venue.imageUrl);
+  const images = safeImg
+    ? [{ url: safeImg, width: 1200, height: 630, alt: venue.name }]
     : undefined;
 
   return {
@@ -44,6 +45,24 @@ const COVER_CONFIG: Record<string, { bg: string; accent: string }> = {
   salao:     { bg: "linear-gradient(160deg, #1c1622 0%, #362840 100%)", accent: "#c8a0b8" },
   spa:       { bg: "linear-gradient(160deg, #121e1c 0%, #1e3830 100%)", accent: "#6aaa96" },
 };
+
+const ALLOWED_IMAGE_HOSTS = [
+  /^[^.]+\.googleusercontent\.com$/,
+  /^res\.cloudinary\.com$/,
+  /^[^.]+\.supabase\.co$/,
+  /^images\.unsplash\.com$/,
+  /^avatars\.githubusercontent\.com$/,
+];
+
+function safeImageUrl(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const { hostname } = new URL(url);
+    return ALLOWED_IMAGE_HOSTS.some((re) => re.test(hostname)) ? url : null;
+  } catch {
+    return null;
+  }
+}
 
 export default async function EstabelecimentoPage({
   params,
@@ -118,7 +137,7 @@ export default async function EstabelecimentoPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/<\//g, "<\\/") }}
       />
       <VenueCoverImage
-        imageUrl={venue.imageUrl}
+        imageUrl={safeImageUrl(venue.imageUrl)}
         name={venue.name}
         initials={initials}
         bg={bg}
