@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import CancelButton from "@/components/CancelButton";
 import AvaliarButton from "@/components/AvaliarButton";
+import DeleteAccountButton from "@/components/DeleteAccountButton";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -190,6 +191,14 @@ export default async function MinhaContaPage({
           )}
         </section>
       )}
+      <div className="divider mt-16 mb-10" />
+      <section>
+        <h2 className="font-serif text-base font-bold text-ink mb-1">Zona de perigo</h2>
+        <p className="text-xs text-muted font-light mb-4">
+          Eliminar a conta remove permanentemente todos os teus dados. Esta acção não pode ser desfeita.
+        </p>
+        <DeleteAccountButton />
+      </section>
     </main>
   );
 }
