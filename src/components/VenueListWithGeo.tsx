@@ -23,6 +23,24 @@ interface Venue {
 type VenueWithDist = Venue & { _distance?: number };
 type GeoStatus = "pending" | "granted" | "denied";
 
+const ALLOWED_IMAGE_HOSTS = [
+  /^[^.]+\.googleusercontent\.com$/,
+  /^res\.cloudinary\.com$/,
+  /^[^.]+\.supabase\.co$/,
+  /^images\.unsplash\.com$/,
+  /^avatars\.githubusercontent\.com$/,
+];
+
+function safeImageUrl(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const { hostname } = new URL(url);
+    return ALLOWED_IMAGE_HOSTS.some((re) => re.test(hostname)) ? url : null;
+  } catch {
+    return null;
+  }
+}
+
 interface Props {
   limit?: number;
   searchQuery?: string;
@@ -172,18 +190,20 @@ export default function VenueListWithGeo({ limit, searchQuery, activeCategory = 
               className="group block cursor-pointer"
             >
               <div className="relative w-full aspect-video rounded-[12px] overflow-hidden mb-3 bg-[#f5f5f5]">
-                {venue.imageUrl ? (
+                {/* Placeholder always rendered underneath */}
+                <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
+                  <VenueImagePlaceholder venue={venue} />
+                </div>
+                {/* Image on top — hides on error, revealing the placeholder */}
+                {safeImageUrl(venue.imageUrl) && (
                   <Image
-                    src={venue.imageUrl}
+                    src={safeImageUrl(venue.imageUrl)!}
                     alt={venue.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />
-                ) : (
-                  <div className="w-full h-full transition-transform duration-500 group-hover:scale-[1.04]">
-                    <VenueImagePlaceholder venue={venue} />
-                  </div>
                 )}
               </div>
 
