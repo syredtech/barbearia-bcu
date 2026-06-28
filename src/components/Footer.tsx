@@ -15,7 +15,7 @@ export default function Footer() {
           <Link href="/parceiros" className="hover:text-ink transition-colors duration-200">
             Registe o seu negócio
           </Link>
-          <a href="mailto:suporte@bcu.cv" className="hover:text-ink transition-colors duration-200">
+          <a href="mailto:suporte@belabelo.cv" className="hover:text-ink transition-colors duration-200">
             Suporte
           </a>
           <Link href="/privacidade" className="hover:text-ink transition-colors duration-200">

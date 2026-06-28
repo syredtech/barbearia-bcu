@@ -84,7 +84,7 @@ export default function ParceirosPage() {
           <label htmlFor="parc-slug" className={labelClass}>URL personalizada</label>
           <div className="flex items-stretch border border-[#ebebeb] rounded-card overflow-hidden focus-within:border-ink transition-colors duration-200">
             <span className="bg-[#fafafa] px-4 flex items-center text-muted text-sm border-r border-[#ebebeb] shrink-0">
-              bcu.cv/
+              belabelo.cv/
             </span>
             <input
               id="parc-slug"

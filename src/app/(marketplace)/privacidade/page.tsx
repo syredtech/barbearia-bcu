@@ -21,8 +21,8 @@ export default function PrivacidadePage() {
             A <strong className="font-medium">Bela &amp; Belo</strong> (anteriormente "Barba, Cabelo e Unha") é uma
             plataforma de agendamento online que liga clientes a barbearias, salões de beleza e spas em Cabo Verde.
             O responsável pelo tratamento de dados é a Bela &amp; Belo, contactável em{" "}
-            <a href="mailto:privacidade@bcu.cv" className="underline underline-offset-2 hover:text-muted transition-colors">
-              privacidade@bcu.cv
+            <a href="mailto:privacidade@belabelo.cv" className="underline underline-offset-2 hover:text-muted transition-colors">
+              privacidade@belabelo.cv
             </a>.
           </p>
         </section>
@@ -85,8 +85,8 @@ export default function PrivacidadePage() {
           </ul>
           <p className="text-muted mt-3">
             Para exercer estes direitos, contacte-nos em{" "}
-            <a href="mailto:privacidade@bcu.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
-              privacidade@bcu.cv
+            <a href="mailto:privacidade@belabelo.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
+              privacidade@belabelo.cv
             </a>.
           </p>
         </section>
@@ -119,8 +119,8 @@ export default function PrivacidadePage() {
           <h2 className="font-serif text-xl font-bold text-ink mb-3">10. Contacto</h2>
           <p className="text-muted">
             Para questões sobre privacidade:{" "}
-            <a href="mailto:privacidade@bcu.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
-              privacidade@bcu.cv
+            <a href="mailto:privacidade@belabelo.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
+              privacidade@belabelo.cv
             </a>
           </p>
         </section>

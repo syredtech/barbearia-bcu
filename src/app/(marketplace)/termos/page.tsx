@@ -115,8 +115,8 @@ export default function TermosPage() {
           <h2 className="font-serif text-xl font-bold text-ink mb-3">11. Contacto</h2>
           <p className="text-muted">
             Para questões sobre estes termos:{" "}
-            <a href="mailto:suporte@bcu.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
-              suporte@bcu.cv
+            <a href="mailto:suporte@belabelo.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
+              suporte@belabelo.cv
             </a>
           </p>
         </section>
