@@ -65,6 +65,18 @@ export async function PUT(req: NextRequest) {
       if (/^(localhost$|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1$|0\.0\.0\.0$|169\.254\.)/.test(urlObj.hostname) || /^\[/.test(urlObj.hostname)) {
         return NextResponse.json({ error: "imageUrl inválida." }, { status: 400 });
       }
+      const ALLOWED = [
+        /^[^.]+\.googleusercontent\.com$/,
+        /^res\.cloudinary\.com$/,
+        /^[^.]+\.supabase\.co$/,
+        /^images\.unsplash\.com$/,
+        /^avatars\.githubusercontent\.com$/,
+      ];
+      if (!ALLOWED.some((re) => re.test(urlObj.hostname))) {
+        return NextResponse.json({
+          error: "Domínio de imagem não permitido. Use Cloudinary, Supabase Storage ou Unsplash.",
+        }, { status: 400 });
+      }
     } catch {
       return NextResponse.json({ error: "imageUrl inválida." }, { status: 400 });
     }

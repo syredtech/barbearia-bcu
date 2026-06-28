@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import ShareButton from "@/components/ShareButton";
+import VenueCoverImage from "@/components/VenueCoverImage";
 import type { Metadata } from "next";
 
 const SITE_URL = (process.env.NEXTAUTH_URL ?? "https://belabelo.cv").replace(/\/$/, "");
@@ -117,20 +117,13 @@ export default async function EstabelecimentoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/<\//g, "<\\/") }}
       />
-      {/* Cover hero */}
-      <div className="relative w-full h-[220px] sm:h-[300px] overflow-hidden" style={{ background: venue.imageUrl ? undefined : bg }}>
-        {venue.imageUrl ? (
-          <Image src={venue.imageUrl} alt={venue.name} fill priority className="object-cover" sizes="100vw" />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-            <span className="font-serif font-bold select-none tracking-widest text-white/60 leading-none"
-              style={{ fontSize: "clamp(56px, 8vw, 96px)" }}>
-              {initials}
-            </span>
-            <div className="h-px w-10 rounded-full" style={{ background: accent, opacity: 0.8 }} />
-          </div>
-        )}
-      </div>
+      <VenueCoverImage
+        imageUrl={venue.imageUrl}
+        name={venue.name}
+        initials={initials}
+        bg={bg}
+        accent={accent}
+      />
 
       <main className="max-w-content mx-auto px-6 py-8">
         {/* Breadcrumb */}
