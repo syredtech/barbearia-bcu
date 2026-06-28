@@ -1,17 +1,10 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
 interface Props {
   status: string | null | undefined;
   expiresAt: Date | string | null | undefined;
   venueStatus?: string;
 }
 
-export default function AssinaturaCard({ status, expiresAt, venueStatus }: Props) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+export default function AssinaturaCard({ status, expiresAt }: Props) {
   const isActive =
     status === "active" && expiresAt && new Date(expiresAt) > new Date();
 
@@ -33,30 +26,8 @@ export default function AssinaturaCard({ status, expiresAt, venueStatus }: Props
             </p>
           )}
         </div>
-
-        {!isActive && venueStatus === "approved" && (
-          <button
-            disabled={loading}
-            onClick={async () => {
-              setLoading(true);
-              setError("");
-              const res = await fetch("/api/stripe/checkout", { method: "POST" });
-              const data = await res.json().catch(() => ({}));
-              if (data.url) { router.push(data.url); return; }
-              setError(data.error || "Erro ao iniciar pagamento. Tente novamente.");
-              setLoading(false);
-            }}
-            className="bg-ink text-white px-5 py-2 rounded-pill text-xs font-medium
-                       hover:bg-[#333] transition-all duration-200 disabled:opacity-40"
-          >
-            {loading ? "A redirecionar…" : "Assinar"}
-          </button>
-        )}
-        {isActive && (
-          <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
-        )}
+        {isActive && <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />}
       </div>
-      {error && <p className="text-xs text-red-500 mt-3">{error}</p>}
     </div>
   );
 }

@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     where: { status },
     select: {
       id: true, name: true, category: true,
-      status: true, subscriptionStatus: true, createdAt: true,
+      status: true, subscriptionStatus: true, subscriptionExpiresAt: true, createdAt: true,
       owner: { select: { name: true, email: true } },
     },
     orderBy: { createdAt: "desc" },

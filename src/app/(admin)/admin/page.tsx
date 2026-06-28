@@ -10,7 +10,7 @@ interface Stats {
 
 interface Venue {
   id: string; name: string; category: string; status: string;
-  subscriptionStatus: string | null; createdAt: string;
+  subscriptionStatus: string | null; subscriptionExpiresAt: string | null; createdAt: string;
   owner: { name: string; email: string };
 }
 
@@ -168,6 +168,23 @@ export default function AdminPage() {
     loadStats();
   }
 
+  async function extendSubscription(id: string, months: number) {
+    setLoadingId(id);
+    setActionError("");
+    const res = await fetch(`/api/admin/venues/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ extendMonths: months }),
+    });
+    setLoadingId(null);
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setActionError(d.error || "Erro ao renovar assinatura.");
+      return;
+    }
+    loadVenues();
+  }
+
   // ── Render ──────────────────────────────────────────────────
   return (
     <main className="max-w-content mx-auto px-6 py-10 sm:py-16">
@@ -290,6 +307,11 @@ export default function AdminPage() {
                         {v.subscriptionStatus
                           ? <StatusPill status={v.subscriptionStatus} />
                           : <span className="text-xs text-muted">—</span>}
+                        {v.subscriptionExpiresAt && (
+                          <p className="text-[10px] text-muted mt-0.5">
+                            até {fmtTs(v.subscriptionExpiresAt)}
+                          </p>
+                        )}
                       </TD>
                       <TD className="text-muted font-light text-xs">{fmtTs(v.createdAt)}</TD>
                       <TD>
@@ -305,7 +327,21 @@ export default function AdminPage() {
                             </button>
                           </div>
                         )}
-                        {venueFilter !== "pending" && (
+                        {venueFilter === "approved" && (
+                          <div className="flex flex-col gap-1.5">
+                            <button type="button" onClick={() => extendSubscription(v.id, 1)}
+                              disabled={loadingId === v.id}
+                              className="bg-ink text-white px-4 py-1.5 rounded-pill text-xs font-medium hover:bg-[#333] transition-all duration-200 disabled:opacity-40">
+                              {loadingId === v.id ? "…" : "+1 mês"}
+                            </button>
+                            <button type="button" onClick={() => updateVenueStatus(v.id, "pending")}
+                              disabled={loadingId === v.id}
+                              className="text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors disabled:opacity-40">
+                              Repor
+                            </button>
+                          </div>
+                        )}
+                        {venueFilter === "rejected" && (
                           <button type="button" onClick={() => updateVenueStatus(v.id, "pending")}
                             disabled={loadingId === v.id}
                             className="text-xs text-muted underline underline-offset-2 hover:text-ink transition-colors disabled:opacity-40">
