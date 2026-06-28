@@ -11,7 +11,7 @@ export default function PrivacidadePage() {
     <main className="max-w-[720px] mx-auto px-6 py-16">
       <p className="text-xs text-muted uppercase tracking-widest mb-2">Legal</p>
       <h1 className="font-serif text-4xl font-bold text-ink mb-3">Política de Privacidade</h1>
-      <p className="text-muted text-sm font-light mb-12">Última actualização: Maio de 2025</p>
+      <p className="text-muted text-sm font-light mb-12">Última actualização: Junho de 2026</p>
 
       <div className="prose-like space-y-10 text-sm font-light text-ink leading-relaxed">
 
@@ -32,8 +32,9 @@ export default function PrivacidadePage() {
           <ul className="list-disc list-inside space-y-2 text-muted">
             <li><span className="text-ink font-medium">Dados de conta:</span> nome, endereço de e-mail e senha encriptada.</li>
             <li><span className="text-ink font-medium">Dados de agendamento:</span> serviço escolhido, data, horário e estabelecimento.</li>
+            <li><span className="text-ink font-medium">Dados de convidados:</span> nome e telefone fornecidos ao agendar sem conta — utilizados exclusivamente para esse agendamento.</li>
             <li><span className="text-ink font-medium">Dados de estabelecimento (parceiros):</span> nome, endereço, telefone, categoria e localização geográfica.</li>
-            <li><span className="text-ink font-medium">Dados de pagamento:</span> geridos directamente pela Stripe — não armazenamos números de cartão.</li>
+            <li><span className="text-ink font-medium">Dados de subscrição (parceiros):</span> geridos internamente pela equipa Bela &amp; Belo — não armazenamos dados de cartão.</li>
             <li><span className="text-ink font-medium">Dados de sessão:</span> cookies técnicos necessários para a autenticação.</li>
           </ul>
         </section>
@@ -44,7 +45,7 @@ export default function PrivacidadePage() {
             <li>Criar e gerir a sua conta.</li>
             <li>Processar e confirmar agendamentos.</li>
             <li>Gerir subscrições e pagamentos dos parceiros.</li>
-            <li>Enviar notificações relacionadas com os seus agendamentos.</li>
+            <li>Enviar notificações na plataforma relacionadas com os seus agendamentos.</li>
             <li>Melhorar a plataforma com base em dados agregados e anónimos.</li>
           </ul>
         </section>
@@ -73,7 +74,7 @@ export default function PrivacidadePage() {
             <li><span className="text-ink font-medium">Vercel Inc.</span> — alojamento, infraestrutura e análise de desempenho.</li>
             <li><span className="text-ink font-medium">Supabase</span> — armazenamento seguro da base de dados.</li>
             <li><span className="text-ink font-medium">Google</span> — autenticação opcional via Google (se utilizar "Continuar com Google").</li>
-            <li>O <span className="text-ink font-medium">estabelecimento parceiro</span> recebe o nome e telefone do cliente para gerir o agendamento.</li>
+            <li>O <span className="text-ink font-medium">estabelecimento parceiro</span> recebe o nome do cliente registado, ou o nome e telefone fornecidos no caso de agendamentos de convidados, para gestão do agendamento.</li>
           </ul>
         </section>
 
@@ -85,7 +86,13 @@ export default function PrivacidadePage() {
           <ul className="list-disc list-inside space-y-2 text-muted">
             <li>Aceder aos seus dados pessoais.</li>
             <li>Corrigir dados incorrectos.</li>
-            <li>Solicitar a eliminação da sua conta e dados.</li>
+            <li>
+              Eliminar a sua conta e dados — pode fazê-lo directamente em{" "}
+              <a href="/minha-conta" className="underline underline-offset-2 hover:text-ink transition-colors">
+                A Minha Conta
+              </a>{" "}
+              ou contactando-nos.
+            </li>
             <li>Opor-se ao tratamento dos seus dados.</li>
           </ul>
           <p className="text-muted mt-3">
@@ -99,8 +106,10 @@ export default function PrivacidadePage() {
         <section>
           <h2 className="font-serif text-xl font-bold text-ink mb-3">7. Retenção de dados</h2>
           <p className="text-muted">
-            Os dados de conta são conservados enquanto a conta estiver activa. Os dados de agendamento são
-            conservados por 12 meses para fins de histórico. Pode solicitar a eliminação antecipada a qualquer momento.
+            Os dados de conta são conservados enquanto a conta estiver activa. Ao eliminar a conta, os dados
+            pessoais identificáveis são removidos; os registos de agendamento são anonimizados e mantidos no
+            histórico do estabelecimento sem qualquer ligação à sua identidade. Dados de convidados são conservados
+            apenas pelo tempo necessário à prestação do serviço agendado.
           </p>
         </section>
 
@@ -121,7 +130,18 @@ export default function PrivacidadePage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-bold text-ink mb-3">10. Contacto</h2>
+          <h2 className="font-serif text-xl font-bold text-ink mb-3">10. Termos e Condições</h2>
+          <p className="text-muted">
+            Esta Política de Privacidade faz parte integrante dos nossos{" "}
+            <a href="/termos" className="underline underline-offset-2 hover:text-ink transition-colors">
+              Termos e Condições
+            </a>
+            , que regem a utilização da plataforma.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-xl font-bold text-ink mb-3">11. Contacto</h2>
           <p className="text-muted">
             Para questões sobre privacidade:{" "}
             <a href="mailto:privacidade@belabelo.cv" className="underline underline-offset-2 hover:text-ink transition-colors">
