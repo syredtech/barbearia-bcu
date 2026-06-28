@@ -18,7 +18,7 @@ export default function PrivacidadePage() {
         <section>
           <h2 className="font-serif text-xl font-bold text-ink mb-3">1. Quem somos</h2>
           <p>
-            A <strong className="font-medium">Bela &amp; Belo</strong> (anteriormente "Barba, Cabelo e Unha") é uma
+            A <strong className="font-medium">Bela &amp; Belo</strong> é uma
             plataforma de agendamento online que liga clientes a barbearias, salões de beleza e spas em Cabo Verde.
             O responsável pelo tratamento de dados é a Bela &amp; Belo, contactável em{" "}
             <a href="mailto:privacidade@belabelo.cv" className="underline underline-offset-2 hover:text-muted transition-colors">
