@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { prismairect } from "@/lib/prisma-direct";
-import { enviarConfirmacao } from "@/lib/mensagem";
+import { enviarNotificacaoHibrida } from "@/lib/notificacoes/enviar";
 import { generateSlots } from "@/lib/slots";
 
 export const dynamic = "force-dynamic";
@@ -208,15 +208,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erro ao processar agendamento." }, { status: 500 });
   }
 
-  const smsPhone = agendamento.guestPhone ?? agendamento.client?.phone ?? null;
-  if (smsPhone) {
-    enviarConfirmacao({
-      phone: smsPhone,
-      venueName: agendamento.venue.name,
-      date: agendamento.date,
-      horario: agendamento.horario,
-      servicoName: agendamento.servico.name,
-    }).catch((err) => { console.error("[mensagem] Falha ao enviar confirmação:", err); });
+  const rawPhone = agendamento.guestPhone ?? agendamento.client?.phone ?? null;
+  if (rawPhone) {
+    const s = rawPhone.replace(/\s/g, "");
+    const numeroCliente = s.startsWith("+") ? s : s.startsWith("238") ? "+" + s : "+238" + s;
+    const [y, m, d] = agendamento.date.split("-");
+    enviarNotificacaoHibrida({
+      reservaId: agendamento.id,
+      numeroCliente,
+      dadosReserva: {
+        salao: agendamento.venue.name,
+        data: `${d}/${m}/${y}`,
+        hora: agendamento.horario,
+      },
+    }).catch((err) => { console.error("[notificacao] Falha ao enviar confirmação:", err); });
   }
 
   const clientLabel = (agendamento.client?.name ?? agendamento.guestName ?? "Cliente").slice(0, 100);
