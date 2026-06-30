@@ -28,6 +28,20 @@ interface Agendamento {
   servico: { name: string; price: number };
 }
 
+interface NotifLog {
+  id: string; idempotencyKey: string; reservaId: string;
+  numeroCliente: string; canal: string; sucesso: boolean;
+  detalhe: unknown; criadoEm: string;
+}
+interface CanalStats { total: number; sucesso: number }
+interface NotifStats {
+  total: number;
+  porCanal: { whatsapp: CanalStats; sms_gateway: CanalStats };
+}
+interface GatewayInfo {
+  online: boolean; ultimoHeartbeat: string | null; minutosDesdeUltimo: number | null;
+}
+
 // ── Constants ──────────────────────────────────────────────────
 const CATEGORY_LABEL: Record<string, string> = {
   barbearia: "Barbearia",
@@ -35,14 +49,15 @@ const CATEGORY_LABEL: Record<string, string> = {
   spa: "Unhas & Maquilhagem",
 };
 
-type TopTab = "overview" | "venues" | "users" | "agendamentos";
+type TopTab = "overview" | "venues" | "users" | "agendamentos" | "notificacoes";
 type VenueFilter = "pending" | "approved" | "rejected";
 
 const TOP_TABS: { id: TopTab; label: string }[] = [
   { id: "overview",     label: "Visão Geral" },
   { id: "venues",       label: "Estabelecimentos" },
   { id: "users",        label: "Utilizadores" },
-  { id: "agendamentos", label: "Agendamentos" },
+  { id: "agendamentos",  label: "Agendamentos" },
+  { id: "notificacoes",  label: "Notificações" },
 ];
 
 const VENUE_FILTERS: { id: VenueFilter; label: string }[] = [
@@ -119,6 +134,9 @@ export default function AdminPage() {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loadingId, setLoadingId]   = useState<string | null>(null);
   const [actionError, setActionError] = useState("");
+  const [logs, setLogs]             = useState<NotifLog[]>([]);
+  const [notifStats, setNotifStats] = useState<NotifStats | null>(null);
+  const [gatewayInfo, setGatewayInfo] = useState<GatewayInfo | null>(null);
 
   // fetch helpers
   const loadStats = useCallback(async () => {
@@ -149,6 +167,16 @@ export default function AdminPage() {
   useEffect(() => { if (tab === "venues")       loadVenues(); }, [tab, loadVenues]);
   useEffect(() => { if (tab === "users")        loadUsers(); }, [tab, loadUsers]);
   useEffect(() => { if (tab === "agendamentos") loadAgendamentos(); }, [tab, loadAgendamentos]);
+
+  const loadNotificacoes = useCallback(async () => {
+    const r = await fetch("/api/admin/notificacoes-log");
+    if (!r.ok) return;
+    const d = await r.json();
+    setLogs(d.logs);
+    setNotifStats(d.stats);
+    setGatewayInfo(d.gateway);
+  }, []);
+  useEffect(() => { if (tab === "notificacoes") loadNotificacoes(); }, [tab, loadNotificacoes]);
 
   async function updateVenueStatus(id: string, status: string) {
     setLoadingId(id);
@@ -465,6 +493,107 @@ export default function AdminPage() {
           )}
         </div>
       )}
+      {/* ── NOTIFICAÇÕES ────────────────────────────────────── */}
+      {tab === "notificacoes" && (
+        <div className="space-y-8">
+          {/* Stats */}
+          {notifStats ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard label="Total enviadas" value={notifStats.total} />
+              <StatCard
+                label="WhatsApp"
+                value={notifStats.porCanal.whatsapp.total > 0
+                  ? `${Math.round((notifStats.porCanal.whatsapp.sucesso / notifStats.porCanal.whatsapp.total) * 100)}%`
+                  : "—"}
+                sub={`${notifStats.porCanal.whatsapp.sucesso} / ${notifStats.porCanal.whatsapp.total} entregues`}
+              />
+              <StatCard
+                label="SMS Gateway"
+                value={notifStats.porCanal.sms_gateway.total > 0
+                  ? `${Math.round((notifStats.porCanal.sms_gateway.sucesso / notifStats.porCanal.sms_gateway.total) * 100)}%`
+                  : "—"}
+                sub={`${notifStats.porCanal.sms_gateway.sucesso} / ${notifStats.porCanal.sms_gateway.total} entregues`}
+              />
+              <div className="border border-[#ebebeb] rounded-card p-6">
+                <p className="text-xs text-muted uppercase tracking-widest mb-3">Gateway Android</p>
+                {gatewayInfo ? (
+                  <>
+                    <p className={`font-serif text-2xl font-bold ${gatewayInfo.online ? "text-green-600" : "text-red-600"}`}>
+                      {gatewayInfo.online ? "Online" : "Offline"}
+                    </p>
+                    {gatewayInfo.minutosDesdeUltimo !== null && (
+                      <p className="text-xs text-muted mt-2">
+                        último sinal há {gatewayInfo.minutosDesdeUltimo} min
+                      </p>
+                    )}
+                    {!gatewayInfo.ultimoHeartbeat && (
+                      <p className="text-xs text-muted mt-2">sem heartbeat ainda</p>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-serif text-2xl font-bold text-muted">—</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="border border-[#ebebeb] rounded-card p-6 animate-pulse">
+                  <div className="h-3 bg-[#f0f0f0] rounded w-1/2 mb-4" />
+                  <div className="h-8 bg-[#f0f0f0] rounded w-1/3" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Log table */}
+          {logs.length === 0 ? (
+            <EmptyState msg="Nenhum registo de notificação encontrado." />
+          ) : (
+            <div className="overflow-x-auto rounded-card border border-[#ebebeb]">
+              <table className="w-full min-w-[760px] text-sm">
+                <thead className="border-b border-[#ebebeb]">
+                  <tr>
+                    {["Data", "Número", "Reserva", "Canal", "Estado", "Detalhe"].map(h => <TH key={h}>{h}</TH>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map((log, i) => (
+                    <tr key={log.id}
+                      className={`${i < logs.length - 1 ? "border-b border-[#ebebeb]" : ""} hover:bg-[#fafafa] transition-colors`}>
+                      <TD className="text-muted font-light text-xs whitespace-nowrap">
+                        {new Date(log.criadoEm).toLocaleString("pt-CV", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                      </TD>
+                      <TD className="text-ink font-light">{log.numeroCliente}</TD>
+                      <TD className="text-muted font-light text-xs">
+                        {log.reservaId.length > 12 ? `${log.reservaId.slice(0, 12)}…` : log.reservaId}
+                      </TD>
+                      <TD>
+                        <span className={`inline-block text-xs px-2.5 py-0.5 rounded-pill font-medium ${
+                          log.canal === "whatsapp" ? "text-green-700 bg-green-50" : "text-blue-700 bg-blue-50"
+                        }`}>
+                          {log.canal === "whatsapp" ? "WhatsApp" : "SMS"}
+                        </span>
+                      </TD>
+                      <TD>
+                        <span className={`inline-block text-xs px-2.5 py-0.5 rounded-pill font-medium ${
+                          log.sucesso ? "text-green-700 bg-green-50" : "text-red-600 bg-red-50"
+                        }`}>
+                          {log.sucesso ? "Enviado" : "Falhou"}
+                        </span>
+                      </TD>
+                      <TD className="text-muted font-light text-xs max-w-[200px] truncate">
+                        {log.detalhe ? JSON.stringify(log.detalhe).slice(0, 60) : "—"}
+                      </TD>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
     </main>
   );
 }
