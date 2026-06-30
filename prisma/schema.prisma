@@ -167,3 +167,21 @@ model WebhookEvent {
   id          String   @id
   processedAt DateTime @default(now())
 }
+
+model NotificacaoLog {
+  id             String   @id @default(cuid())
+  idempotencyKey String
+  reservaId      String
+  numeroCliente  String
+  canal          String
+  sucesso        Boolean
+  detalhe        Json?
+  criadoEm       DateTime @default(now())
+
+  @@index([idempotencyKey])
+}
+
+model GatewayStatus {
+  id              String   @id
+  ultimoHeartbeat DateTime
+}
